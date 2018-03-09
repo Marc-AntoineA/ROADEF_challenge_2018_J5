@@ -1,4 +1,3 @@
-/Documents/
 
 Documents/Remarques.aux
 Documents/Remarques.bbl
@@ -9,3 +8,7 @@ Documents/Remarques.log
 Documents/Remarques.out
 Documents/Remarques.toc
 Documents/Remarques.synctex.gz
+Code/CMakeFiles/
+Code/checker
+Code/Makefile
+Code/cmake_install.cmake
