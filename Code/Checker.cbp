@@ -92,6 +92,9 @@
 		<Unit filename="C:/Users/Corentin/Documents/GitHub/ROADEF/Code/GlassStructures.h">
 			<Option target="checker"/>
 		</Unit>
+		<Unit filename="C:/Users/Corentin/Documents/GitHub/ROADEF/Code/GlobalVar.h">
+			<Option target="checker"/>
+		</Unit>
 		<Unit filename="C:/Users/Corentin/Documents/GitHub/ROADEF/Code/Parser.cpp">
 			<Option target="checker"/>
 		</Unit>
@@ -99,9 +102,6 @@
 			<Option target="checker"/>
 		</Unit>
 		<Unit filename="C:/Users/Corentin/Documents/GitHub/ROADEF/Code/main.cpp">
-			<Option target="checker"/>
-		</Unit>
-		<Unit filename="C:/Users/Corentin/Documents/GitHub/ROADEF/Code/main.h">
 			<Option target="checker"/>
 		</Unit>
 		<Unit filename="C:/Users/Corentin/Documents/GitHub/ROADEF/Code/CMakeLists.txt">

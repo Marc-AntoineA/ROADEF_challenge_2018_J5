@@ -13,65 +13,15 @@
  *  - Classes instantiation functions.
 **/
 
-#include <stdint-gcc.h>
-#include <cstdlib>
-#include <string>
-#include <iostream>
-#include <fstream>
-
-#include "main.h"
 #include "Checker.h"
 #include "GlassStructures.h"
-#include "Parser.h"
-
-using namespace std;
-
-unsigned int active_log = 1; // Once log file is generated this var will be cleared.
-ofstream log_file; // Reference to log file.
-
-ofstream statistics_file; // Reference to statisticsLog file.
-bool opened_file = true; // Boolean to test if one of needed files (batch, solution, defects and optimization parameters) was not opened.
-
-string file_idx; // To save used file index (Normal mode).
-string testPath; // To save path according to chosen test.
-string instance; // To save used file index (Test mode).
-
-unsigned int s_idx = 0; // Solution index, used precise where to insert solution node in sol_items array.
-unsigned int plates_nbr = 0; // Save solution used plates number.
-unsigned int stack_nbr = 0; // Save batch stack number.
-unsigned int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
-                                                  // plates_list[X][Y]:   X dimension contains plates Ids list
-                                                  //                      Y dimension contains number of nodes of plate X
-unsigned int lines_nbr = 0; // csv file lines number.
-unsigned int node_nbr = 0; // Solution file nodes number.
-unsigned int useful_node = 0; // Solution useful nodes number (node not a branch or waste or residual).
-unsigned int branch_node = 0; // Solution branch nodes number
-unsigned int residual_node = 0; // Solution residual nodes number.
-unsigned int waste_node = 0; // Solution waste nodes number.
-unsigned int batch_items = 0; // Batch items number.
-unsigned int constraint_error = 0; // Success constraint, combination of solution's occured errors (refer to main.h to find errors list).
-unsigned int defects_nbr = 0; // Defects file defects number.
-
-unsigned int total_waste = 0; // Sum of wasted area.
-unsigned int total_useful = 0; // Sum of used area.
-
-int max_cut_stage = 0; // Solution max used cut stage.
-
-unsigned int plate_nbr_limit = 0; // To save Optimization parameters plate number limit constraint.
-unsigned int plate_w = 0; // To save Optimization parameters plate's length constraint.
-unsigned int plate_h = 0; // To save Optimization parameters plate's width constraint.
-unsigned int min1Cut = 0; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
-unsigned int min2Cut = 0; // To save Optimization parameters cut 1 & 2 min2Cut constraint.
-unsigned int max1Cut = 0; // To save Optimization parameters cut 1 & 2 max1Cut  constraint.
-unsigned int waste_min = 0; // To save Optimization parameters cut 1 & 2 minWasteWidth constraint.
-
-unsigned int success = 1;
+#include "GlobalVar.h"  // a virer quand parser et checker seront fini
+#include "Parser.h" // a garder ? ou parie integrante du checker
 
 GlassPlate *plate; // List of solution used plates.
 GlassNode *sol_items; // List of solution nodes.
 GlassStack *stacks; // List of batch stacks.
 GlassItem *items; // List of batch items.
-
 
 /// Optimization Parameters file Parser
 void parseOptimizationParams (string path);

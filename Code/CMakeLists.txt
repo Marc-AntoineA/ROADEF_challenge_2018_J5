@@ -8,5 +8,6 @@ add_executable(checker
     Parser.cpp
     Checker.h
     GlassStructures.h
+    GlobalVar.h
     Parser.h
-    main.h)
+    )
