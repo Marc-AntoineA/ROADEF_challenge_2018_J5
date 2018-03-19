@@ -20,10 +20,9 @@
 #include <fstream>
 
 #include "main.h"
-#include "GlassNode.h"
-#include "GlassPlate.h"
-#include "GlassItem.h"
-#include "GlassStack.h"
+#include "Checker.h"
+#include "GlassStructures.h"
+#include "Parser.h"
 
 using namespace std;
 
