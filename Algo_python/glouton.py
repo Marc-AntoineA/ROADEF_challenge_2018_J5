@@ -74,7 +74,7 @@ def cut(node, item):
     if feasible:
         # An alpha-cut ?
         
-        if alpha_cut % 2 == 1: # first horizontal cut
+        if alpha_cut % 2 == 0: # first horizontal cut
             above = YY + H - y - h
             bellow = y - YY
             if above > 0 or bellow > 0: # we need a horizontal cut
@@ -124,97 +124,117 @@ def display_node(node, matrix):
     else:
         col = alpha_cut
         
-    for x in range(XX, XX + W):
-        for y in range(YY, YY + H):
-            if matrix[x][y] == - 1:
-                matrix[x][y] = col
+    for x in range(XX, XX + W, resolution):
+        for y in range(YY, YY + H, resolution):
+            x_r = x//resolution
+            y_r = y//resolution
+            matrix[x_r][y_r] = col
+            
+            if x == XX or y == YY or XX + W - XX < resolution or YY + H - y < resolution:
+                # draw border
+                matrix[x_r][y_r] = -5
+                
     plt.imshow(matrix)
     plt.show()
     #plt.pause(1)
     return matrix
 
+def display_defects(matrix, bin = 0):
+    defects_bin_id = list(defects.loc[defects.PLATE_ID == bin].DEFECT_ID)
+    for d in defects_bin_id:
+        [__, _, XX, YY, W, H] = list(defects.loc[d])
+        XX = int(XX)
+        YY = int(YY)
+        W = int(W)
+        H = int(H)
+        for x in range(XX, XX + W, resolution):
+            for y in range(YY, YY + H, resolution):
+                x_r = x//resolution
+                y_r = y//resolution
+                matrix[x_r][y_r] = -10
+                
+    return matrix
     
 def display_nodes_visited(nodes_visited, bin = 0):
     
-    matrix = np.zeros((widthPlates, heightPlates))
-    matrix -= 1
+    matrix = np.zeros((widthPlates//resolution + 1, heightPlates//resolution + 1))
     for n in nodes_visited:
         if n[1][1] == bin:
             matrix = display_node(n, matrix)
     
-    plt.imshow(matrix)
+    matrix = display_defects(matrix, bin)
+    plt.imshow(matrix.T)
+    plt.title("Bin {}".format(bin))
     plt.show()
-
+    plt.pause(3)
     return matrix
-				
+    
 
 if __name__=='__main__':
-	instance = "../Datasets/dataset_A/A17"
-	defects = instance + "_defects.csv"
-	batch = instance + "_batch.csv"
-	
-	defects = pd.read_csv(defects, sep = ";")
-	batch = pd.read_csv(batch, sep = ";")
-	
-	nPlates = 100
-	widthPlates = 6000
-	heightPlates = 3210
-	minXX = 100
-	maxXX = 3500
-	minYY = 100
-	minWaste = 20
-	
-	
-	colors_alpha_cut = [(0, 0, 1),
-	    (0, 1, 0),
-	    (1, 0, 0),
-	    (1, 0, 1),
-	    (1, 1, 0),
-	    (0, 1, 1),
-	    (0, 1, .5)]
-	waste = (0, 0, 0)
+    instance = "../Datasets/dataset_A/A17"
+    defects = instance + "_defects.csv"
+    batch = instance + "_batch.csv"
+
+    defects = pd.read_csv(defects, sep = ";")
+    batch = pd.read_csv(batch, sep = ";")
     
-	# Convert batch into stacks
-	nStack = max(batch.STACK)
-	list_stacks = []
-	
-	for k in range(nStack + 1):
-	    list_stacks.append(list(batch.loc[batch["STACK"] == k].ITEM_ID))
-	    
-	solution = []
-	    
-	current_bin = 0
-	nodes_to_visit = [(1, idx, 0, 0, widthPlates, heightPlates) for idx in range(99, -1, -1)]
-	
-	
-	# First (temporary), we take an available item (and we don't even rotate it)
-	current_item = heads(list_stacks)[0]
-	
-	nodes_visited = []
-	# While all items are not cut
-	while len(heads(list_stacks)) > 0 and len(nodes_to_visit) > 0:
-	    current_node = nodes_to_visit.pop()
-	    nodes = cut(current_node, current_item)
-	    if nodes == None:
-	        nodes_visited.append(("W", current_node))
-	    else:
-	        if not(is_real_node(nodes[0])) and not (is_real_node(nodes[1])):
-	            remove_item(current_item, list_stacks)
-	            nodes_visited.append(("P", current_node))
-	            if len(heads(list_stacks)) > 0:
-	                current_item = heads(list_stacks)[0]
-	        else:
-	            for n in nodes:
-	                print(n)
-	                if is_real_node(n):
-	                    nodes_to_visit.append(n)
+    nPlates = 100
+    widthPlates = 6000
+    heightPlates = 3210
+    minXX = 100
+    maxXX = 3500
+    minYY = 100
+    minWaste = 20
+    
+    resolution = 50
+    
+    colors_alpha_cut = [(0, 0, 1),
+        (0, 1, 0),
+        (1, 0, 0),
+        (1, 0, 1),
+        (1, 1, 0),
+        (0, 1, 1),
+        (0, 1, .5)]
+    waste = (0, 0, 0)
+    
+    # Convert batch into stacks
+    nStack = max(batch.STACK)
+    list_stacks = []
+    
+    for k in range(nStack + 1):
+        list_stacks.append(list(batch.loc[batch["STACK"] == k].ITEM_ID))
+        
+    solution = []
+        
+    current_bin = 0
+    nodes_to_visit = [(1, idx, 0, 0, widthPlates, heightPlates) for idx in range(99, -1, -1)]
     
     
+    # First (temporary), we take an available item (and we don't even rotate it)
+    current_item = heads(list_stacks)[0]
     
+    nodes_visited = []
+    # While all items are not cut
+    while len(heads(list_stacks)) > 0 and len(nodes_to_visit) > 0:
+        current_node = nodes_to_visit.pop()
+        nodes = cut(current_node, current_item)
+        if nodes == None:
+            nodes_visited.append(("W", current_node))
+        else:
+            if not(is_real_node(nodes[0])) and not (is_real_node(nodes[1])):
+                remove_item(current_item, list_stacks)
+                nodes_visited.append(("P", current_node))
+                if len(heads(list_stacks)) > 0:
+                    current_item = heads(list_stacks)[0]
+            else:
+                for n in nodes:
+                    print(n)
+                    if is_real_node(n):
+                        nodes_to_visit.append(n)
     
-    
-    
-    
+    max_plate = current_node[1]
+    for k in range(max_plate + 1):
+        display_nodes_visited(nodes_visited, k)
     
     
     
@@ -223,6 +243,11 @@ if __name__=='__main__':
     
     
     
+    
+    
+    
+    
+
     
     
     
