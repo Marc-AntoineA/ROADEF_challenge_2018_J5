@@ -161,9 +161,6 @@ def display_node(node, matrix):
                 # draw border
                 matrix[x_r][y_r] = -5
                 
-    plt.imshow(matrix)
-    plt.show()
-    #plt.pause(1)
     return matrix
 
 def display_defects(matrix, bin = 0):
@@ -188,12 +185,12 @@ def display_nodes_visited(nodes_visited, bin = 0):
     for n in nodes_visited:
         if n[1][1] == bin:
             matrix = display_node(n, matrix)
-    display_nodes_visited(nodes_visited, k)
+            
     matrix = display_defects(matrix, bin)
+    plt.figure(bin)
     plt.imshow(matrix.T)
     plt.title("Bin {}".format(bin))
     plt.show()
-    plt.pause(3)
     return matrix
     
 
@@ -261,7 +258,7 @@ if __name__=='__main__':
     
     max_plate = current_node[1]
     #for k in range(max_plate + 1):
-     #   display_nodes_visited(nodes_visited, k)
+    #    display_nodes_visited(nodes_visited, k)
     
     
     
