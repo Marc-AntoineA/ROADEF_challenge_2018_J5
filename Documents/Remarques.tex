@@ -80,7 +80,7 @@
 \pagestyle{fancy}
 \fancyhead[L]{M. \bsc{Augé} et M. \bsc{Roux}}
 \fancyhead[C]{}
-\fancyhead[R]{DistribEauPti - Rapport}
+\fancyhead[R]{Challenge ROADEF}
 \renewcommand{\headrulewidth}{1pt}
 \fancyfoot[C]{\thepage}
 
@@ -88,13 +88,38 @@
 \setcounter{MaxMatrixCols}{20}
 \renewcommand{\footrulewidth}{1pt}
 
-\title{}
+\title{Challenge ROADEF}
 \date{\today}
 \author{}
 
 \begin{document}
 
 \tableofcontents
+
+\section{Étude bibliographique}
+    \section{A tabu search algorithm for large-scale guillotine
+    (un)constrained two-dimensional cutting problems\cite{alvarez2002tabu}}
+    \paragraph{Objectif de l'article :} Présenter différents algorithmes, constructifs ou non, ainsi que plusieurs heuristiques en vue de résoudre le TDC (expliqué après).
+
+    \paragraph{Problème considéré :} \textit{Two-dimensional cutting problem} = \textbf{une} grande feuille de papier et un ensemble de pièces \textbf{rectangulaires} à découper. Chaque pièce a une \textbf{valeur} et il s'agit de \textbf{maximiser} la valeur totale découpée. À la différence avec notre problème, il n'y a \textbf{ni défauts, ni contrainte de tailles, ni contraintes d'ordre}... Le problème est donc différent. De plus, les différentes pièces ont encore une fois des offres et des demandes différentes. Toutefois, on dispose des \textbf{contraintes guillotines} (notons que les pièces ne peuvent pas roter ici) (la rotation semble être une liberté très importante).
+
+    \paragraph{}Les TDC se classent en quatre catégories : 
+    \begin{enumerate}
+        \item \textit{The unconstrained unweighted version} (UU\_TDC) : la valeur d'une pièce est égale à sa surface. On cherche à maximiser la surface utilisée (ce que nous on veut, d'une certaine manière).
+        \item \textit{The unconstrained weighted version} (UW\_TDC): Chaque pièce a une certaine valeur, indépendante de sa surface (a priori). Pas ce qu'on veut.
+        \item \textit{The constrained unweighted version} (CU\_TDC): On contraint sur les quantités à produire de chaque pièce. Il s'agit encore plus de notre problème puis-ce qu'on impose ici de couper 1 fois chaque pièce.
+        \item \textit{The constrained weighted version}
+    \end{enumerate}
+
+    \begin{itemize}
+        \item Des algorithmes exacts existent pour des petites et moyennes instances. Pour les autres, il y a des heuristiques : l'une d'elle se base sur une recherche en profondeur d'abord suivie d'une \textit{hill climbing strategy} (algorithme DH)
+    \end{itemize}
+
+    \paragraph{A constructive heuristic algorithm} : L'idée est de considérer, pour chaque sous-rectangle à découper toutes les pièces possibles.
+    \begin{itemize}
+        \item 1. Pour une pièce placée dans le coin inférieur gauche, une guillotine va faire deux nouvelles pièces. On calcule pour chacune d'entre elle une borne supérieure de ce qu'on pourrait y mettre en résolvant un problème du sac-à-dos. L'idée étant de faire en sorte de pouvoir en mettre un maximum.
+        \item Une autre idée pour obtenir une autre borne sup (non comprise)
+    \end{itemize}
 
 \section{Remarques prélimininaires sur le sujet}
     \subsection{Définitions}
