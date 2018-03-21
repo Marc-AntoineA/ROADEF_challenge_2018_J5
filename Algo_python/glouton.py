@@ -59,11 +59,11 @@ def best_position(current_node, current_item, rotateItem=False):
                                      and (XX+W-x-w == 0 or XX+W-x-w > minXX)\
                                      and (y-YY == 0 or y-YY > minYY)\
                                      and (h > minYY)\
-                                     and (YY+H-y-h == 0 or XX+W-x-w > minYY)
+                                     and (YY+H-y-h == 0 or YY+H-y-h > minYY)
                 elif alpha_cut == 2:
                     minDimensionsAreOk = (y-YY == 0 or y-YY > minYY)\
                                      and (h > minYY)\
-                                     and (YY+H-y-h == 0 or XX+W-x-w > minYY)
+                                     and (YY+H-y-h == 0 or YY+H-y-h > minYY)
                 else:
                     minDimensionsAreOk = True
                 if minDimensionsAreOk:
