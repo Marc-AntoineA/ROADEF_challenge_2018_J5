@@ -257,8 +257,8 @@ if __name__=='__main__':
                         nodes_to_visit.append(n)
     
     max_plate = current_node[1]
-    #for k in range(max_plate + 1):
-    #    display_nodes_visited(nodes_visited, k)
+    for k in range(max_plate + 1):
+        display_nodes_visited(nodes_visited, k)
     
     
     
