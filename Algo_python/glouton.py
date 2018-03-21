@@ -5,6 +5,7 @@ import matplotlib.patches as patches
 import numpy as np
 import geometry
 
+
 def heads(list_stacks):
     """ Return all items we can cut """
     return [x[0] for x in list_stacks if len(x) > 0]
@@ -24,7 +25,7 @@ def areaIsFreeOfDefects(x, y, w, h, id_bin):
     return True
 
 
-def best_position(current_node, current_item):
+def best_position(current_node, current_item, rotateItem=False):
     """
     Input:
     current_node = (alpha_cut, id_bin, x_pos, y_pos, width, height) 
@@ -40,6 +41,9 @@ def best_position(current_node, current_item):
     """
     (alpha_cut, id_bin, XX, YY, W, H) = current_node
     [_, h, w, _, _] = list(batch.loc[current_item])
+    
+    if rotateItem:
+        h, w = w, h
     
     for x in range(XX, XX + W):
         for y in range(YY, YY + H):
@@ -62,10 +66,12 @@ def best_position(current_node, current_item):
                                      and (YY+H-y-h == 0 or XX+W-x-w > minYY)
                 else:
                     minDimensionsAreOk = True
-                if minDimensionsAreOk or True:
-                    return (True, x, y, 0)
-
-    return (False, 0, 0, 0)
+                if minDimensionsAreOk:
+                    return (True, rotateItem, x, y, 0)
+    if rotateItem:
+        return (False, rotateItem, 0, 0, 0)
+    else:
+        return best_position(current_node, current_item, True)
 
 def is_real_node(node):
     """
@@ -89,7 +95,9 @@ def cut(node, item):
     if alpha_cut > 3:
         return None
     
-    (feasible, x, y, score) = best_position(node, item)
+    (feasible, rotate, x, y, score) = best_position(node, item)
+    if rotate:
+        h, w = w, h
     if feasible:
         # An alpha-cut ?
         
@@ -180,7 +188,7 @@ def display_nodes_visited(nodes_visited, bin = 0):
     for n in nodes_visited:
         if n[1][1] == bin:
             matrix = display_node(n, matrix)
-    
+    display_nodes_visited(nodes_visited, k)
     matrix = display_defects(matrix, bin)
     plt.imshow(matrix.T)
     plt.title("Bin {}".format(bin))
@@ -252,8 +260,8 @@ if __name__=='__main__':
                         nodes_to_visit.append(n)
     
     max_plate = current_node[1]
-    for k in range(max_plate + 1):
-        display_nodes_visited(nodes_visited, k)
+    #for k in range(max_plate + 1):
+     #   display_nodes_visited(nodes_visited, k)
     
     
     
