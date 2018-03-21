@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -14,7 +15,7 @@ def remove_item(item, list_stacks):
         if len(list_stacks[k]) > 0 and item == list_stacks[k][0]:
             list_stacks[k].remove(list_stacks[k][0])
 
-def isAreaFreeOfDefects(x, y, w, h, id_bin):
+def areaIsFreeOfDefects(x, y, w, h, id_bin):
     list_defects = list(defects.loc[defects["PLATE_ID"] == id_bin].DEFECT_ID)
     for defect_id in list_defects:
         (_, _, xd, yd, wd, hd) = list(defects.loc[defect_id])
@@ -37,15 +38,32 @@ def best_position(current_node, current_item):
     * Constraints verified (soon)
     * The algorithm can rotate the item
     """
-    (_, id_bin, XX, YY, W, H) = current_node
+    (alpha_cut, id_bin, XX, YY, W, H) = current_node
     [_, h, w, _, _] = list(batch.loc[current_item])
     
     for x in range(XX, XX + W):
         for y in range(YY, YY + H):
             # Verifying constraints
             # Avoiding defects
-            if x + w <= XX + W and y + h <= YY + H and isAreaFreeOfDefects(x, y, w, h, id_bin):
-                return (True, x, y, 0)
+            if x + w <= XX + W\
+            and y + h <= YY + H\
+            and areaIsFreeOfDefects(x, y, w, h, id_bin):
+            
+                if alpha_cut == 1:
+                    minDimensionsAreOk = (x-XX == 0 or x-XX > minXX)\
+                                     and (w > minXX)\
+                                     and (XX+W-x-w == 0 or XX+W-x-w > minXX)\
+                                     and (y-YY == 0 or y-YY > minYY)\
+                                     and (h > minYY)\
+                                     and (YY+H-y-h == 0 or XX+W-x-w > minYY)
+                elif alpha_cut == 2:
+                    minDimensionsAreOk = (y-YY == 0 or y-YY > minYY)\
+                                     and (h > minYY)\
+                                     and (YY+H-y-h == 0 or XX+W-x-w > minYY)
+                else:
+                    minDimensionsAreOk = True
+                if minDimensionsAreOk or True:
+                    return (True, x, y, 0)
 
     return (False, 0, 0, 0)
 
@@ -65,10 +83,11 @@ def cut(node, item):
     Output:
     * nodes (max 3, 2 parallel cuts)
     * boolean : True if item cut
-    TODO: no limit on alpha-cut
     """
     (alpha_cut, id_bin, XX, YY, W, H) = node
     [_, h, w, _, _] = list(batch.loc[item])
+    if alpha_cut > 3:
+        return None
     
     (feasible, x, y, score) = best_position(node, item)
     if feasible:
@@ -76,8 +95,8 @@ def cut(node, item):
         
         if alpha_cut % 2 == 0: # first horizontal cut
             above = YY + H - y - h
-            bellow = y - YY
-            if above > 0 or bellow > 0: # we need a horizontal cut
+            below = y - YY
+            if above > 0 or below > 0: # we need a horizontal cut
                 # [(bottom, up, center)]
                 return [
                     (alpha_cut, id_bin, XX, YY, W, y - YY), 
@@ -235,7 +254,6 @@ if __name__=='__main__':
     max_plate = current_node[1]
     for k in range(max_plate + 1):
         display_nodes_visited(nodes_visited, k)
-    
     
     
     
