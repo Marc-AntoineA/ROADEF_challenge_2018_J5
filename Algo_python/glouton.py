@@ -67,7 +67,13 @@ def best_position(current_node, current_item, rotateItem=False):
                                          and (YY+H-y-h == 0 or YY+H-y-h > minYY)
                     else:
                         minDimensionsAreOk = True
-                    if minDimensionsAreOk:
+                    
+                    minWasteIsOk = (x-XX == 0 or x-XX > minWaste)\
+                               and (XX+W-x-w == 0 or XX+W-x-w > minWaste)\
+                               and (y-YY == 0 or y-YY > minWaste)\
+                               and (YY+H-y-h == 0 or YY+H-y-h > minWaste)                    
+                    
+                    if minDimensionsAreOk and minWasteIsOk:
                         return (True, rotateItem, x, y, 0)
                     else:
                         if not printed:
@@ -302,6 +308,8 @@ if __name__=='__main__':
     while len(nodes_to_visit) > 0:
         nodes_visited.append(nodes_to_visit.pop())
     print("done cutting")
+    max_plate = current_node[1]
+
                     
     #obj : passer de 
     #* node = (alpha_cut, id_bin, node_id, Type, XX, YY, W, H, Parent)
@@ -315,7 +323,7 @@ if __name__=='__main__':
     nodes_visited = sorted(nodes_visited, key=lambda x: x[2])
     print("identifying waste")
     solution = []
-    for i in range(len(nodes_visited)-1):
+    for i in range(len(nodes_visited)):
         node = nodes_visited[i]
         (alpha_cut, id_bin, node_id, Type, XX, YY, W, H, parent) = node
         hasChild = False
@@ -330,7 +338,11 @@ if __name__=='__main__':
             if hasChild:
                 solution.append((id_bin, node_id, XX, YY, W, H, -2, alpha_cut, parent))
             else:
-                solution.append((id_bin, node_id, XX, YY, W, H, -1, alpha_cut, parent))
+                if id_bin == max_plate and alpha_cut == 1 and XX + W == widthPlates:
+                    Type = -3 #residuel
+                else:
+                    Type = -1 #waste
+                solution.append((id_bin, node_id, XX, YY, W, H, Type, alpha_cut, parent))
     (alpha_cut, id_bin, node_id, Type, XX, YY, W, H, parent) = nodes_visited[-1]
     solution.append((id_bin, node_id, XX, YY, W, H, -3, alpha_cut, parent))
 
@@ -340,8 +352,7 @@ if __name__=='__main__':
                        columns=["PLATE_ID","NODE_ID","X","Y","WIDTH","HEIGHT","TYPE","CUT","PARENT"])
     df.to_csv("solutionA17Glouton.csv", sep = ";", index = False)
     
-    max_plate = current_node[1]
-    for k in range(max_plate + 1):
+    for k in range(max_plate+1):
         display_nodes_visited(solution, k)    
     
     print("finished")
