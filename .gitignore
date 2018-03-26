@@ -12,3 +12,4 @@ Code/CMakeFiles/
 Code/checker
 Code/Makefile
 Code/cmake_install.cmake
+Code/*.user
