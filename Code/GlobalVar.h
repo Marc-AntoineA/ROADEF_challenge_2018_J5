@@ -7,10 +7,17 @@
 #include <iostream>
 #include <fstream>
 
+#include "GlassStructures.h"
+
+extern GlassPlate *plate; // List of solution used plates.
+extern GlassNode *sol_items; // List of solution nodes.
+extern GlassStack *stacks; // List of batch stacks.
+extern GlassItem *items; // List of batch items.
+
 using namespace std;
 
 // Static Path to global_parameters, X_batch, X_defects and X_solution files
-#define PATH_TO_INSTANCES           "instances_checker\\"
+#define PATH_TO_INSTANCES           "C:/Users/Corentin/Documents/GitHub/ROADEF/checker/instances_checker/"
 
 // Plates number limit
 #define PLATES_NBR_LIMIT            100
@@ -54,13 +61,13 @@ using namespace std;
 #define DEFECTS_HEIGHT_COL          5
 
 // Optimization parameters file raws index
-#define OPT_PARAM_NPLATES_RAW             0
+#define OPT_PARAM_NPLATES_RAW            0
 #define OPT_PARAM_WIDTHPLATES_RAW        1
-#define OPT_PARAM_HEIGHTPLATES_RAW         2
-#define OPT_PARAM_MIN1CUT_RAW             3
-#define OPT_PARAM_MAX1CUT_RAW             4
-#define OPT_PARAM_MIN2CUT_RAW             5
-#define OPT_PARAM_MINWASTE_RAW       6
+#define OPT_PARAM_HEIGHTPLATES_RAW       2
+#define OPT_PARAM_MIN1CUT_RAW            3
+#define OPT_PARAM_MAX1CUT_RAW            4
+#define OPT_PARAM_MIN2CUT_RAW            5
+#define OPT_PARAM_MINWASTE_RAW           6
 
 /*---------------------------------------------------------------*/
 /*--------  Solution's possible errors mask and offset  --------*/
@@ -90,45 +97,45 @@ using namespace std;
 #define SEQUENCE_ERROR_MASK                 32
 #define SEQUENCE_ERROR_OFFSET               5
 
-unsigned int active_log = 1; // Once log file is generated this var will be cleared.
-ofstream log_file; // Reference to log file.
+extern unsigned int active_log; // Once log file is generated this var will be cleared.
+extern ofstream log_file; // Reference to log file.
 
-ofstream statistics_file; // Reference to statisticsLog file.
-bool opened_file = true; // Boolean to test if one of needed files (batch, solution, defects and optimization parameters) was not opened.
+extern ofstream statistics_file; // Reference to statisticsLog file.
+extern bool opened_file; // Boolean to test if one of needed files (batch, solution, defects and optimization parameters) was not opened.
 
-string file_idx; // To save used file index (Normal mode).
-string testPath; // To save path according to chosen test.
-string instance; // To save used file index (Test mode).
+extern string file_idx; // To save used file index (Normal mode).
+extern string testPath; // To save path according to chosen test.
+extern string instance; // To save used file index (Test mode).
 
-unsigned int s_idx = 0; // Solution index, used precise where to insert solution node in sol_items array.
-unsigned int plates_nbr = 0; // Save solution used plates number.
-unsigned int stack_nbr = 0; // Save batch stack number.
-unsigned int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
+extern unsigned int s_idx; // Solution index, used precise where to insert solution node in sol_items array.
+extern unsigned int plates_nbr; // Save solution used plates number.
+extern unsigned int stack_nbr; // Save batch stack number.
+extern unsigned int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
                                                   // plates_list[X][Y]:   X dimension contains plates Ids list
                                                   //                      Y dimension contains number of nodes of plate X
-unsigned int lines_nbr = 0; // csv file lines number.
-unsigned int node_nbr = 0; // Solution file nodes number.
-unsigned int useful_node = 0; // Solution useful nodes number (node not a branch or waste or residual).
-unsigned int branch_node = 0; // Solution branch nodes number
-unsigned int residual_node = 0; // Solution residual nodes number.
-unsigned int waste_node = 0; // Solution waste nodes number.
-unsigned int batch_items = 0; // Batch items number.
-unsigned int constraint_error = 0; // Success constraint, combination of solution's occured errors (refer to main.h to find errors list).
-unsigned int defects_nbr = 0; // Defects file defects number.
+extern unsigned int lines_nbr; // csv file lines number.
+extern unsigned int node_nbr; // Solution file nodes number.
+extern unsigned int useful_node; // Solution useful nodes number (node not a branch or waste or residual).
+extern unsigned int branch_node; // Solution branch nodes number
+extern unsigned int residual_node; // Solution residual nodes number.
+extern unsigned int waste_node; // Solution waste nodes number.
+extern unsigned int batch_items; // Batch items number.
+extern unsigned int constraint_error; // Success constraint, combination of solution's occured errors (refer to main.h to find errors list).
+extern unsigned int defects_nbr; // Defects file defects number.
 
-unsigned int total_waste = 0; // Sum of wasted area.
-unsigned int total_useful = 0; // Sum of used area.
+extern unsigned int total_waste; // Sum of wasted area.
+extern unsigned int total_useful; // Sum of used area.
 
-int max_cut_stage = 0; // Solution max used cut stage.
+extern int max_cut_stage; // Solution max used cut stage.
 
-unsigned int plate_nbr_limit = 0; // To save Optimization parameters plate number limit constraint.
-unsigned int plate_w = 0; // To save Optimization parameters plate's length constraint.
-unsigned int plate_h = 0; // To save Optimization parameters plate's width constraint.
-unsigned int min1Cut = 0; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
-unsigned int min2Cut = 0; // To save Optimization parameters cut 1 & 2 min2Cut constraint.
-unsigned int max1Cut = 0; // To save Optimization parameters cut 1 & 2 max1Cut  constraint.
-unsigned int waste_min = 0; // To save Optimization parameters cut 1 & 2 minWasteWidth constraint.
+extern unsigned int plate_nbr_limit; // To save Optimization parameters plate number limit constraint.
+extern unsigned int plate_w; // To save Optimization parameters plate's length constraint.
+extern unsigned int plate_h; // To save Optimization parameters plate's width constraint.
+extern unsigned int min1Cut; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
+extern unsigned int min2Cut; // To save Optimization parameters cut 1 & 2 min2Cut constraint.
+extern unsigned int max1Cut; // To save Optimization parameters cut 1 & 2 max1Cut  constraint.
+extern unsigned int waste_min; // To save Optimization parameters cut 1 & 2 minWasteWidth constraint.
 
-unsigned int success = 1;
+extern unsigned int success;
 
 #endif // GLOBALVAR_H
