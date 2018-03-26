@@ -8,8 +8,11 @@ Documents/Remarques.log
 Documents/Remarques.out
 Documents/Remarques.toc
 Documents/Remarques.synctex.gz
+
 Code/CMakeFiles/
-Code/checker
 Code/Makefile
+Code/CMakeCache.txt
 Code/cmake_install.cmake
 Code/*.user
+Code/*.cbp
+Code/*.exe
