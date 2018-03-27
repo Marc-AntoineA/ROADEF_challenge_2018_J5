@@ -8,15 +8,25 @@ add_executable(toukeute
     builddata.cpp
     Checker.cpp
     classinitialization.cpp
-    GlassStructures.cpp
     globalvar.cpp
     Parser.cpp
     results.cpp
     builddata.h
     Checker.h
     classinitialization.h
-    GlassStructures.h
     GlobalVar.h
     Parser.h
     results.h
+    glass_defect.h
+    glass_defect.cpp
+    glass_item.h
+    glass_item.cpp
+    glass_node.cpp
+    glass_node.h
+    glass_plate.h
+    glass_plate.cpp
+    glass_stack.h
+    glass_stack.cpp
+    algorithm.h
+    algorithm.cpp
     )

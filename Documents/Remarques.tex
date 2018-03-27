@@ -115,11 +115,37 @@
         \item Des algorithmes exacts existent pour des petites et moyennes instances. Pour les autres, il y a des heuristiques : l'une d'elle se base sur une recherche en profondeur d'abord suivie d'une \textit{hill climbing strategy} (algorithme DH)
     \end{itemize}
 
-    \paragraph{A constructive heuristic algorithm} : L'idée est de considérer, pour chaque sous-rectangle à découper toutes les pièces possibles.
+    \paragraph{A constructive heuristic algorithm} : L'idée est de considérer, pour chaque sous-rectangle à découper toutes les pièces possibles (ainsi que ses orientations) :\\
+     Pour une pièce placée dans le coin inférieur gauche, une guillotine va faire deux nouvelles pièces. On calcule pour chacune d'entre elle une borne supérieure de ce qu'on pourrait y mettre en résolvant un problème du sac-à-dos. L'idée étant de faire en sorte de pouvoir en mettre un maximum.\\ 
+    Utilisation de l'algorithme \textit{fast greedy algorithm} de Martello et Toth pour obtenir cette valeur (suffisamment décrit dans l'article).\\
+    L'autre borne sup. proposée dans l'article ne s'applique pas à notre problème puis-ce qu'on ne découpe pas plusieurs fois une pièce.\\
+    Cet algorithme revient à notre algorithme glouton.
+
+    \paragraph{A GRASP algorithm: } GRASP pour \textit{greedy adaptative search procedure} (greedy = glouton). À chaque itération de GRASP il y a une partie constructive et une procédure d'échange (recherche locale).\\
+    L'algorithme se structure comme tel :
+    \begin{enumerate}
+        \item On prend un rectangle courant (le plus petit ou le premier, pour vérifier la contrainte d'ordre dans notre cas).
+        \item Pour chaque pièce qui rentre on calcule un score intelligent (le max des bornes sup + la valeur de la pièce). Score max noté $B$.
+        \item On prend aléatoirement une pièce possible parmi toutes celles qui ont un score $\geq \delta.B$ où $\delta$ est un paramètre d'acceptation (=> on rajoute de l'aléa pour parcourir plus de solutions).
+        \item Ensuite, on fusionne les pièces déchets avec les pièces adjacentes dans l'optique de créer un grand rectangle qui puisse être redécoupé. Des pièces dites adjacentes sont des pièces qui ont un côté (obligatoirement entier ici) en commun c-à-d deux enfants d'un même papa.
+        \item On réapplique le glouton sur le rectangle fusionné. 
+    \end{enumerate}
+    \textbf{Attention :} Ça va être la grosse merde pour vérifier la contrainte d'ordre ce truc non ?
+
+    \paragraph{A tabu search algorithm} :
     \begin{itemize}
-        \item 1. Pour une pièce placée dans le coin inférieur gauche, une guillotine va faire deux nouvelles pièces. On calcule pour chacune d'entre elle une borne supérieure de ce qu'on pourrait y mettre en résolvant un problème du sac-à-dos. L'idée étant de faire en sorte de pouvoir en mettre un maximum.
-        \item Une autre idée pour obtenir une autre borne sup (non comprise)
-    \end{itemize}
+        \item Un \textit{move} qui doit vérifier la contrainte guillotine. Ce que eux décrivent : étant donné deux rectangles qui partagent un morceau de côté en commun et considérent le plus petit rectangle qui les contienne tous les deux. Ils déterminent ensuite le plus petit rectangle dont la guillotine cut correspond. Ils vident alors ce rectangle et le 
+        redécoupent avec l'algorithme GRASP.
+        \item La \textit{sélection du move} : à chaque itération ils selectionnent uniformément un rectangle (pièces et déchets). Ensuite, pour chaque rectangle voisin ils fusionent pour obtenir un plus grand rectangle (\textit{le move}). On ne fait rien s'il n'y pas de waste sur cette partie. 
+        \item On apliquant le move pour chacun de ses voisins, on obtient plusieurs cutting patterns différents. On sélectionne celui qui améliore la fonction objectif.
+        \item La \textit{tabu list} : pour chaque move, ils conservent dans la liste les coordonnées et dimensions des rectangles coupés à nouveau ainsi que le type de pièce dans le coin inférieur gauche.\\
+        Si on améliore pas la solution courante, on change la longueur de la liste aléatoirement.
+        \item La \textit{basic tabu search procedure} : Description générale de l'algorithme.
+    \end{itemize} 
+    
+    \paragraph{Remarques} : Le voisinage peut-être très général et conduire à refaire entièrement la répartition au sein d'un bin. Une amélioration dans la fonction de décision est de considérer les $n$ meilleures solutions courantes et de changer la valeur des pièces en fonction de leurs apparitions dans ces solutions : plus une pièce apparaît souvent dans les meilleurs solutions, plus on a envie de la garder.
+
+    \paragraph{Path relinking :} Étant donné deux solutions, on peut passer de l'une à l'autre en effectuant des échanges puis en parcourant ces chemins on arrive à faire de grandes choses...
 
 \section{Remarques prélimininaires sur le sujet}
     \subsection{Définitions}
