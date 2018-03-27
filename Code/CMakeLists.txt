@@ -25,4 +25,6 @@ add_executable(toukeute
     glass_plate.cpp
     glass_stack.h
     glass_stack.cpp
+    algorithm.h
+    algorithm.cpp
     )
