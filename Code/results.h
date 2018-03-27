@@ -1,7 +1,7 @@
 #ifndef RESULTS_H
 #define RESULTS_H
 
-#include "GlobalVar.h"
+#include "global_var.h"
 
 /// Display Plates Area Usage
 void displayPlatesAreaUsage (void);

@@ -1,4 +1,4 @@
-#include "Checker.h"
+#include "checker.h"
 
 int checker()
 {
@@ -7,16 +7,17 @@ int checker()
     int not_exit = 1, choice = 0;
     cout << endl << "\t------------------- Optimization Checker -------------------" << endl << endl;
     log_file << endl << "\t------------------- Optimization Checker -------------------" << endl;
+    cout << "Looking in folder "<< PATH_TO_INSTANCES << endl;
 
     cout << "\tPlease enter your USED BATCH file Index: ";
     cin >> file_idx;
     batchPath =     PATH_TO_INSTANCES + file_idx + "_batch.csv";
     solutionPath =  PATH_TO_INSTANCES + file_idx + "_solution.csv";
     defectsPath =   PATH_TO_INSTANCES + file_idx + "_defects.csv";
-    optParamsPath = PATH_TO_INSTANCES "global_param.csv";
+    optParamsPath = PATH_TO_INSTANCES + string("global_param.csv");
 
     /// If csv files exist and files index is equal.
-    string log_name = "logs\\" + file_idx + "_log.txt";
+    string log_name = "logs/" + file_idx + "_log.txt";
     log_file.open(log_name.c_str());
     cout << endl << "\t\t----------- Start files parsing -----------" << endl;
     log_file << endl << "\t\t----------- Start files parsing -----------" << endl;

@@ -1,28 +1,28 @@
 cmake_minimum_required(VERSION 2.6)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11")
-
 project(ROADEF)
+
 add_executable(toukeute
     main.cpp
-    builddata.cpp
-    Checker.cpp
-    classinitialization.cpp
-    globalvar.cpp
-    Parser.cpp
-    results.cpp
-    builddata.h
-    Checker.h
-    classinitialization.h
-    GlobalVar.h
-    Parser.h
+    global_var.h
+    build_data.h
+    build_data.cpp
+    checker.h
+    checker.cpp
+    class_initialization.h
+    class_initialization.cpp
+    global_var.cpp
+    parser.h
+    parser.cpp
     results.h
+    results.cpp
     glass_defect.h
     glass_defect.cpp
     glass_item.h
     glass_item.cpp
-    glass_node.cpp
     glass_node.h
+    glass_node.cpp
     glass_plate.h
     glass_plate.cpp
     glass_stack.h

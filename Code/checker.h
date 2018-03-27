@@ -15,9 +15,9 @@
  *  - Classes instantiation functions.
 **/
 
-#include "GlobalVar.h"
+#include "global_var.h"
 
-#include "Parser.h"
+#include "parser.h"
 #include "results.h"
 
 ///Main Function

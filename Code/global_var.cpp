@@ -1,4 +1,4 @@
-#include "GlobalVar.h"
+#include "global_var.h"
 
 GlassPlate *plate;
 GlassNode *sol_items;

@@ -1,10 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "GlobalVar.h"
+#include "global_var.h"
 
-#include "classinitialization.h"
-#include "builddata.h"
+#include "class_initialization.h"
+#include "build_data.h"
 
 /// Optimization Parameters file Parser
 void parseOptimizationParams (string path);

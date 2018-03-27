@@ -1,5 +1,5 @@
-#ifndef GLOBALVAR_H
-#define GLOBALVAR_H
+#ifndef GLOBAL_VAR_H
+#define GLOBAL_VAR_H
 
 #include <stdint-gcc.h>
 #include <cstdlib>
@@ -7,7 +7,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "GlassStructures.h"
+#include "glass_plate.h"
+#include "glass_node.h"
+#include "glass_stack.h"
+#include "glass_item.h"
 
 extern GlassPlate *plate; // List of solution used plates.
 extern GlassNode *sol_items; // List of solution nodes.
@@ -17,7 +20,7 @@ extern GlassItem *items; // List of batch items.
 using namespace std;
 
 // Static Path to global_parameters, X_batch, X_defects and X_solution files
-#define PATH_TO_INSTANCES           "C:/Users/Corentin/Documents/GitHub/ROADEF/checker/instances_checker/"
+#define PATH_TO_INSTANCES           "../checker/instances_checker/glouton_results/"
 
 // Plates number limit
 #define PLATES_NBR_LIMIT            100

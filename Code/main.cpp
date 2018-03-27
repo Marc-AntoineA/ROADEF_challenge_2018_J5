@@ -1,5 +1,5 @@
-#include "GlobalVar.h"
-#include "Checker.h"
+#include "global_var.h"
+#include "checker.h"
 
 int main (void)
 {

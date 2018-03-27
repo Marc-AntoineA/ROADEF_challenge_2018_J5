@@ -1,7 +1,7 @@
-#ifndef CLASSINITIALIZATION_H
-#define CLASSINITIALIZATION_H
+#ifndef CLASS_INITIALIZATION_H
+#define CLASS_INITIALIZATION_H
 
-#include "GlobalVar.h"
+#include "global_var.h"
 
 /// Create Plate Instance
 void createPlate (string *token, int p);

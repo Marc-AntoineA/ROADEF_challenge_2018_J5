@@ -1,7 +1,7 @@
 #ifndef BUILDDATA_H
 #define BUILDDATA_H
 
-#include "GlobalVar.h"
+#include "global_var.h"
 
 /// Data Structure Builder
 void buildDataStructure (GlassNode *node);
