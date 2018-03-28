@@ -395,14 +395,13 @@ void parseSolution(string path)
  * This function parse Defects csv file.
  * path: input / path to Defects file.
 **/
-/*
-void parseDefects(string path)
+vector<GlassPlate> parseDefects(string path)
 {
-    GlassDefect defect;
-    unsigned int plate_defect [plates_nbr][2];
-    unsigned int i, k, s = 0, defects_on_used_plats = 0;
+    unsigned int i, k, s = 0;
+    unsigned int defects_nbr = 0;
     string token[DEFECTS_COL_LENGTH], temp;
     string value;
+
     ifstream filess(path.c_str());
     if(!filess.is_open())
     {
@@ -411,68 +410,44 @@ void parseDefects(string path)
         log_file << endl << "\t--- Unable to Open Defects file / file not found ---" << endl << "\tDefects file path: " << path << endl;
         cout <<     "\t--- Defects file not parsed ---" << endl;
         log_file << "\t--- Defects file not parsed ---" << endl;
-        return;
+        return vector<GlassPlate>(0);
     }
     cout << endl << "\t--- Parsing Defects file ---" << endl << "\tDefects file path: " << path << endl;
     log_file << endl << "\t--- Parsing Defects file ---" << endl << "\tDefects file path: " << path << endl;
-    // Skip first line.
-    for(i = 0; i < plates_nbr; i++)
-        plate_defect[i][1] = 0;
-    getline(filess, value, '\n');
-    // Parse defects file.
-    while(filess.good())
-    {
-        getline(filess, value, '\n');
-        temp = value.substr(0, value.find(';'));
-        if(temp.size())
-        {
-            defects_nbr++;
-            temp = value.erase(0, temp.size()+1);
-            temp = temp.substr(0, value.find(';'));
-            if(atoi(temp.c_str()) < plates_nbr)
-                plate_defect[atoi(temp.c_str())][1]++;
-        }
+
+    vector<GlassPlate> plates(PLATES_NBR_LIMIT);
+    for(k = 0; k < plates.size(); k++){
+        plates[k].Setplate_id(k);
+        plates[k].Setwidth(plate_w);
+        plates[k].Setheight(plate_h);
     }
-    // Allocate defects array to each used plate.
-    for(i = 0; i < plates_nbr; i++)
-    {
-        plate[i].defect = new GlassDefect[plate_defect[i][1]];
-        // Compute defects on used plates.
-        defects_on_used_plats += plate_defect[i][1];
-    }
-    cout <<     "\tDefects: " << defects_nbr << endl << "\tDefects on used plates: " << defects_on_used_plats << endl;
-    log_file << "\tDefects: " << defects_nbr << endl << "\tDefects on used plates: " << defects_on_used_plats << endl;
-    filess.clear();
-    filess.seekg(0, filess.beg);
+
+
+    // Skip first line.   
     getline(filess, value, '\n');
-    while(filess.good())
-    {
+    while(filess.good()){ // tant qu'il reste des lignes dans le parser
+
         getline(filess, value, '\n');
         // Loop on value string to split defects column tokens.
-        for(i = 0; i < value.size();)
-        {
-            for(k = i; k < value.size(); k++)
-            {
-                if(value[k] == ';')
-                {
+        for(i = 0; i < value.size();){
+            for(k = i; k < value.size(); k++){
+                
+                if(value[k] == ';'){
                     i = k + 1;
                     s =(s+1)%6;
                     break;
-                }
-                else if(k ==(value.size()-1) &&(s == 5))
-                {
+                }else if(k ==(value.size()-1) &&(s == 5)){
+
                     token[s].append(value, k, 1);
                     i = k+1;
                     break;
-                }
-                else
-                {
+                }else{
                     token[s].append(value, k, 1);
                 }
             }
         }
-        if(token[DEFECTS_DEFECT_ID_COL].size() &&(atoi(token[DEFECTS_PLATE_ID_COL].c_str()) < plates_nbr))
-        {
+        if(token[DEFECTS_DEFECT_ID_COL].size() &&(atoi(token[DEFECTS_PLATE_ID_COL].c_str()) < PLATES_NBR_LIMIT)){
+            defects_nbr ++;
             // Create defect with parsed parameters.
             GlassDefect d(atoi(token[DEFECTS_DEFECT_ID_COL].c_str()),
                            atoi(token[DEFECTS_PLATE_ID_COL].c_str()),
@@ -481,19 +456,25 @@ void parseDefects(string path)
                            atoi(token[DEFECTS_WIDTH_COL].c_str()),
                            atoi(token[DEFECTS_HEIGHT_COL].c_str()));
             // Add defect to respective plate.
-            plate[atoi(token[DEFECTS_PLATE_ID_COL].c_str())].Setdefect(d);
-        }
-        else
-        {
+            plates[atoi(token[DEFECTS_PLATE_ID_COL].c_str())].Setdefect(d);
+        }else{
+            cerr << "Defect in a plate out of range" << endl;
             break;
         }
-        for(k = 0; k < DEFECTS_COL_LENGTH; k++)
-        {
+
+        for(k = 0; k < DEFECTS_COL_LENGTH; k++){
+
             token[k].clear();
         }
         s = 0;
     }
+    cout << "\tPlates : " << PLATES_NBR_LIMIT << endl;
+    log_file << "\tPlates : " << PLATES_NBR_LIMIT << endl;
+    cout <<     "\tDefects: " << defects_nbr << endl;
+    log_file << "\tDefects: " << defects_nbr << endl;
     filess.close();
     cout << "\t--- Defects file parsed successfully ---" << endl << endl;
     log_file << "\t--- Defects file parsed successfully ---" << endl << endl;
-}*/
+
+    return plates;
+}

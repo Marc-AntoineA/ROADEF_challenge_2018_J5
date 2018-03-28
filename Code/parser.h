@@ -19,6 +19,6 @@ std::vector<GlassStack> parseBatch(std::string path);
 void parseSolution(string path);
 
 /// Defects file Parser
-void parseDefects(string path);
+std::vector<GlassPlate> parseDefects(std::string path);
 
 #endif // PARSER_H

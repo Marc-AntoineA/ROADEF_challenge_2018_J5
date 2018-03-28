@@ -22,3 +22,13 @@ GlassDefect::~GlassDefect()
 {
     //dtor
 }
+
+std::ostream& operator<<(std::ostream& os, const GlassDefect& defect){
+    os << "Id " << defect.Getdefect_id();
+    os << "\tPlate " << defect.Getplate_id();
+    os << "\tW " << defect.Getwidth();
+    os << "\tH " << defect.Getheight();
+    os << "\tx " << defect.Getpos_x();
+    os << "\ty " << defect.Getpos_y();
+    return os;
+}

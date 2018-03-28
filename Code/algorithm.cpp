@@ -7,12 +7,12 @@ using namespace std;
 
 
 Algorithm::Algorithm(string instance){
-
-    string batch_name = instance + "_batch.csv";
-    cout << batch_name << endl;
-    stacks = parseBatch(batch_name);
-    cout << stacks.size() << endl;
-    cout << stacks[2].Getitem(4) << endl;
+   
+    name_instance = instance;
+    stacks = parseBatch(instance + "_batch.csv");
+    plates = parseDefects(instance + "_defects.csv");
+    cout << plates[0] << endl;
+    cout << plates[97] << endl;
 }
 
 

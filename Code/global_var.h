@@ -117,7 +117,7 @@ extern unsigned int residual_node; // Solution residual nodes number.
 extern unsigned int waste_node; // Solution waste nodes number.
 extern unsigned int batch_items; // Batch items number.
 extern unsigned int constraint_error; // Success constraint, combination of solution's occured errors (refer to main.h to find errors list).
-extern unsigned int defects_nbr; // Defects file defects number.
+//extern unsigned int defects_nbr; // Defects file defects number.
 
 extern unsigned int total_waste; // Sum of wasted area.
 extern unsigned int total_useful; // Sum of used area.
@@ -125,7 +125,7 @@ extern unsigned int total_useful; // Sum of used area.
 extern int max_cut_stage; // Solution max used cut stage.
 
 extern unsigned int plate_nbr_limit; // To save Optimization parameters plate number limit constraint.
-extern unsigned int plate_w; // To save Optimization parameters plate's length constraint.
+extern unsigned plate_w; // To save Optimization parameters plate's length constraint.
 extern unsigned int plate_h; // To save Optimization parameters plate's width constraint.
 extern unsigned int min1Cut; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
 extern unsigned int min2Cut; // To save Optimization parameters cut 1 & 2 min2Cut constraint.

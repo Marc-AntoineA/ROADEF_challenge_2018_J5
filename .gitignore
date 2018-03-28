@@ -16,3 +16,9 @@ Code/cmake_install.cmake
 Code/*.user
 Code/*.cbp
 Code/*.exe
+Code/toukeute
+
+Algo_python/__pycache__/
+
+Datasets/dataset_A/*.~lock.*
+checker/instances_checker/*

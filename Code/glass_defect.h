@@ -5,18 +5,21 @@
 /* This class is created
  * to model a defect instance with its all attributes
 **/
+
+#include <iostream>
+
 class GlassDefect
 {
     public:
         GlassDefect();
         GlassDefect(unsigned int id, unsigned int pid, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
         virtual ~GlassDefect();
-        unsigned int Getdefect_id() { return defect_id; }
-        unsigned int Getplate_id() { return plate_id; }
-        unsigned int Getpos_x() { return pos_x; }
-        unsigned int Getpos_y() { return pos_y; }
-        unsigned int Getwidth() { return width; }
-        unsigned int Getheight() { return height; }
+        unsigned int Getdefect_id() const { return defect_id; }
+        unsigned int Getplate_id() const { return plate_id; }
+        unsigned int Getpos_x() const { return pos_x; }
+        unsigned int Getpos_y() const { return pos_y; }
+        unsigned int Getwidth() const { return width; }
+        unsigned int Getheight() const { return height; }
 
         void Setdefect_id(unsigned int val) { defect_id = val; }
         void Setplate_id(unsigned int val) { plate_id = val; }
@@ -33,3 +36,5 @@ class GlassDefect
         unsigned int width; // Defect's width.
         unsigned int height; // Defect's height.
 };
+
+std::ostream& operator<<(std::ostream& os, const GlassDefect& defect);

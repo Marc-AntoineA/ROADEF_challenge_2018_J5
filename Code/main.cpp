@@ -3,5 +3,5 @@
 
 int main(void)
 {
-    Algorithm A("../Datasets/dataset_A/A16");
+    Algorithm A("../Datasets/dataset_A/A6");
 }
