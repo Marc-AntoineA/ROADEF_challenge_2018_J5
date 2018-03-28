@@ -32,9 +32,9 @@ int max_cut_stage = 0;
 unsigned int plate_nbr_limit = 0;
 unsigned int plate_w = 6000;
 unsigned int plate_h = 3210;
-unsigned int min1Cut = 0;
-unsigned int min2Cut = 0;
-unsigned int max1Cut = 0;
-unsigned int waste_min = 0;
+unsigned int min1Cut = 100;
+unsigned int min2Cut = 100;
+unsigned int max1Cut = 3500;
+unsigned int waste_min = 20;
 
 unsigned int success = 1;

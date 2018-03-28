@@ -29,4 +29,32 @@ add_executable(toukeute
     glass_stack.cpp
     algorithm.h
     algorithm.cpp
-    )
+)
+
+add_executable(tests
+    tests.cpp
+    #build_data.h
+    #build_data.cpp
+    #checker.h
+    #checker.cpp
+    class_initialization.h
+    class_initialization.cpp
+    global_var.h
+    global_var.cpp
+    parser.h
+    parser.cpp
+    #results.h
+    #results.cpp
+    glass_defect.h
+    glass_defect.cpp
+    glass_item.h
+    glass_item.cpp
+    glass_node.h
+    glass_node.cpp
+    glass_plate.h
+    glass_plate.cpp
+    glass_stack.h
+    glass_stack.cpp
+    algorithm.h
+    algorithm.cpp
+)

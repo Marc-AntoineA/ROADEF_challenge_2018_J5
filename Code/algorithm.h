@@ -44,10 +44,12 @@ class Algorithm{
          // met à jour les attributs de Algorithm avec un algorithme glouton
         void glouton(method m = basic);
 
-         // Renvoie la meilleure position en bas à gauche pour une piece (variables par références x et y)
+        // Renvoie la meilleure position en bas à gauche pour une piece (variables par références x et y)
         // et une orientation (roteted == true si on regarde la version pivotée de pi/2)
         // les contraintes. False si aucune solution possible
         bool position_defects(const GlassNode& node, const GlassItem& item, bool rotated, int& x, int& y);
+        bool intersect(const int& x, const int& y, const int& w, const int& h, const GlassDefect& defect);
+
 
         // Calcule un score selon un critere (parametre avec l'enumerate method - voir global_var.h)
         float score(const GlassNode& node, const GlassItem& item, bool rotated, const int& x, const int y,  method m = basic);
@@ -57,6 +59,12 @@ class Algorithm{
 
         // Coupe la piece la plus appropriée selon la decision
         void cut(GlassItem* items, GlassNode& node);
+
+
+        std::vector<GlassStack> Getstacks() const { return stacks; }
+        std::vector<GlassPlate> Getplates() const { return plates; }
+        std::vector<GlassItem> Getitems() const { return items; }
+        std::vector<GlassNode> Getsol() const { return sol; }
 
     private:
         // Parametres du probleme

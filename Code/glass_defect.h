@@ -17,7 +17,9 @@ class GlassDefect
         unsigned int Getdefect_id() const { return defect_id; }
         unsigned int Getplate_id() const { return plate_id; }
         unsigned int Getpos_x() const { return pos_x; }
+        unsigned int Getpos_xSup() const { return pos_x + width; } // x max (attention, non inclus)
         unsigned int Getpos_y() const { return pos_y; }
+        unsigned int Getpos_ySup() const { return pos_y + height; }
         unsigned int Getwidth() const { return width; }
         unsigned int Getheight() const { return height; }
 

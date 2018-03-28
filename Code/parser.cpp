@@ -458,7 +458,6 @@ vector<GlassPlate> parseDefects(string path)
             // Add defect to respective plate.
             plates[atoi(token[DEFECTS_PLATE_ID_COL].c_str())].Setdefect(d);
         }else{
-            cerr << "Defect in a plate out of range" << endl;
             break;
         }
 

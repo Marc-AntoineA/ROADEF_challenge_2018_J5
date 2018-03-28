@@ -19,6 +19,14 @@ const string LOGFILE = "/results.csv";
 #define PLATES_NBR_LIMIT            100
 
 /*---------------------------------------------------------------*/
+/*-------------------GLASS_NODE and GLASS_PLATE------------------*/
+/*---------------------------------------------------------------*/
+
+#define WASTE -1
+#define BRANCH -2
+#define RESIDUAL -3
+
+/*---------------------------------------------------------------*/
 /*-------------------  csv files configuration ------------------*/
 /*---------------------------------------------------------------*/
 
@@ -106,7 +114,7 @@ extern string instance; // To save used file index (Test mode).
 extern unsigned int s_idx; // Solution index, used precise where to insert solution node in sol_items array.
 extern unsigned int plates_nbr; // Save solution used plates number.
 extern unsigned int stack_nbr; // Save batch stack number.
-extern unsigned int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
+//extern unsigned int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
                                                   // plates_list[X][Y]:   X dimension contains plates Ids list
                                                   //                      Y dimension contains number of nodes of plate X
 extern unsigned int lines_nbr; // csv file lines number.

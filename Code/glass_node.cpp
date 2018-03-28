@@ -2,6 +2,8 @@
 
 /////GlassNode/////
 
+using namespace std;
+
 GlassNode::GlassNode()
 {
     plate_id = 0;
@@ -21,3 +23,8 @@ GlassNode::~GlassNode()
     //dtor
 }
 
+// à compléter
+ostream& operator<<(ostream& os, const GlassNode& node){
+    os << "Id " << node.Getplate_id() << "\t H " << node.Getheight() << "\t W " << node.Getwidth() << endl;
+    return os;
+}

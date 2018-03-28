@@ -12,8 +12,8 @@ class GlassItem
         GlassItem();
         virtual ~GlassItem();
         int Getitem_id() const { return item_id; }
-        unsigned int Getitem_w() const { return item_w; }
-        unsigned int Getitem_h() const { return item_h; }
+        unsigned int Getitem_w(bool rotated = false) const { if(rotated){return item_h;} else {return item_w;} }
+        unsigned int Getitem_h(bool rotated = false) const { if(rotated){return item_w;} else {return item_h;} }
         unsigned int Getitem_stack() const { return item_stack; }
         unsigned int Getitem_seq() const { return item_seq; }
 

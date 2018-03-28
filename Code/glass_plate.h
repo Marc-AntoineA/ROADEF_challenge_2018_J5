@@ -29,6 +29,7 @@ class GlassPlate
         unsigned int Getuseful() const { return useful; }
         GlassNode Getsuccessor(unsigned int index) const { return successors[index]; }
         GlassDefect Getdefect(unsigned int index) const { return defects[index]; }
+        std::vector<GlassDefect>* Getdefects() { return &defects; }
         unsigned int Getsuccessor_nbr() const { return successor_nbr; }
         unsigned int Getdefect_nbr() const { return defect_nbr; }
         GlassNode Getresidual() const { return residual; }
