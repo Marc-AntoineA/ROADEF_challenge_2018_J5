@@ -20,6 +20,11 @@
 #include "parser.h"
 #include "results.h"
 
+#include "glass_item.h"
+#include "glass_stack.h"
+GlassItem* items;
+GlassStack* stacks;
+
 ///Main Function
 int checker();
 

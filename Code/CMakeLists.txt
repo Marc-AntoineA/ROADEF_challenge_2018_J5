@@ -5,18 +5,18 @@ project(ROADEF)
 
 add_executable(toukeute
     main.cpp
-    global_var.h
-    build_data.h
-    build_data.cpp
-    checker.h
-    checker.cpp
+    #build_data.h
+    #build_data.cpp
+    #checker.h
+    #checker.cpp
     class_initialization.h
     class_initialization.cpp
+    global_var.h
     global_var.cpp
     parser.h
     parser.cpp
-    results.h
-    results.cpp
+    #results.h
+    #results.cpp
     glass_defect.h
     glass_defect.cpp
     glass_item.h

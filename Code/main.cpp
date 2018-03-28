@@ -1,7 +1,7 @@
 #include "global_var.h"
-#include "checker.h"
+#include "algorithm.h"
 
-int main (void)
+int main(void)
 {
-    checker();
+    Algorithm A("../Datasets/dataset_A/A16");
 }

@@ -8,6 +8,7 @@
 /* This class is created
  * to model a solution used plate instance with its all attributes
 **/
+
 class GlassPlate
 {
     public:
@@ -44,6 +45,7 @@ class GlassPlate
         void Setsuccessor (GlassNode c) { successor[successor_nbr] = c; successor_nbr++; }
         void Setdefect (GlassDefect c) { defect[defect_nbr] = c; defect_nbr++; }
         void Setresidual (GlassNode r) { residual = r; }
+
     public:
         GlassNode *successor; // Successors list.
         GlassNode residual; // Residual node (only if last used plate).

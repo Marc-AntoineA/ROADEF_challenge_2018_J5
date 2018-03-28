@@ -1,10 +1,5 @@
 #include "global_var.h"
 
-GlassPlate *plate;
-GlassNode *sol_items;
-GlassStack *stacks;
-GlassItem *items;
-
 unsigned int active_log=1;
 ofstream log_file;
 ofstream statistics_file;

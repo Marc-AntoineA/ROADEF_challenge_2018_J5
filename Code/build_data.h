@@ -3,6 +3,9 @@
 
 #include "global_var.h"
 
+extern GlassNode* sol_items;
+extern GlassPlate* plate;
+
 /// Data Structure Builder
 void buildDataStructure (GlassNode *node);
 

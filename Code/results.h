@@ -2,6 +2,7 @@
 #define RESULTS_H
 
 #include "global_var.h"
+#include "glass_plate.h"
 
 /// Display Plates Area Usage
 void displayPlatesAreaUsage (void);

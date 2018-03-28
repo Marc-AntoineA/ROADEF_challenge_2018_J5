@@ -1,5 +1,4 @@
-#ifndef GLOBAL_VAR_H
-#define GLOBAL_VAR_H
+#pragma once
 
 #include <stdint-gcc.h>
 #include <cstdlib>
@@ -7,17 +6,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "glass_plate.h"
-#include "glass_node.h"
-#include "glass_stack.h"
-#include "glass_item.h"
-
-extern GlassPlate *plate; // List of solution used plates.
-extern GlassNode *sol_items; // List of solution nodes.
-extern GlassStack *stacks; // List of batch stacks.
-extern GlassItem *items; // List of batch items.
-
 using namespace std;
+
+enum method{ basic };
+
+const string LOGFILE = "/results.csv";
 
 // Static Path to global_parameters, X_batch, X_defects and X_solution files
 #define PATH_TO_INSTANCES           "../checker/instances_checker/glouton_results/"
@@ -141,4 +134,3 @@ extern unsigned int waste_min; // To save Optimization parameters cut 1 & 2 minW
 
 extern unsigned int success;
 
-#endif // GLOBALVAR_H

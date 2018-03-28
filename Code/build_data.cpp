@@ -9,12 +9,13 @@
  * to build the first level of the tree structure.
  * node: input / all solution nodes as a GlassNode array.
 **/
+
 void buildDataStructure (GlassNode *node)
 {
     unsigned int i, j, index = 0;
     int waste = 0.0, useful = 0.0;
     unsigned int c_nbr; // maintains plate[i] nodes number.
-    sol_items = new GlassNode[useful_node];
+    //sol_items = new GlassNode[useful_node];
     // Loop on plates list.
     for (i = 0; i < plates_nbr; i++)
     {

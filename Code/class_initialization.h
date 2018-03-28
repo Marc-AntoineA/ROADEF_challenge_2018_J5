@@ -1,15 +1,18 @@
-#ifndef CLASS_INITIALIZATION_H
-#define CLASS_INITIALIZATION_H
+#pragma once
 
 #include "global_var.h"
+#include <vector>
+
+#include "glass_item.h"
+#include "glass_plate.h"
+#include "glass_node.h"
 
 /// Create Plate Instance
-void createPlate (string *token, int p);
+void createPlate(string *token, int p);
 
 /// Create Node Instance
-void createNode (GlassNode *node, string *token, int p);
+void createNode(std::vector<GlassNode> nodes, string *token, int n);
 
 /// Create Item Instance
-void createItem (GlassItem *items, string *token, int p);
+void createItem(std::vector<GlassItem> items, string *token, int p);
 
-#endif // CLASSINITIALIZATION_H
