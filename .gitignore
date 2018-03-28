@@ -17,6 +17,7 @@ Code/*.user
 Code/*.cbp
 Code/*.exe
 Code/toukeute
+Code/tests
 
 Algo_python/__pycache__/
 
