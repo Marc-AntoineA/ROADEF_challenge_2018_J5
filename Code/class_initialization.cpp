@@ -6,6 +6,7 @@
 #include "glass_plate.h"
 #include "vector"
 #include "string"
+#include <iostream>
 
 /* ==================================================================================== */
 /*              Different Class instantiation and initialization functions              */
@@ -53,7 +54,7 @@ void createPlate(vector<GlassPlate> plates, string *token, int p)
  * token: input / string array contains node parameters.
  * n: input / index at node array
 **/
-void createNode(vector<GlassNode> nodes, string *token, int n)
+void createNode(vector<GlassNode>& nodes, string *token, int n)
 {
     nodes[n].Setplate_id(atoi(token[SOLUTION_PLATE_ID_COL].c_str()));
     nodes[n].Setnode_id(atoi(token[SOLUTION_NODE_ID_COL].c_str()));
@@ -73,7 +74,7 @@ void createNode(vector<GlassNode> nodes, string *token, int n)
  * to build the first level of the tree structure.
  * node: input / node array.
 **/
-void createItem(vector<GlassItem> items, string *token, int p)
+void createItem(vector<GlassItem>& items, string *token, int p)
 {
     items[p].Setitem_id(atoi(token[BATCH_ITEM_ID_COL].c_str()));
     items[p].Setitem_h(atoi(token[BATCH_LENGTH_ITEM_COL].c_str()));

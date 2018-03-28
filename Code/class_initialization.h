@@ -11,8 +11,8 @@
 void createPlate(string *token, int p);
 
 /// Create Node Instance
-void createNode(std::vector<GlassNode> nodes, string *token, int n);
+void createNode(std::vector<GlassNode>& nodes, string *token, int n);
 
 /// Create Item Instance
-void createItem(std::vector<GlassItem> items, string *token, int p);
+void createItem(std::vector<GlassItem>& items, string *token, int p);
 

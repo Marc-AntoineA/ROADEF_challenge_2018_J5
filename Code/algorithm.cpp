@@ -12,6 +12,7 @@ Algorithm::Algorithm(string instance){
     cout << batch_name << endl;
     stacks = parseBatch(batch_name);
     cout << stacks.size() << endl;
+    cout << stacks[2].Getitem(4) << endl;
 }
 
 

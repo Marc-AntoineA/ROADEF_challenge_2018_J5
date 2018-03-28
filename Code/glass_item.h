@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 /////GlassItem/////
 
@@ -10,11 +11,11 @@ class GlassItem
     public:
         GlassItem();
         virtual ~GlassItem();
-        int Getitem_id() { return item_id; }
-        unsigned int Getitem_w() { return item_w; }
-        unsigned int Getitem_h() { return item_h; }
-        unsigned int Getitem_stack() { return item_stack; }
-        unsigned int Getitem_seq() { return item_seq; }
+        int Getitem_id() const { return item_id; }
+        unsigned int Getitem_w() const { return item_w; }
+        unsigned int Getitem_h() const { return item_h; }
+        unsigned int Getitem_stack() const { return item_stack; }
+        unsigned int Getitem_seq() const { return item_seq; }
 
         void Setitem_id(int val) { item_id = val; }
         void Setitem_w(unsigned int val) { item_w = val; }
@@ -30,3 +31,5 @@ class GlassItem
         unsigned int item_stack; // Item's stack Id
         unsigned int item_seq; // Item's stack sequence.
 };
+
+std::ostream& operator<<(std::ostream& os, const GlassItem& item);
