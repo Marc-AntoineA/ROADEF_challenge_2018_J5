@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -13,14 +14,62 @@ Algorithm::Algorithm(string instance){
     plates = parseDefects(instance + "_defects.csv");
 }
 
+bool Algorithm::decision(const GlassNode& node, GlassItem& item, bool& rotated, int& x, int& y, method n){
+    if (n==basic){
+        for (int i=0;i<stacks.size();i++){
+            if (!stacks[i].Depleted()){
+                item = stacks[i].Top();
+                if (position_defects(node, item, rotated, x, y))
+                    return true;
+            }
+        }
+        return false;
+    }
+    //if (n == otherMethod){
+    //....
+    //}
+}
+
+void Algorithm::cut(const GlassItem &item, GlassNode& node, const bool &rotated, const int &x, const int &y, stack<GlassNode> nodes_to_visit){
+    int alpha = node.Getcut();
+    alpha = (alpha == 0)? 1 : alpha;
+    if (!rotated){
+        int h = item.Getitem_h();
+        int w = item.Getitem_w();
+    }
+    else{
+        int h = item.Getitem_w();
+        int w = item.Getitem_h();
+    }
+    int H = node.Getheight();
+    int W = node.Getwidth();
+    if (alpha % 2 == 0){
+        if (h == H)
+            cut_horizontally(node, y, stack<GlassNode> nodes_to_visit);
+    }
+}
+
 void Algorithm::glouton(method m){
-    
+    stack<GlassNode> nodes_to_visit;
+    int x, y; bool rotated;
+    GlassNode current_node;
+    GlassItem current_item;
+    while (thereAreItemsToCut || !nodes_to_visit.empty()){
+        if (nodes_to_visit.empty()){
+
+        }
+        current_node = nodes_to_visit.top();
+        nodes_to_visit.pop();
+        if (decision(current_node, current_item, rotated, x, y, m)){
+            cut(current_item, current_node, rotated, x, y, nodes_to_visit);
+        }
+    }
 }
 
 /**
  * Renvoie la position (x, y) où placer un item orienté pour un node donné 
  * (le plus à gauche en bas possible)
- * output: false si aucun emplacement possible
+ * output: false si aucun emplacement possible
  * Complexité = algo intelligent pour la répartition en Y mais pas en X
 **/
 bool Algorithm::position_defects(const GlassNode& node, const GlassItem& item, bool rotated, int& x, int& y){

@@ -109,11 +109,17 @@ def cut(node, item):
     * nodes (max 3, 2 parallel cuts)
     * boolean : True if item cut
     """
-    (alpha_cut, id_bin, node_id, Type, XX, YY, W, H, _) = node
+    (alpha_cut, id_bin, node_id, Type, XX, YY, W, H, parent) = node
+    global next_node_id
+        
     if Type >= 0 or alpha_cut > 3:
         return False, None
     if alpha_cut == 0:
         alpha_cut = 1
+        parent = node_id
+        node_id = next_node_id
+        next_node_id += 1
+        
     [_, h, w, _, _] = list(batch.loc[item])
     thereIsNewItem = False
     result = []
@@ -122,19 +128,19 @@ def cut(node, item):
         h, w = w, h
     if feasible:
         # An alpha-cut ?
-        global next_node_id
         if alpha_cut % 2 == 0: # first horizontal cut
             above = YY + H - y - h
             below = y - YY
             if above > 0 or below > 0: # we need a horizontal cut
                 # [(bottom, center, up)]
                 if below > 0:
-                    result.append((alpha_cut, id_bin, next_node_id, -2, XX, YY, W, y - YY, node_id))
+                    result.append((alpha_cut, id_bin, node_id, -2, XX, YY, W, y - YY, parent))
+                    result.append((alpha_cut, id_bin, next_node_id, -2, XX, y, W, h, parent))
                     next_node_id+=1
-                result.append(    (alpha_cut, id_bin, next_node_id, -2, XX, y, W, h, node_id))
-                next_node_id+=1
+                else:
+                    result.append((alpha_cut, id_bin, node_id, -2, XX, y, W, h, parent))
                 if above > 0:
-                    result.append((alpha_cut, id_bin, next_node_id, -2, XX, y + h, W, YY + H - y - h, node_id))
+                    result.append((alpha_cut, id_bin, next_node_id, -2, XX, y + h, W, YY + H - y - h, parent))
                     next_node_id +=1
             else: # no alpha-cut needed
                 # [(left, center , right)]
@@ -142,7 +148,7 @@ def cut(node, item):
                 if x - XX > 0:
                     result.append((alpha_cut + 1, id_bin, next_node_id, -2, XX, YY, x - XX, H, node_id))
                     next_node_id+=1
-                result.append(    (alpha_cut + 1, id_bin, next_node_id, item, x, y, w, H, node_id))
+                result.append((alpha_cut + 1, id_bin, next_node_id, item, x, y, w, H, node_id))
                 next_node_id+=1
                 if XX + W - x - w > 0:
                     result.append((alpha_cut + 1, id_bin, next_node_id, -2, x + w, YY, XX + W - x - w, H, node_id))
@@ -155,12 +161,13 @@ def cut(node, item):
             if left > 0 or right > 0: # we need a horizontal cut
                 # [(left, center, center)]
                 if left > 0:
-                    result.append((alpha_cut, id_bin, next_node_id, -2, XX, YY, x - XX, H, node_id))
+                    result.append((alpha_cut, id_bin, node_id, -2, XX, YY, x - XX, H, parent))
+                    result.append((alpha_cut, id_bin, next_node_id, -2, x, y, w, H, parent))
                     next_node_id+=1
-                result.append(    (alpha_cut, id_bin, next_node_id, -2, x, y, w, H, node_id))
-                next_node_id+=1
+                else:
+                    result.append((alpha_cut, id_bin, node_id, -2, x, y, w, H, parent))
                 if right > 0:
-                    result.append((alpha_cut, id_bin, next_node_id, -2, x + w, YY, XX + W - x - w, H, node_id))
+                    result.append((alpha_cut, id_bin, next_node_id, -2, x + w, YY, XX + W - x - w, H, parent))
                     next_node_id+=1
             else:
                 # [(bottom, center, up)]
@@ -289,21 +296,24 @@ if __name__=='__main__':
         print(current_item)
         if len(nodes_to_visit) == 0:
             nodes_to_visit.append((0, next_bin_id, next_node_id, -2, 0, 0, widthPlates, heightPlates, None))
+            nodes_visited.append((0, next_bin_id, next_node_id, -2, 0, 0, widthPlates, heightPlates, None))
             next_bin_id+=1
             next_node_id+=1
         current_node = nodes_to_visit.pop()
         thereIsNewItem, nodes = cut(current_node, current_item)
-        nodes_visited.append(current_node)
         if nodes != None:
             for l in range(len(nodes)):
                 print(nodes[l])
                 nodes_to_visit.append(nodes[((len(nodes)-1) - l)])
             if thereIsNewItem:
+                nodes_visited.append(current_node)
                 if len(heads(list_stacks)) > 0:
                     current_item = heads(list_stacks)[0]
                     remove_item(current_item, list_stacks)
                 else:
                     thereAreItemsToCut = False
+        else:
+            nodes_visited.append(current_node)
     
     while len(nodes_to_visit) > 0:
         nodes_visited.append(nodes_to_visit.pop())
@@ -343,14 +353,12 @@ if __name__=='__main__':
                 else:
                     Type = -1 #waste
                 solution.append((id_bin, node_id, XX, YY, W, H, Type, alpha_cut, parent))
-    (alpha_cut, id_bin, node_id, Type, XX, YY, W, H, parent) = nodes_visited[-1]
-    solution.append((id_bin, node_id, XX, YY, W, H, -3, alpha_cut, parent))
 
     print("saving")
     
     df = pd.DataFrame(np.array(solution),\
                        columns=["PLATE_ID","NODE_ID","X","Y","WIDTH","HEIGHT","TYPE","CUT","PARENT"])
-    df.to_csv("solutionA17Glouton.csv", sep = ";", index = False)
+    df.to_csv("A17_solution.csv", sep = ";", index = False)
     
     for k in range(max_plate+1):
         display_nodes_visited(solution, k)    

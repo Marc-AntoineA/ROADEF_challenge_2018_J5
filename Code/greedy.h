@@ -13,13 +13,14 @@
 #include "global_var.h"
 #include "parser.h"
 
+enum cutting_direction{horizontal, vertical};
 
-class Algorithm{
+class Greedy{
     
     public:
 
         // Le constructeur prend en entrée le nom de l'instance courante à étudier
-        Algorithm(std::string instance);
+        Greedy(std::string instance);
 
         // renvoie la valeur du score correspondant à la déf. de la roadef 
         unsigned int get_score_roadef(); 
@@ -42,8 +43,8 @@ class Algorithm{
         // ---------------------------------------------
         //            GLOUTON
 
-         // met à jour les attributs de Algorithm avec un algorithme glouton
-        void glouton(method m = basic);
+         // met à jour les attributs avec un algorithme glouton
+        void run(method m = basic);
 
         // Renvoie la meilleure position en bas à gauche pour une pièce (variables par références x et y)
         // et une orientation (rotated == true si on regarde la version pivotée de pi/2)
@@ -53,16 +54,24 @@ class Algorithm{
 
 
         // Calcule un score selon un critère (paramètre avec l'enumerate method - voir global_var.h)
-        float score(const GlassNode& node, const GlassItem& item, bool rotated, const int& x, const int& y,  method m = basic);
+        float score(const GlassNode& node, const GlassItem& item, const bool& rotated, const int& x, const int& y,  method m = basic);
         
-        // Renvoie la référence vers la pièce à découper et sa position en vue de la découpe
-        // et false si aucune pièce n'est découpable dans le node
-        bool decision(const GlassNode& node, GlassItem& item, bool& rotated, int& x, int& y, method n = basic);
+        // Met à jour la pièce à découper (current_item) et renvoie sa position en vue de la découpe
+        // et renvoie false si aucune pièce n'est découpable dans le node
+        bool decision();
 
-        // Coupe la pièce la plus appropriée selon la décision
-        void cut(const GlassItem& item, GlassNode& node, const bool& rotated, const int& x, const int& y, stack<GlassNode> nodes_to_visit);
+        // Coupe la pièce courante selon la décision
+        void cut();
 
+        bool thereAreItemsToCut(){
+            for (int i=0;i<stacks.size();i++){
+                if (!stacks[i].Depleted())
+                    return true;
+            }
+            return false;
+        }
 
+        std::string Getname_instance() const {return name_instance;}
         std::vector<GlassStack> Getstacks() const { return stacks; }
         std::vector<GlassPlate> Getplates() const { return plates; }
         std::vector<GlassItem> Getitems() const { return items; }
@@ -77,4 +86,14 @@ class Algorithm{
 
         // Solution 
         std::vector<GlassNode> sol; // Cutting pattern
+
+        // Attributs particuliers du Greedy
+        stack<GlassNode> nodes_to_visit;
+        GlassNode current_node;
+        GlassItem current_item;
+        int current_bin = 0;
+        bool rotated;
+        int x;
+        int y;
+        method meth;
 };

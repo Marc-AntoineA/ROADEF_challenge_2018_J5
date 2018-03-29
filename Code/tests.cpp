@@ -6,7 +6,7 @@
 **/
 
 #include "global_var.h"
-#include "algorithm.h"
+#include "greedy.h"
 
 #include <vector>
 using namespace std;
@@ -15,13 +15,13 @@ bool test_position_defects(){
     cout << "Test_position_defects..." << endl;
     bool results = true;
     
-    Algorithm A = Algorithm("../Datasets/dataset_A/A6");
+    Greedy G = Greedy("../Datasets/dataset_A/A6");
     GlassNode node = GlassNode();    
     node.Setwidth(plate_w);
     node.Setheight(plate_h);
 
-    vector<GlassStack> stacks = A.Getstacks();
-    vector<GlassPlate> plates = A.Getplates();
+    vector<GlassStack> stacks = G.Getstacks();
+    vector<GlassPlate> plates = G.Getplates();
 
     /* Plate 0 (defects)
     Id 0	 H 3210	 W 6000
@@ -30,7 +30,7 @@ bool test_position_defects(){
     */
     int x, y;
     GlassItem item = stacks[0].Getitem(4);
-    A.position_defects(node, item, false, x, y);
+    G.position_defects(node, item, false, x, y);
     results = results && (x == 0 && y == 0);
     if(!(x == 0 && y == 0)){
         cout << "\t\tError test 1 x : " << x << " and y :" << y << endl;
@@ -38,7 +38,7 @@ bool test_position_defects(){
     
     item.Setitem_w(1665); // pour etre sur de rencontrer le defaut 0
     item.Setitem_h(694); // juste en dessous
-    A.position_defects(node, item, false, x, y);
+    G.position_defects(node, item, false, x, y);
     results = results && (x == 0 && y == 0);
     if(!(x == 0 && y == 0)){
         cout << "\t\tError test 2 x : " << x << " and y :" << y << endl;
@@ -46,7 +46,7 @@ bool test_position_defects(){
     
 
     item.Setitem_h(695); 
-    A.position_defects(node, item, false, x, y);
+    G.position_defects(node, item, false, x, y);
     results = results && (x == 0 && y == 696);
     if(!(x == 0 && y == 696)){
         cout << "\t\tError test 3 x : " << x << " and y :" << y << endl;
@@ -55,7 +55,7 @@ bool test_position_defects(){
     // pour la rotation
     item.Setitem_h(1000);
     item.Setitem_w(600);
-    A.position_defects(node, item, true, x, y);
+    G.position_defects(node, item, true, x, y);
     results = results && (x == 0 && y == 0);
     if(!(x == 0 && y == 0)){
         cout << "\t\tError test 4 x : " << x << " and y :" << y << endl;
@@ -64,7 +64,7 @@ bool test_position_defects(){
     // pour le deplacement selon x
     item.Setitem_h(plate_h);
     item.Setitem_w(3000);
-    A.position_defects(node, item, false, x, y);
+    G.position_defects(node, item, false, x, y);
     results = results && (x == 1140 && y == 0);
     if(!(x == 1140 && y == 0)){
         cout << "\t\tError test 5 x : " << x << " and y :" << y << endl;
@@ -73,9 +73,19 @@ bool test_position_defects(){
     // trop grand
     item.Setitem_h(plate_h);
     item.Setitem_w(plate_w + 1);
-    results = results && !A.position_defects(node, item, true, x, y);
-    if(A.position_defects(node, item, false, x, y)){
+    results = results && !G.position_defects(node, item, true, x, y);
+    if(G.position_defects(node, item, false, x, y)){
         cout << "\t\tError test 6 x" << endl;
+    }
+
+    // vérif de la fonction Depleted de stack
+    GlassStack stack = G.Getstacks()[0];
+    for (int i = 0; i<stack.Getitem_nbr(); i++){
+        stack.Pop();
+    }
+    results = results && (stack.Depleted() == true);
+    if (stack.Depleted() != true){
+        cout << "\t\tError test 6 x : stack should be empty" << endl;
     }
 
     if(!results){

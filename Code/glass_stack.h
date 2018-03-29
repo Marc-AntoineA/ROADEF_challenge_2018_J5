@@ -25,7 +25,9 @@ class GlassStack
 
         void AllocateItems(){ items.resize(item_nbr); }
         void Increaseitem_nbr(){ item_nbr++; }
-        void Increasecur_item_idx(){ if(cur_item_idx >= item_nbr) {cur_item_idx = 0xffff;} else { cur_item_idx++; } }
+        void Pop(){ if(cur_item_idx >= item_nbr) {cur_item_idx = 0xffff;} else { cur_item_idx++; } }
+        GlassItem Top(){ return Getitem(cur_item_idx); }
+        bool Depleted(){ return cur_item_idx >= item_nbr; }
 
     public:
         

@@ -1,7 +1,14 @@
+#include <iostream>
+using namespace std;
+
 #include "global_var.h"
-#include "algorithm.h"
+#include "greedy.h"
 
 int main(void)
 {
-    Algorithm A("../Datasets/dataset_A/A6");
+    Greedy G("../Datasets/dataset_A/A6");
+    G.run();
+    for (int i=0; i < G.Getsol().size(); i++){
+        cout << G.Getsol()[i] << endl;
+    }
 }
