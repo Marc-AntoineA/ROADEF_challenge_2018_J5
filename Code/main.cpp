@@ -8,7 +8,9 @@ int main(void)
 {
     Greedy G("../Datasets/dataset_A/A6");
     G.run();
+    cout << "done" << endl;
     for (int i=0; i < G.Getsol().size(); i++){
         cout << G.Getsol()[i] << endl;
     }
+    G.export_solution();
 }

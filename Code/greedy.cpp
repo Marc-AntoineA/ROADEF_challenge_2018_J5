@@ -6,21 +6,14 @@
 
 using namespace std;
 
-
-Greedy::Greedy(string instance){
-   
-    name_instance = instance;
-    stacks = parseBatch(instance + "_batch.csv");
-    plates = parseDefects(instance + "_defects.csv");
-}
-
-bool Greedy::decision(){
+bool Greedy::decision(method meth){
     if (meth == basic){
         for (int i=0;i<stacks.size();i++){
             if (!stacks[i].Depleted()){
                 current_item = stacks[i].Top();
                 //TODO : les aligner en mode paysage en priorité ?
                 rotated = true;
+                position_defects(current_node, current_item, rotated, x, y);
                 if (position_defects(current_node, current_item, rotated, x, y)){
                     return true;
                 }
@@ -40,15 +33,8 @@ bool Greedy::decision(){
 void Greedy::cut(){
     int alpha = current_node.Getcut();
     alpha = (alpha == 0)? 1 : alpha;
-    int h, w;
-    if (!rotated){
-        h = current_item.Getitem_h();
-        w = current_item.Getitem_w();
-    }
-    else{
-        h = current_item.Getitem_w();
-        w = current_item.Getitem_h();
-    }
+    int h = current_item.Getitem_h(rotated);
+    int w = current_item.Getitem_w(rotated);
     int H = current_node.Getheight();
     int W = current_node.Getwidth();
     int X = current_node.Getpos_x();
@@ -61,6 +47,9 @@ void Greedy::cut(){
         else if (h == H){
             d = vertical;
             alpha ++;
+            // Les vraies branches sont ajoutées à la solution ici
+            current_node.Settype(BRANCH);
+            sol.push_back(current_node);
         }
     }
     if (alpha % 2 == 1){
@@ -69,12 +58,16 @@ void Greedy::cut(){
         else if (w == W){
             d = horizontal;
             alpha ++;
+            // Les vraies branches sont ajoutées à la solution ici
+            current_node.Settype(BRANCH);
+            sol.push_back(current_node);
         }
     }
     //on coupe vraiment
     GlassNode node;
     node.Setcut(alpha);
     node.Setplate_id(current_node.Getplate_id());
+    node.Setparent(current_node.Getnode_id());
     if (d == vertical){
         node.Setheight(H);
         node.Setpos_y(Y);
@@ -82,21 +75,35 @@ void Greedy::cut(){
         if (x + w < X + W){
             node.Setpos_x(x + w);
             node.Setwidth(X + W - x - w);
+            node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
         }
         // Le noeud du centre
         node.Setpos_x(x);
         node.Setwidth(w);
-        nodes_to_visit.push(node);
-        //S'il y a un noeud à gauche
+        node.Setnode_id(getNewNodeId());
+
+        // on regarde si on ne vient pas de couper un nouvel item
+        if (h == H){
+
+            stacks[current_item.Getitem_stack()].Pop();
+
+            // Les items découpés sont ajoutés à la solution ici
+
+            node.Setnode_id(getNewNodeId());
+
+            sol.push_back(node);
+        }
+        else
+            nodes_to_visit.push(node);
         if (x - X > 0){
             node.Setpos_x(X);
             node.Setwidth(x - X);
+
+            node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
-        }
-        // on regarde si on ne vient pas de couper un nouvel item
-        if (x == X){
-            stacks[current_item.Getitem_stack()].Pop();
         }
     }
     if (d == horizontal){
@@ -106,51 +113,71 @@ void Greedy::cut(){
         if (y + h < Y + H){
             node.Setpos_y(y + h);
             node.Setheight(Y + H - y - h);
+
+            node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
         }
         // le noeud du centre
         node.Setpos_y(y);
         node.Setheight(h);
-        nodes_to_visit.push(node);
+
+        node.Setnode_id(getNewNodeId());
+
+        // on regarde si on ne vient pas de couper un nouvel item
+        if (w == W){
+            stacks[current_item.Getitem_stack()].Pop();
+            // Les items découpés sont ajoutés à la solution ici
+            node.Settype(current_item.Getitem_id());
+            sol.push_back(node);
+        }
+        else
+            nodes_to_visit.push(node);
         // S'il y a un noeud en bas
         if (y - Y > 0){
             node.Setpos_y(Y);
             node.Setheight(y - Y);
+
+            node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
-        }
-        // on regarde si on ne vient pas de couper un nouvel item
-        if (y == Y){
-            stacks[current_item.Getitem_stack()].Pop();
         }
     }
 }
 
-void Greedy::run(method m){
-    meth = m;
+void Greedy::run(const method& m){
+    current_bin = -1;
+    int alpha;
     while (thereAreItemsToCut() || !nodes_to_visit.empty()){
         if (nodes_to_visit.empty()){
             current_bin++;
             GlassNode plateNode;
             //alpha, X and Y already at zero by default
             plateNode.Setplate_id(current_bin);
+            plateNode.Setnode_id(getNewNodeId());
             plateNode.Setwidth(plate_w);
             plateNode.Setheight(plate_h);
+            plateNode.Settype(BRANCH);
+            sol.push_back(plateNode);
             nodes_to_visit.push(plateNode);
         }
         current_node = nodes_to_visit.top();
+        alpha = current_node.Getcut();
+        //Pour vérifier la contrainte de profondeur
         nodes_to_visit.pop();
-        if (decision()){
+        decision(m);
+        if (alpha <= 3 && decision(m)){ // il faudrait vérifier que le "et" est bien gourmand
             cut();
         }
-        else
+        else{
+            //Le waste est ajouté à la solution ici
+            current_node.Settype(WASTE);
             sol.push_back(current_node);
+        }
     }
+    sol[sol.size()-1].Settype(RESIDUAL);
 }
 
-// TO COMPLETE
-void Greedy::export_solution(){
-
-}
 
 /**
  * Renvoie la position (x, y) où placer un item orienté pour un node donné 
@@ -176,10 +203,10 @@ bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool
     int maxY = y + HH - h + 1;
     int y_defect = y; // Plus grande ordonnée du défaut qui bloque la piece
     
-    vector<GlassDefect>* defects = plates[node.Getnode_id()].Getdefects();
+    vector<GlassDefect>* defects = plates[node.Getplate_id()].Getdefects();
     bool location_found = false;
     while(!location_found && x < maxX && y < maxY){
-        for(int defect_idx = 0; defect_idx < plates[node.Getnode_id()].Getdefect_nbr(); defect_idx++){
+        for(int defect_idx = 0; defect_idx < plates[node.Getplate_id()].Getdefect_nbr(); defect_idx++){
             if(intersect(x, y, w, h, (*defects)[defect_idx])){
                 y_defect = (*defects)[defect_idx].Getpos_ySup();                
             }

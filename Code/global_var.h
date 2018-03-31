@@ -9,6 +9,7 @@
 using namespace std;
 
 enum method{ basic };
+enum cutting_direction{ horizontal, vertical };
 
 const string LOGFILE = "/results.csv";
 
@@ -25,6 +26,7 @@ const string LOGFILE = "/results.csv";
 #define WASTE -1
 #define BRANCH -2
 #define RESIDUAL -3
+#define UNDEFINED -4
 
 /*---------------------------------------------------------------*/
 /*-------------------  csv files configuration ------------------*/

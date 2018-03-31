@@ -27,6 +27,8 @@ add_executable(toukeute
     glass_plate.cpp
     glass_stack.h
     glass_stack.cpp
+    algorithm.h
+    algorithm.cpp
     greedy.h
     greedy.cpp
     heuristic.h
@@ -57,6 +59,8 @@ add_executable(tests
     glass_plate.cpp
     glass_stack.h
     glass_stack.cpp
+    algorithm.h
+    algorithm.cpp
     greedy.h
     greedy.cpp
     heuristic.h
