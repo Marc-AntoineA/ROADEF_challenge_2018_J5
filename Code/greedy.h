@@ -30,10 +30,14 @@ public:
     // met à jour les attributs avec un algorithme glouton
     void run(const method &m = basic);
 
-    // Renvoie la meilleure position en bas à gauche pour une pièce (variables par références x et y)
-    // et une orientation (rotated == true si on regarde la version pivotée de pi/2)
-    // les contraintes. False si aucune solution possible
+    /**
+     * Renvoie la position (x, y) où placer un item orienté pour un node donné 
+     * (le plus à gauche en bas possible)
+     * output: false si aucun emplacement possible
+     * Complexité = algo intelligent pour la répartition en Y mais pas en X
+    **/
     bool position_defects(const GlassNode& node, const GlassItem& item, bool rotated, int& x, int& y);
+    
     bool intersect(const int& x, const int& y, const int& w, const int& h, const GlassDefect& defect);
 
 

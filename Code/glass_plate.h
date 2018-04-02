@@ -16,35 +16,35 @@ class GlassPlate
     public:
         GlassPlate();
         virtual ~GlassPlate();
-        unsigned int Getplate_id() const { return plate_id; }
-        unsigned int Getnode_id() const { return node_id; }
-        unsigned int Getpos_x() const { return pos_x; }
-        unsigned int Getpos_y() const { return pos_y; }
-        unsigned int Getwidth() const { return width; }
-        unsigned int Getheight() const { return height; }
+        int Getplate_id() const { return plate_id; }
+        int Getnode_id() const { return node_id; }
+        int Getpos_x() const { return pos_x; }
+        int Getpos_y() const { return pos_y; }
+        int Getwidth() const { return width; }
+        int Getheight() const { return height; }
         int Gettype() const { return type; }
-        unsigned int Getcut() const { return cut; }
-        unsigned int Getnodes_nbr() const { return nodes_nbr; }
-        unsigned int Getwaste() const { return waste; }
-        unsigned int Getuseful() const { return useful; }
-        GlassNode Getsuccessor(unsigned int index) const { return successors[index]; }
-        GlassDefect Getdefect(unsigned int index) const { return defects[index]; }
+        int Getcut() const { return cut; }
+        int Getnodes_nbr() const { return nodes_nbr; }
+        int Getwaste() const { return waste; }
+        int Getuseful() const { return useful; }
+        GlassNode Getsuccessor(int index) const { return successors[index]; }
+        GlassDefect Getdefect(int index) const { return defects[index]; }
         std::vector<GlassDefect>* Getdefects() { return &defects; }
-        unsigned int Getsuccessor_nbr() const { return successor_nbr; }
-        unsigned int Getdefect_nbr() const { return defect_nbr; }
+        int Getsuccessor_nbr() const { return successor_nbr; }
+        int Getdefect_nbr() const { return defect_nbr; }
         GlassNode Getresidual() const { return residual; }
 
-        void Setplate_id(unsigned int val) { plate_id = val; }
-        void Setnode_id(unsigned int val) { node_id = val; }
-        void Setpos_x(unsigned int val) { pos_x = val; }
-        void Setpos_y(unsigned int val) { pos_y = val; }
-        void Setwidth(unsigned int w) { width = w; }
-        void Setheight(unsigned int h) { height = h; }
+        void Setplate_id(int val) { plate_id = val; }
+        void Setnode_id(int val) { node_id = val; }
+        void Setpos_x(int val) { pos_x = val; }
+        void Setpos_y(int val) { pos_y = val; }
+        void Setwidth(int w) { width = w; }
+        void Setheight(int h) { height = h; }
         void Settype(int val) { type = val; }
-        void Setcut(unsigned int val) { cut = val; }
-        void Setnodes_nbr(unsigned int val) { nodes_nbr = val; }
-        void Setwaste(unsigned int val) { waste = val; }
-        void Setuseful(unsigned int val) { useful = val; }
+        void Setcut(int val) { cut = val; }
+        void Setnodes_nbr(int val) { nodes_nbr = val; }
+        void Setwaste(int val) { waste = val; }
+        void Setuseful(int val) { useful = val; }
         void Setsuccessor(GlassNode c) { successors[successor_nbr] = c; successor_nbr++; }
         void Setdefect(GlassDefect c) { defects.push_back(c); defect_nbr++; }
         void Setresidual(GlassNode r) { residual = r; }
@@ -55,12 +55,12 @@ class GlassPlate
         std::vector<GlassDefect> defects; // Defects list of plate instance.
     protected:
     private:
-        unsigned int plate_id; // Plate Id.
-        unsigned int node_id; // Node Id.
-        unsigned int pos_x; // x position.
-        unsigned int pos_y; // y position.
-        unsigned int width; // Plate's width.
-        unsigned int height; // Plate's height.
+        int plate_id; // Plate Id.
+        int node_id; // Node Id.
+        int pos_x; // x position.
+        int pos_y; // y position.
+        int width; // Plate's width.
+        int height; // Plate's height.
         int type;   /* node type
                      * > 0 glass piece index in batch file
                      * = -1 wasted glass
@@ -68,12 +68,12 @@ class GlassPlate
                      * = -3 residual
                      * Note: since this is plate class, plate's instance type should be -2 (branch).
                      */
-        unsigned int cut; // Cut stage (Note: since this is plate class, plate's instance cut level should be 0-cut).
-        unsigned int nodes_nbr; // Number of all nodes on a plate instance.
-        unsigned int waste; // Sum of Wasted area.
-        unsigned int useful; // Sum of Used area.
-        unsigned int successor_nbr; // Plate's successor nodes number (children).
-        unsigned int defect_nbr; // Defects number.
+        int cut; // Cut stage (Note: since this is plate class, plate's instance cut level should be 0-cut).
+        int nodes_nbr; // Number of all nodes on a plate instance.
+        int waste; // Sum of Wasted area.
+        int useful; // Sum of Used area.
+        int successor_nbr; // Plate's successor nodes number (children).
+        int defect_nbr; // Defects number.
 };
 
 std::ostream& operator<<(std::ostream& os, const GlassPlate& plate);
