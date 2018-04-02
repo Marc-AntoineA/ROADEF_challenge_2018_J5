@@ -1,46 +1,52 @@
-#ifndef CHECKER_H
-#define CHECKER_H
+#pragma once
 
-/*
- * Optimization Checker Algorithm 2017
- * This script is built to check user’s solution compatibility and validity.
- * This main script is composed of the following parts:
- *  - main() function called by default when program is executed.
- *  - Test Tode Tenu function.
- *  - StatisticsLog create function.
- *  - Display plate area usage function.
- *  - Constraints verification functions.
- *  - CSV files parse functions.
- *  - Tree structure build functions.
- *  - Classes instantiation functions.
-**/
+#include <vector>
 
 #include "global_var.h"
-
 #include "parser.h"
-#include "results.h"
-
 #include "glass_item.h"
 #include "glass_stack.h"
-GlassItem* items;
-GlassStack* stacks;
+#include "glass_node.h"
+
+
 
 ///Main Function
 int checker();
 
-/// Verify Identity & Sequence constraints
-void verifyIdt_Sequence (void);
+/**
+ * This function verifies the Identity and sequence constraints
+ * Identity:
+ *      this function verifies that all solution items are identical to batch items
+ *      with the possibility to invert width and height.
+ * Sequence:
+ *      this function verifies that user solution respects the production sequence
+ *      given in the batch file.
+ * WARNING: stacks is changed (the current_idx)
+**/
+bool verifyIdt_Sequence(std::vector<GlassStack>& stacks, const std::vector<GlassNode>& solution);
 
-/// Verify Dimensions constraint
-void verifyDimensions (void);
 
-/// Verify Dimensions constraint of a node successors
-void checkSuccDimensions (GlassNode parent);
+/**
+ * This function verifies dimensions constraint for first node cut level.
+ * It verifies nodes superposing, cut stage, if nodes dimensions respect prefixed optimization parameters
+ * if node's x, y, width and height are coherent with parent node (dependent on cut stage) and do not overflow it's area,
+ * and verifies that nodes widths sum is equal to parent area.
+**/
+bool verifyDimensions(const std::vector<GlassPlate>& plates, const std::vector<GlassNode>& solution);
 
-/// Verify Defects overlap constraint
-void verifyDefects (void);
+/**
+ * This function is recursive, it verifies dimensions constraint of node successors.
+**/
+void checkSuccDimensions(GlassNode parent);
 
-/// Verify Item Production constraint
-void verifyItemProduction (void);
+/**
+ * This function verifies if solution items overlap defect(s)
+ * given in defects csv file.
+**/
+bool verifyDefects(const std::vector<GlassPlate>& plates, const std::vector<GlassNode>& solution);
 
-#endif // CHECKER_H
+/**
+ * This function verifies if all batch items are produced,
+ * not produced and/or duplicated.
+**/
+bool verifyItemProduction(const std::vector<GlassStack>& stacks, const std::vector<GlassNode>& solution);

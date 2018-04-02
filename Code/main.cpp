@@ -13,4 +13,5 @@ int main(void)
         cout << G.Getsol()[i] << endl;
     }
     G.export_solution();
+    G.checker_complete();
 }

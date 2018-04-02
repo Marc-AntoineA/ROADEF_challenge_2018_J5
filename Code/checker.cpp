@@ -1,5 +1,5 @@
 #include "checker.h"
-
+/*
 int checker()
 {
     testPath = "";
@@ -32,12 +32,12 @@ int checker()
     cout <<     "\t\t----------- End of files parsing ----------" << endl;
     log_file << "\t\t----------- End of files parsing ----------" << endl;
     // Auto verify constraints and generate log file.
-    verifyItemProduction ();
-    verifyDefects ();
-    verifyIdt_Sequence ();
-    verifyDimensions ();
-    displayPlatesAreaUsage ();
-    violatedConstraints ();
+    verifyItemProduction();
+    verifyDefects();
+    verifyIdt_Sequence();
+    verifyDimensions();
+    displayPlatesAreaUsage();
+    violatedConstraints();
     active_log = 0;
     log_file << endl    << "\t------------------------------------------------------------" << endl;
     if (constraint_error != 0)
@@ -106,124 +106,117 @@ int checker()
 /* ==================================================================================== */
 /*                       Constraint verification functions                              */
 /* ==================================================================================== */
-/**
- * This function verifies if all batch items are produced,
- * not produced and/or duplicated.
-**/
-void verifyItemProduction (void)
-{
+
+bool verifyItemProduction(const vector<GlassStack>& stacks, const vector<GlassNode>& solution){
     if (active_log)
         log_file << "\n\t--- Item production constraint verification ---" << endl;
     else
         cout << endl << "\t--- Item production constraint verification ---" << endl;
-    unsigned int i, j, nbr = 0;
+    int i, j, nbr = 0;
+
     // Loop on batch parsed items.
-    for (i = 0; i < batch_items; i++)
-    {
-        nbr = 0;
-        // For each batch item loop on solution parsed nodes.
-        for (j = 0; j < useful_node; j++)
-        {
-            // Test if batch item id is identical to solution node type.
-            if (items[i].Getitem_id() == sol_items[j].Gettype())
-                nbr++;
+    for(int k = 0; k < stacks.size(); k++){
+        for (i = 0; i < stacks[k].Getitem_nbr(); i++){
+            GlassItem item = stacks[k].Getitem(i);
+            nbr = 0;
+            // For each batch item loop on solution parsed nodes.
+            for (j = 0; j < useful_node; j++){
+                // Test if batch item id is identical to solution node type.
+                if (item.Getitem_id() == solution[j].Gettype())
+                    nbr++;
+            }
+            // If batch item is found more than one time, the item is declared duplicated.
+            if (nbr > 1){
+                if (active_log){
+                    log_file << "\tERROR -- Item " << item.Getitem_id() << ": is duplicated" << endl;
+                    constraint_error |= ITEM_PRODUCTION_ERROR_MASK;
+                }else{
+                    cout << "\tERROR -- Item " << item.Getitem_id() << ": is duplicated" << endl;
+                }
+            }
+        
+            // If batch item is not found at all, the item is declared as not produced.
+            if (nbr == 0){
+                if (active_log){
+                    log_file << "\tERROR -- Item " << item.Getitem_id() << ": is not produced" << endl;
+                    constraint_error |= ITEM_PRODUCTION_ERROR_MASK;
+                }else{
+                    cout << "\tERROR -- Item " << item.Getitem_id() << ": is not produced" << endl;
+                }
+            }
         }
-        // If batch item is found more than one time, the item is declared duplicated.
-        if (nbr > 1)
-        {
-            if (active_log)
-            {
-                log_file << "\tERROR -- Item " << items[i].Getitem_id() << ": is duplicated" << endl;
-                constraint_error |= ITEM_PRODUCTION_ERROR_MASK;
-            }
-            else
-            {
-                cout << "\tERROR -- Item " << items[i].Getitem_id() << ": is duplicated" << endl;
-            }
-            //break;
-        }
-        // If batch item is not found at all, the item is declared as not produced.
-        if (nbr == 0)
-        {
-            if (active_log)
-            {
-                log_file << "\tERROR -- Item " << items[i].Getitem_id() << ": is not produced" << endl;
-                constraint_error |= ITEM_PRODUCTION_ERROR_MASK;
-            }
-            else
-            {
-                cout << "\tERROR -- Item " << items[i].Getitem_id() << ": is not produced" << endl;
-            }
-            //break;
-        }
+
     }
-    if (active_log)
-    {
+
+    if (active_log){
         if (nbr == 1)
             log_file << "\tItem production constraint verified successfully" << endl;
         else
             log_file << "\tERROR -- Item production constraint violated" << endl;
-    }
-    else
-    {
+    }else{
         if (nbr == 1)
             cout << "\tItem production constraint verified successfully" << endl;
         else
             cout << "\tERROR -- Item production constraint violated" << endl;
     }
+
     if (active_log)
         log_file <<     "\t--- End of Item production constraint verification ---" << endl;
     else
         cout <<         "\t--- End of Item production constraint verification ---" << endl;
+    
+    return (nbr == 1);
 }
 
 
-/**
- * This function verifies if solution items overlap defect(s)
- * given in defects csv file.
-**/
-void verifyDefects (void)
-{
-    unsigned int error = 0;
+
+bool verifyDefects(const vector<GlassPlate>& plates, const vector<GlassNode>& solution){
+    int error = 0;
     if (active_log)
         log_file << endl << "\t--- Superposing with defects constraint verification ---" << endl;
     else
         cout << endl << "\t--- Superposing with defects constraint verification ---" << endl;
-    unsigned int i, j, plate_id;
-    unsigned int defect_width, defect_height, defect_x, defect_y; // Defect Coord.
-    unsigned int item_width, item_height, item_x, item_y; // Item Coord.
+    int i, j, plate_id;
+    int defect_width, defect_height, defect_x, defect_y; // Defect Coord.
+    int item_width, item_height, item_x, item_y; // Item Coord.
     // Loop on solution parsed nodes.
-    for (i = 0; i < useful_node; i++)
-    {
+    cout << solution.size() << endl;
+    for (i = 0; i < solution.size(); i++){
+
         // Get node coordinates.
-        item_x = sol_items [i].Getpos_x();
-        item_y = sol_items [i].Getpos_y();
-        item_width = sol_items [i].Getwidth();
-        item_height = sol_items [i].Getheight();
-        plate_id = sol_items[i].Getplate_id();
+        item_x = solution[i].Getpos_x();
+        item_y = solution[i].Getpos_y();
+        item_width = solution[i].Getwidth();
+        item_height = solution[i].Getheight();
+        plate_id = solution[i].Getplate_id();
+        
         // Loop on associated plate defects.
-        for (j = 0; j < plate[plate_id].Getdefect_nbr(); j++)
-        {
+        for (j = 0; j < plates[plate_id].Getdefect_nbr(); j++){
             // Get defect coordinates.
-            defect_x = plate[sol_items[i].Getplate_id()].Getdefect(j).Getpos_x();
-            defect_y = plate[sol_items[i].Getplate_id()].Getdefect(j).Getpos_y();
-            defect_width = plate[sol_items[i].Getplate_id()].Getdefect(j).Getwidth();
-            defect_height = plate[sol_items[i].Getplate_id()].Getdefect(j).Getheight();
+            defect_x = plates[solution[i].Getplate_id()].Getdefect(j).Getpos_x();
+            defect_y = plates[solution[i].Getplate_id()].Getdefect(j).Getpos_y();
+            defect_width = plates[solution[i].Getplate_id()].Getdefect(j).Getwidth();
+            defect_height = plates[solution[i].Getplate_id()].Getdefect(j).Getheight();
             // Test if one or more defect ends are inside the solution useful node area.
-            if (  (((item_x <= defect_x) && (defect_x < item_x + item_width)) || ((item_x < defect_x + defect_width) && (defect_x + defect_width < item_x + item_width))) && // horizontal ends
-                  (((item_y <= defect_y) && (defect_y < item_y + item_height)) || ((item_y < defect_y + defect_height) && (defect_y + defect_height < item_y + item_height)))  ) // vertical ends
-            {
+            if ((((item_x <= defect_x) 
+                        && (defect_x < item_x + item_width)) 
+                    || ((item_x < defect_x + defect_width)
+                        && (defect_x + defect_width < item_x + item_width)))
+                && // horizontal ends
+                  (((item_y <= defect_y) && (defect_y < item_y + item_height)) 
+                  || ((item_y < defect_y + defect_height) 
+                  && (defect_y + defect_height < item_y + item_height)))){ // vertical ends
                 error = 1;
                 if (active_log)
                 {
-                    log_file << "\tERROR -- Node " << sol_items [i].Getnode_id() << ": (type: item, item_id: " << sol_items [i].Gettype() << ", x: " << item_x << ", y: " << item_y << ", width: " << item_width << ", height: " << item_height
-                         << ") superposes defect " << plate[sol_items[i].Getplate_id()].Getdefect(j).Getdefect_id() << ": (x: " << defect_x << ", y: " << defect_y << ", width: " << defect_width << ", height: " << defect_height << ")" << endl;
+                    log_file << "\tERROR -- Node " << solution[i].Getnode_id() << ": (type: item, item_id: " << solution [i].Gettype() << ", x: " << item_x << ", y: " << item_y << ", width: " << item_width << ", height: " << item_height
+                         << ") superposes defect " << plates[solution[i].Getplate_id()].Getdefect(j).Getdefect_id() << ": (x: " << defect_x << ", y: " << defect_y << ", width: " << defect_width << ", height: " << defect_height << ")" << endl;
                     constraint_error |= DEFECTS_SUPERPOSING_ERROR_MASK;
                 }
                 else
                 {
-                    cout << "\tERROR -- Node " << sol_items [i].Getnode_id() << ": (type: item, item_id: " << sol_items [i].Gettype() << ", x: " << item_x << ", y: " << item_y << ", width: " << item_width << ", height: " << item_height
-                         << ") superposes defect " << plate[sol_items[i].Getplate_id()].Getdefect(j).Getdefect_id() << ": (x: " << defect_x << ", y: " << defect_y << ", width: " << defect_width << ", height: " << defect_height << ")" << endl;
+                    cout << "\tERROR -- Node " << solution[i].Getnode_id() << ": (type: item, item_id: " << solution [i].Gettype() << ", x: " << item_x << ", y: " << item_y << ", width: " << item_width << ", height: " << item_height
+                         << ") superposes defect " << plates[solution[i].Getplate_id()].Getdefect(j).Getdefect_id() << ": (x: " << defect_x << ", y: " << defect_y << ", width: " << defect_width << ", height: " << defect_height << ")" << endl;
                 }
             }
         }
@@ -240,46 +233,42 @@ void verifyDefects (void)
             cout << "\tSuperposing with defects constraint verified successfully" << endl;
         cout     << "\t--- End of Superposing with defects constraint verification ---" << endl;
     }
+
+    return (error == 0);
 }
 
 
-/**
- * This function verifies dimensions constraint for first node cut level.
- * It verifies nodes superposing, cut stage, if nodes dimensions respect prefixed optimization parameters
- * if node's x, y, width and height are coherent with parent node (dependent on cut stage) and do not overflow it's area,
- * and verifies that nodes widths sum is equal to parent area.
-**/
-void verifyDimensions (void)
-{
+
+bool verifyDimensions(const vector<GlassPlate>& plates, const vector<GlassNode>& solution){
+
     if (active_log)
         log_file << endl << "\t--- Dimensions constraint verification ---" << endl;
     else
         cout << endl << "\t--- Dimensions constraint verification ---" << endl;
-    unsigned int i, j, height, width, x, y, cut, c_nbr;
+    
+    int i, j, height, width, x, y, cut, c_nbr;
     int type;
     //
     success = 1;
     // Loop on plates list.
-    for (i = 0; i < plates_nbr; i++)
-    {
+    for (i = 0; i < PLATES_NBR_LIMIT; i++){
         // Get plate successors number.
-        c_nbr = plate[i].Getsuccessor_nbr();
-        for (j = 0; j < c_nbr; j++)
-        {
+        c_nbr = plates[i].Getsuccessor_nbr();
+        for (j = 0; j < c_nbr; j++){
             // Get successor coordinates and type.
-            height = plate[i].Getsuccessor(j).Getheight();
-            width = plate[i].Getsuccessor(j).Getwidth();
-            x = plate[i].Getsuccessor(j).Getpos_x();
-            y = plate[i].Getsuccessor(j).Getpos_y();
-            type = plate[i].Getsuccessor(j).Gettype();
-            cut = plate[i].Getsuccessor(j).Getcut();
+            height = plates[i].Getsuccessor(j).Getheight();
+            width = plates[i].Getsuccessor(j).Getwidth();
+            x = plates[i].Getsuccessor(j).Getpos_x();
+            y = plates[i].Getsuccessor(j).Getpos_y();
+            type = plates[i].Getsuccessor(j).Gettype();
+            cut = plates[i].Getsuccessor(j).Getcut();
             // If node cut stage do not equal parent.cut + 1.
-            if (cut != plate[i].Getcut()+1)
+            if (cut != plates[i].Getcut()+1)
             {
                 if (active_log)
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.cut != plate.cut + 1 (plate.node_id: " << plate[i].Getnode_id() << ")" << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.cut != plate.cut + 1 (plate.node_id: " << plates[i].Getnode_id() << ")" << endl;
                 else
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.cut != plate.cut + 1 (plate.node_id: " << plate[i].Getnode_id() << ")" << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.cut != plate.cut + 1 (plate.node_id: " << plates[i].Getnode_id() << ")" << endl;
                 success = 0;
             }
             // If branch node type.
@@ -289,73 +278,73 @@ void verifyDimensions (void)
                 if (width < min1Cut)
                 {
                     if (active_log)
-                        log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width less than " << min1Cut << endl;
+                        log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width less than " << min1Cut << endl;
                     else
-                        cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width less than " << min1Cut << endl;
+                        cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width less than " << min1Cut << endl;
                     success = 0;
                 }
                 // verifies width is not > max1Cut optimization parameter.
                 if (width > max1Cut)
                 {
                     if (active_log)
-                        log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width greater than " << max1Cut << "mm" << endl;
+                        log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width greater than " << max1Cut << "mm" << endl;
                     else
-                        cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width greater than " << max1Cut << "mm" << endl;
+                        cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: branch, width: " << width << ", height: " << height << ") has node.width greater than " << max1Cut << "mm" << endl;
                     success = 0;
                 }
             }
             // verifies node.y parameter is equal or not to plate's y position.
-            if (y != plate[i].Getpos_y())
+            if (y != plates[i].Getpos_y())
             {
                 if (active_log)
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": node.y is not equal to its plate " << plate[i].Getnode_id() << " y: " << plate[i].Getpos_y() << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": node.y is not equal to its plate " << plates[i].Getnode_id() << " y: " << plates[i].Getpos_y() << endl;
                 else
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": node.y is not equal to its plate " << plate[i].Getnode_id() << " y: " << plate[i].Getpos_y() << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": node.y is not equal to its plate " << plates[i].Getnode_id() << " y: " << plates[i].Getpos_y() << endl;
                 success = 0;
             }
             // verifies node.height parameter is equal or not to plate's height.
-            if (height != plate[i].Getheight())
+            if (height != plates[i].Getheight())
             {
                 if (active_log)
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": node.height is not equal to its plate " << plate[i].Getnode_id() << " height: " << plate[i].Getheight() << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": node.height is not equal to its plate " << plates[i].Getnode_id() << " height: " << plates[i].Getheight() << endl;
                 else
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": node.height is not equal to its plate " << plate[i].Getnode_id() << " height: " << plate[i].Getheight() << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": node.height is not equal to its plate " << plates[i].Getnode_id() << " height: " << plates[i].Getheight() << endl;
                 success = 0;
             }
-            // verifies if first node of plate[i] starts at coordinate node.x = 0.
+            // verifies if first node of plates[i] starts at coordinate node.x = 0.
             if ((j == 0) && (x != 0))
             {
                 if (active_log)
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != plate.x (plate.node_id: " << plate[i].Getnode_id() << ", x: 0)" << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != plate.x (plate.node_id: " << plates[i].Getnode_id() << ", x: 0)" << endl;
                 else
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != plate.x (plate.node_id: " << plate[i].Getnode_id() << ", x: 0)" << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != plate.x (plate.node_id: " << plates[i].Getnode_id() << ", x: 0)" << endl;
                 success = 0;
             }
             // verifies if nodes from the same cut stage have node[i].x == node[i-1].x + node[i-1].width.
-            if ( (j > 0) && (x != (plate[i].Getsuccessor(j-1).Getpos_x() + plate[i].Getsuccessor(j-1).Getwidth())))
+            if ( (j > 0) && (x != (plates[i].Getsuccessor(j-1).Getpos_x() + plates[i].Getsuccessor(j-1).Getwidth())))
             {
                 if (active_log)
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != node[" << plate[i].Getsuccessor(j-1).Getnode_id() << "].x + node[" << plate[i].Getsuccessor(j-1).Getnode_id() << "].width" << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != node[" << plates[i].Getsuccessor(j-1).Getnode_id() << "].x + node[" << plates[i].Getsuccessor(j-1).Getnode_id() << "].width" << endl;
                 else
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != node[" << plate[i].Getsuccessor(j-1).Getnode_id() << "].x + node[" << plate[i].Getsuccessor(j-1).Getnode_id() << "].width" << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x != node[" << plates[i].Getsuccessor(j-1).Getnode_id() << "].x + node[" << plates[i].Getsuccessor(j-1).Getnode_id() << "].width" << endl;
                 success = 0;
             }
             // verifies if node.width + node.x overflow plate's width.
-            if (x+width > plate[i].Getwidth())
+            if (x+width > plates[i].Getwidth())
             {
                 if (active_log)
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x + node.width > plate.width (plate.node_id: " << plate[i].Getnode_id() << ")" << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x + node.width > plate.width (plate.node_id: " << plates[i].Getnode_id() << ")" << endl;
                 else
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x + node.width > plate.width (plate.node_id: " << plate[i].Getnode_id() << ")" << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (x: " << x << ", y: " << y << ", width: " << width << ", height: " << height << ") has node.x + node.width > plate.width (plate.node_id: " << plates[i].Getnode_id() << ")" << endl;
                 success = 0;
             }
             // if node is last plate's successor, verify if node.width + node.x is less than plate's width.
-            if ((j == c_nbr-1) && (x+width < plate[i].Getwidth()))
+            if ((j == c_nbr-1) && (x+width < plates[i].Getwidth()))
             {
                 if (active_log)
-                    log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": is the last of plate " << plate[i].Getplate_id() << " successors and node.x + node.width < plate.width (plate.node_id: " << plate[i].Getnode_id() << ")" << endl;
+                    log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": is the last of plate " << plates[i].Getplate_id() << " successors and node.x + node.width < plate.width (plate.node_id: " << plates[i].Getnode_id() << ")" << endl;
                 else
-                    cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": is the last of plate " << plate[i].Getplate_id() << " successors and node.x + node.width < plate.width (plate.node_id: " << plate[i].Getnode_id() << ")" << endl;
+                    cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": is the last of plate " << plates[i].Getplate_id() << " successors and node.x + node.width < plate.width (plate.node_id: " << plates[i].Getnode_id() << ")" << endl;
                 success = 0;
             }
             // If node has waste type.
@@ -365,36 +354,36 @@ void verifyDimensions (void)
                 if (height < waste_min)
                 {
                     if (active_log)
-                        log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.height less than " << waste_min << "mm" << endl;
+                        log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.height less than " << waste_min << "mm" << endl;
                     else
-                        cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.height less than " << waste_min << "mm" << endl;
+                        cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.height less than " << waste_min << "mm" << endl;
                     success = 0;
                 }
                 // verifies if node.width is not inferior to waste_min optimization parameter prefixed value.
                 if (width < waste_min)
                 {
                     if (active_log)
-                        log_file << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.width less than " << waste_min << "mm" << endl;
+                        log_file << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.width less than " << waste_min << "mm" << endl;
                     else
-                        cout << "\tERROR -- Node " << plate[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.width less than " << waste_min << "mm" << endl;
+                        cout << "\tERROR -- Node " << plates[i].Getsuccessor(j).Getnode_id() << ": (type: waste, width: " << width << ", height: " << height << ") has node.width less than " << waste_min << "mm" << endl;
                     success = 0;
                 }
             }
             // If node has residual type, verifies if node.width and node.height are not inferior to waste_min optimization parameter prefixed value.
-            if ((i == plates_nbr-1) && (residual_node > 0))
+            if ((i == PLATES_NBR_LIMIT-1) && (residual_node > 0))
             {
-                if (plate[i].Getresidual().Getwidth() < waste_min)
+                if (plates[i].Getresidual().Getwidth() < waste_min)
                 {
                     if (active_log)
-                        log_file << "\tERROR -- Node " << plate[i].Getresidual().Getnode_id() << ": (type: residual, width: " << plate[i].Getresidual().Getwidth() << ", height: " << plate[i].Getresidual().Getheight() << ") has node.width less than " << waste_min << "mm" << endl;
+                        log_file << "\tERROR -- Node " << plates[i].Getresidual().Getnode_id() << ": (type: residual, width: " << plates[i].Getresidual().Getwidth() << ", height: " << plates[i].Getresidual().Getheight() << ") has node.width less than " << waste_min << "mm" << endl;
                     else
-                        cout << "\tERROR -- Node " << plate[i].Getresidual().Getnode_id() << ": (type: residual, width: " << plate[i].Getresidual().Getwidth() << ", height: " << plate[i].Getresidual().Getheight() << ") has node.width less than " << waste_min << "mm" << endl;
+                        cout << "\tERROR -- Node " << plates[i].Getresidual().Getnode_id() << ": (type: residual, width: " << plates[i].Getresidual().Getwidth() << ", height: " << plates[i].Getresidual().Getheight() << ") has node.width less than " << waste_min << "mm" << endl;
                     success = 0;
                 }
             }
             // If node has branch type, look for its successors dimensions.
             if (type == -2)
-                checkSuccDimensions (plate[i].Getsuccessor(j));
+                checkSuccDimensions (plates[i].Getsuccessor(j));
         }
     }
     if (success)
@@ -414,15 +403,14 @@ void verifyDimensions (void)
         log_file <<         "\t--- End of Dimension constraint verification ---" << endl;
     else
         cout <<         "\t--- End of Dimension constraint verification ---" << endl;
+
+    return success;
 }
 
 
-/**
- * This function is recursive, it verifies dimensions constraint of node successors.
-**/
-void checkSuccDimensions (GlassNode parent)
-{
-    unsigned int j, height, width, x, y, cut, c_nbr;
+void checkSuccDimensions(GlassNode parent){
+
+    int j, height, width, x, y, cut, c_nbr;
     int type;
     // Get node successors number (children).
     c_nbr = parent.Getsuccessor_nbr();
@@ -601,38 +589,31 @@ void checkSuccDimensions (GlassNode parent)
 }
 
 
-/**
- * This function verifies the Identity and sequence constraints
- * Identity:
- *      this function verifies that all solution items are identical to batch items
- *      with the possibility to invert width and height.
- * Sequence:
- *      this function verifies that user solution respects the production sequence
- *      given in the batch file.
-**/
-void verifyIdt_Sequence(void)
-{
+
+bool verifyIdt_Sequence(vector<GlassStack>& stacks, const vector<GlassNode>& solution){
     if (active_log)
         log_file << endl << "\t--- Sequence & Identity constraints verification ---" << endl;
+
     else
         cout << endl << "\t--- Sequence & Identity constraints verification ---" << endl;
-    unsigned int i, j, sol_width, sol_height, batch_width, batch_height, fnd_stck = 0, idtty_error = 0;
-    unsigned int stack_cur_idx;
+
+    int i, j, sol_width, sol_height, batch_width, batch_height, fnd_stck = 0, idtty_error = 0;
+    int stack_cur_idx;
     // Verify that no Item production errors occured.
-    if ((constraint_error & ITEM_PRODUCTION_ERROR_MASK) >> ITEM_PRODUCTION_ERROR_OFFSET)
-    {
+    if ((constraint_error & ITEM_PRODUCTION_ERROR_MASK) >> ITEM_PRODUCTION_ERROR_OFFSET){
         if (active_log)
-        {
             log_file << "\tERROR -- Unable to verify Sequence & Identity constraints due to Item Production ERROR" << endl;
-        }
+        
         else
             cout << "\tERROR -- Unable to verify Sequence & Identity constraints due to Item Production ERROR" << endl;
-    }
-    else
-    {
+    
+    }else{
+        for(j = 0; j < stack_nbr; j++){
+            stacks[j].Reset(); // set stacks_idx to 0
+        }
+
         // Loop on all solution nodes.
-        for (i = 0; i < useful_node; i++)
-        {
+        for (i = 0; i < solution.size(); i++){
             fnd_stck = 0, idtty_error = 0;
             // Loop on all batch stacks.
             for (j = 0; j < stack_nbr; j++)
@@ -642,35 +623,34 @@ void verifyIdt_Sequence(void)
                 if (stack_cur_idx == 0xffff)
                     break;
                 // If solution item type equals to a authorized stack item id.
-                if (sol_items[i].Gettype() == stacks[j].Getitem(stack_cur_idx).Getitem_id())
+                if (solution[i].Gettype() == stacks[j].Getitem(stack_cur_idx).Getitem_id())
                 {
                     fnd_stck++;
-                    sol_width = sol_items[i].Getwidth();
-                    sol_height = sol_items[i].Getheight();
-                    batch_width = stacks[j].Getitem(stacks[j].Getcur_item_idx()).Getitem_w ();
-                    batch_height = stacks[j].Getitem(stacks[j].Getcur_item_idx()).Getitem_h ();
-                    stacks[j].Increasecur_item_idx();
+                    sol_width = solution[i].Getwidth();
+                    sol_height = solution[i].Getheight();
+                    batch_width = stacks[j].Getitem(stacks[j].Getcur_item_idx()).Getitem_w();
+                    batch_height = stacks[j].Getitem(stacks[j].Getcur_item_idx()).Getitem_h();
+                    stacks[j].Pop();
                     if (!(((sol_height == batch_height) && (sol_width == batch_width)) || ((sol_height == batch_width) && (sol_width == batch_height))))
                     {
                         if (active_log)
-                            log_file << "\tERROR -- Identity constraint is not respected " << endl << "\t\tItem " << sol_items[i].Gettype() << " ( width: " << sol_width << ", height: " << sol_height << ")  parameters are not identical to its batch version (width: " << batch_width << ", height: " << batch_height << ")." << endl;
+                            log_file << "\tERROR -- Identity constraint is not respected " << endl << "\t\tItem " << solution[i].Gettype() << " ( width: " << sol_width << ", height: " << sol_height << ")  parameters are not identical to its batch version (width: " << batch_width << ", height: " << batch_height << ")." << endl;
                         else
-                            cout << "\tERROR -- Identity constraint is not respected " << endl << "\t\tItem " << sol_items[i].Gettype() << " ( width: " << sol_width << ", height: " << sol_height << ")  parameters are not identical to its batch version (width: " << batch_width << ", height: " << batch_height << ")." << endl;
+                            cout << "\tERROR -- Identity constraint is not respected " << endl << "\t\tItem " << solution[i].Gettype() << " ( width: " << sol_width << ", height: " << sol_height << ")  parameters are not identical to its batch version (width: " << batch_width << ", height: " << batch_height << ")." << endl;
                         idtty_error ++;
                         constraint_error |= IDENTITY_ERROR_MASK;
                     }
                 }
             }
             // If solution item is not a authorized item (not found).
-            if ( fnd_stck == 0)
-            {
+            if(fnd_stck == 0){
                 if (active_log)
                 {
-                    log_file << "\tERROR -- Sequence constraint is not respected " << endl << "\t\tItem " << sol_items[i].Gettype() << " is not allowed" << endl;
+                    log_file << "\tERROR -- Sequence constraint is not respected " << endl << "\t\tItem " << solution[i].Gettype() << " is not allowed" << endl;
                     constraint_error |= SEQUENCE_ERROR_MASK;
                 }
                 else
-                    cout << "\tERROR -- Sequence constraint is not respected " << endl << "\t\tItem " << sol_items[i].Gettype() << " is not allowed" << endl;
+                    cout << "\tERROR -- Sequence constraint is not respected " << endl << "\t\tItem " << solution[i].Gettype() << " is not allowed" << endl;
                 break;
             }
         }
@@ -695,9 +675,12 @@ void verifyIdt_Sequence(void)
             else
                 cout << "\tIdentity Constraint verified successfully" << endl;
         }
+    
+        if (active_log)
+            log_file << "\t--- End of Sequence & Identity constraints verification ---" << endl;
+        else
+            cout << "\t--- End of Sequence & Identity constraints verification ---" << endl;
+
+        return (idtty_error == 0);
     }
-    if (active_log)
-        log_file << "\t--- End of Sequence & Identity constraints verification ---" << endl;
-    else
-        cout << "\t--- End of Sequence & Identity constraints verification ---" << endl;
 }

@@ -7,8 +7,8 @@ add_executable(toukeute
     main.cpp
     #build_data.h
     #build_data.cpp
-    #checker.h
-    #checker.cpp
+    checker.h
+    checker.cpp
     class_initialization.h
     class_initialization.cpp
     global_var.h
@@ -39,8 +39,8 @@ add_executable(tests
     tests.cpp
     #build_data.h
     #build_data.cpp
-    #checker.h
-    #checker.cpp
+    checker.h
+    checker.cpp
     class_initialization.h
     class_initialization.cpp
     global_var.h

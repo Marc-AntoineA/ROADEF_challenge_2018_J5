@@ -13,10 +13,10 @@ class GlassStack
     public:
         GlassStack();
         virtual ~GlassStack();
-        int Getstack_id(){ return stack_id; }
-        int Getitem_nbr(){ return item_nbr; }
-        int Getcur_item_idx(){ return cur_item_idx; }
-        GlassItem Getitem (int idx){ return items[idx]; }
+        int Getstack_id() const { return stack_id; }
+        int Getitem_nbr() const { return item_nbr; }
+        int Getcur_item_idx() const { return cur_item_idx; }
+        GlassItem Getitem(int idx) const { return items[idx]; }
 
         void Setstack_id(int val){ stack_id = val; }
         void Setitem_nbr(int val){ item_nbr = val; }
@@ -26,6 +26,7 @@ class GlassStack
         void AllocateItems(){ items.resize(item_nbr); }
         void Increaseitem_nbr(){ item_nbr++; }
         void Pop(){ if(cur_item_idx >= item_nbr) {cur_item_idx = 0xffff;} else { cur_item_idx++; } }
+        void Reset(){ cur_item_idx = 0; }
         GlassItem Top(){ return Getitem(cur_item_idx); }
         bool Depleted(){ return cur_item_idx >= item_nbr; }
 

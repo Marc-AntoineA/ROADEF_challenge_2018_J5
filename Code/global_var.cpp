@@ -1,6 +1,6 @@
 #include "global_var.h"
 
-int active_log=1;
+int active_log=0;
 ofstream log_file;
 ofstream statistics_file;
 bool opened_file = true;
