@@ -1,10 +1,9 @@
 #include "greedy.h"
-
 #include <string>
 #include <iostream>
 #include <stack>
 #include <cmath>
-#include <algorithm> 
+#include <algorithm>
 
 using namespace std;
 
@@ -40,40 +39,39 @@ bool Greedy::decision(method meth){
         return false;
     }
     else{
-        float best_score=0;
-        GlassItem best_item, potential_item;
+        float best_score = 0;
+        GlassItem best_item;
         bool best_rotated;
         for (int i=0;i<stacks.size();i++){
             if (!stacks[i].Depleted()){
-                potential_item = stacks[i].Top();
+                current_item = stacks[i].Top();
                 rotated = true;
-                if (position_defects(current_node, potential_item, rotated, x, y)){
-                    float item_score=score(current_node, potential_item, rotated, x, y, meth);
-                    if (item_score>best_score){
+                if (position_defects(current_node, current_item, rotated, x, y)){
+                    float item_score=score(current_node, current_item, rotated, x, y, meth);
+                    if (item_score > best_score){
                         best_score=item_score;
-                        best_item=potential_item;
+                        best_item=current_item;
                         best_rotated=rotated;
                     }
                 }
                 rotated = false;
-                if (position_defects(current_node, potential_item, rotated, x, y)){
-                    float item_score=score(current_node, potential_item, rotated, x, y, meth);
-                    if (item_score>best_score){
+                if (position_defects(current_node, current_item, rotated, x, y)){
+                    float item_score=score(current_node, current_item, rotated, x, y, meth);
+                    if (item_score > best_score){
                         best_score=item_score;
-                        best_item=potential_item;
+                        best_item=current_item;
                         best_rotated=rotated;
                     }
                 }
             }
         }
-        if (best_score<0.001){
-            cout<<"score null"<<endl;
+        if (best_score < 0.001){
             return false;
         }
         else{
             current_item = best_item;
-            cout<<"score not null"<< best_item.Getitem_id()<<endl;
-            return position_defects(current_node, current_item, best_rotated, x, y);
+            rotated = best_rotated;
+            return position_defects(current_node, current_item, rotated, x, y);
         }
     }
 }
@@ -124,7 +122,6 @@ void Greedy::cut(){
             node.Setpos_x(x + w);
             node.Setwidth(X + W - x - w);
             node.Setnode_id(getNewNodeId());
-
             nodes_to_visit.push(node);
         }
         // Le noeud du centre
@@ -134,13 +131,9 @@ void Greedy::cut(){
 
         // on regarde si on ne vient pas de couper un nouvel item
         if (h == H){
-
             stacks[current_item.Getitem_stack()].Pop();
-
             // Les items découpés sont ajoutés à la solution ici
-
-            node.Setnode_id(getNewNodeId());
-
+            node.Settype(current_item.Getitem_id());
             sol.push_back(node);
         }
         else
@@ -148,9 +141,7 @@ void Greedy::cut(){
         if (x - X > 0){
             node.Setpos_x(X);
             node.Setwidth(x - X);
-
             node.Setnode_id(getNewNodeId());
-
             nodes_to_visit.push(node);
         }
     }
@@ -161,15 +152,12 @@ void Greedy::cut(){
         if (y + h < Y + H){
             node.Setpos_y(y + h);
             node.Setheight(Y + H - y - h);
-
             node.Setnode_id(getNewNodeId());
-
             nodes_to_visit.push(node);
         }
         // le noeud du centre
         node.Setpos_y(y);
         node.Setheight(h);
-
         node.Setnode_id(getNewNodeId());
 
         // on regarde si on ne vient pas de couper un nouvel item
@@ -185,9 +173,7 @@ void Greedy::cut(){
         if (y - Y > 0){
             node.Setpos_y(Y);
             node.Setheight(y - Y);
-
             node.Setnode_id(getNewNodeId());
-
             nodes_to_visit.push(node);
         }
     }
