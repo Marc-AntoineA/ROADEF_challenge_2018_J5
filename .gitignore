@@ -16,6 +16,7 @@ Code/cmake_install.cmake
 Code/*.user
 Code/*.cbp
 Code/*.exe
+Code/*.cpp.autosave
 Code/toukeute
 Code/tests
 

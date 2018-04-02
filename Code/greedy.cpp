@@ -41,36 +41,39 @@ bool Greedy::decision(method meth){
     }
     else{
         float best_score=0;
-        GlassItem best_item;
+        GlassItem best_item, potential_item;
         bool best_rotated;
         for (int i=0;i<stacks.size();i++){
             if (!stacks[i].Depleted()){
-                current_item = stacks[i].Top();
+                potential_item = stacks[i].Top();
                 rotated = true;
-                if (position_defects(current_node, current_item, rotated, x, y)){
-                    float item_score=score(current_node, current_item, rotated, x, y, meth);
+                if (position_defects(current_node, potential_item, rotated, x, y)){
+                    float item_score=score(current_node, potential_item, rotated, x, y, meth);
                     if (item_score>best_score){
                         best_score=item_score;
-                        best_item=current_item;
+                        best_item=potential_item;
                         best_rotated=rotated;
                     }
                 }
                 rotated = false;
-                if (position_defects(current_node, current_item, rotated, x, y)){
-                    float item_score=score(current_node, current_item, rotated, x, y, meth);
+                if (position_defects(current_node, potential_item, rotated, x, y)){
+                    float item_score=score(current_node, potential_item, rotated, x, y, meth);
                     if (item_score>best_score){
                         best_score=item_score;
-                        best_item=current_item;
+                        best_item=potential_item;
                         best_rotated=rotated;
                     }
                 }
             }
         }
-        if (best_score==0){
+        if (best_score<0.001){
+            cout<<"score null"<<endl;
             return false;
         }
         else{
-            return position_defects(current_node, best_item, best_rotated, x, y);
+            current_item = best_item;
+            cout<<"score not null"<< best_item.Getitem_id()<<endl;
+            return position_defects(current_node, current_item, best_rotated, x, y);
         }
     }
 }
