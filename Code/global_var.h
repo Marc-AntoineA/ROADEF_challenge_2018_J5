@@ -8,7 +8,7 @@
 
 using namespace std;
 
-enum method{ basic };
+enum method{ basic, simple_score };
 enum cutting_direction{ horizontal, vertical };
 
 const string LOGFILE = "/results.csv";
@@ -135,7 +135,7 @@ extern unsigned int total_useful; // Sum of used area.
 extern int max_cut_stage; // Solution max used cut stage.
 
 extern unsigned int plate_nbr_limit; // To save Optimization parameters plate number limit constraint.
-extern unsigned plate_w; // To save Optimization parameters plate's length constraint.
+extern unsigned int plate_w; // To save Optimization parameters plate's length constraint.
 extern unsigned int plate_h; // To save Optimization parameters plate's width constraint.
 extern unsigned int min1Cut; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
 extern unsigned int min2Cut; // To save Optimization parameters cut 1 & 2 min2Cut constraint.

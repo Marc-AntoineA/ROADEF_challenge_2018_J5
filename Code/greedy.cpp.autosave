@@ -7,16 +7,18 @@
 using namespace std;
 
 float Greedy::score(const GlassNode& node, const GlassItem& item, const bool& rotated, const int& x, const int& y,  method m){
-    //coefficients positifs
-    float alpha_h=0;
-    float alpha_w=0;
-    float alpha_surface=1;
-
-    int item_h=item.Getitem_h(rotated);
-    int item_w=item.Getitem_w(rotated);
-    int item_surface=item_h*item_w;
-
-    return alpha_surface*item_surface+alpha_h*item_h+alpha_w*item_w;
+    if (m==simple_score){
+        //coefficients positifs
+        float alpha_h=0;
+        float alpha_w=0;
+        float alpha_surface=1;
+    
+        int item_h=item.Getitem_h(rotated);
+        int item_w=item.Getitem_w(rotated);
+        int item_surface=item_h*item_w;
+    
+        return alpha_surface*item_surface+alpha_h*item_h+alpha_w*item_w;
+    }
 }
 
 bool Greedy::decision(method meth){
