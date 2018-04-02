@@ -8,7 +8,7 @@ GlassDefect::GlassDefect()
     //ctor
 }
 
-GlassDefect::GlassDefect(unsigned int id, unsigned int pid, unsigned int x, unsigned int y, unsigned int w, unsigned int h)
+GlassDefect::GlassDefect(int id, int pid, int x, int y, int w, int h)
 {
     defect_id = id;
     plate_id = pid;

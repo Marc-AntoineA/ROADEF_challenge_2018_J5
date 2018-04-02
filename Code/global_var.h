@@ -113,34 +113,34 @@ extern string file_idx; // To save used file index (Normal mode).
 extern string testPath; // To save path according to chosen test.
 extern string instance; // To save used file index (Test mode).
 
-extern unsigned int s_idx; // Solution index, used precise where to insert solution node in sol_items array.
-extern unsigned int plates_nbr; // Save solution used plates number.
-extern unsigned int stack_nbr; // Save batch stack number.
-//extern unsigned int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
+extern int s_idx; // Solution index, used precise where to insert solution node in sol_items array.
+extern int plates_nbr; // Save solution used plates number.
+extern int stack_nbr; // Save batch stack number.
+//extern int plates_list [PLATES_NBR_LIMIT][2];   // Save number of nodes for each plate used in user solution.
                                                   // plates_list[X][Y]:   X dimension contains plates Ids list
                                                   //                      Y dimension contains number of nodes of plate X
-extern unsigned int lines_nbr; // csv file lines number.
-extern unsigned int node_nbr; // Solution file nodes number.
-extern unsigned int useful_node; // Solution useful nodes number (node not a branch or waste or residual).
-extern unsigned int branch_node; // Solution branch nodes number
-extern unsigned int residual_node; // Solution residual nodes number.
-extern unsigned int waste_node; // Solution waste nodes number.
-extern unsigned int batch_items; // Batch items number.
-extern unsigned int constraint_error; // Success constraint, combination of solution's occured errors (refer to main.h to find errors list).
-//extern unsigned int defects_nbr; // Defects file defects number.
+extern int lines_nbr; // csv file lines number.
+extern int node_nbr; // Solution file nodes number.
+extern int useful_node; // Solution useful nodes number (node not a branch or waste or residual).
+extern int branch_node; // Solution branch nodes number
+extern int residual_node; // Solution residual nodes number.
+extern int waste_node; // Solution waste nodes number.
+extern int batch_items; // Batch items number.
+extern int constraint_error; // Success constraint, combination of solution's occured errors (refer to main.h to find errors list).
+//extern int defects_nbr; // Defects file defects number.
 
-extern unsigned int total_waste; // Sum of wasted area.
-extern unsigned int total_useful; // Sum of used area.
+extern int total_waste; // Sum of wasted area.
+extern int total_useful; // Sum of used area.
 
 extern int max_cut_stage; // Solution max used cut stage.
 
-extern unsigned int plate_nbr_limit; // To save Optimization parameters plate number limit constraint.
-extern unsigned int plate_w; // To save Optimization parameters plate's length constraint.
-extern unsigned int plate_h; // To save Optimization parameters plate's width constraint.
-extern unsigned int min1Cut; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
-extern unsigned int min2Cut; // To save Optimization parameters cut 1 & 2 min2Cut constraint.
-extern unsigned int max1Cut; // To save Optimization parameters cut 1 & 2 max1Cut  constraint.
-extern unsigned int waste_min; // To save Optimization parameters cut 1 & 2 minWasteWidth constraint.
+extern int plate_nbr_limit; // To save Optimization parameters plate number limit constraint.
+extern int plate_w; // To save Optimization parameters plate's length constraint.
+extern int plate_h; // To save Optimization parameters plate's width constraint.
+extern int min1Cut; // To save Optimization parameters cut 1 & 2 min1Cut constraint.
+extern int min2Cut; // To save Optimization parameters cut 1 & 2 min2Cut constraint.
+extern int max1Cut; // To save Optimization parameters cut 1 & 2 max1Cut  constraint.
+extern int waste_min; // To save Optimization parameters cut 1 & 2 minWasteWidth constraint.
 
-extern unsigned int success;
+extern int success;
 

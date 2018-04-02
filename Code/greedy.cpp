@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <stack>
+#include <cmath>
+#include <algorithm> 
 
 using namespace std;
 
@@ -244,13 +246,16 @@ bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool
     int maxX = x + WW - w + 1;
     int maxY = y + HH - h + 1;
     int y_defect = y; // Plus grande ordonnée du défaut qui bloque la piece
-    
+    int x_defect = maxX; // Plus petite abscisse
+
     vector<GlassDefect>* defects = plates[node.Getplate_id()].Getdefects();
     bool location_found = false;
+
     while(!location_found && x < maxX && y < maxY){
         for(int defect_idx = 0; defect_idx < plates[node.Getplate_id()].Getdefect_nbr(); defect_idx++){
             if(intersect(x, y, w, h, (*defects)[defect_idx])){
-                y_defect = (*defects)[defect_idx].Getpos_ySup();                
+                y_defect = max(y_defect, (*defects)[defect_idx].Getpos_ySup());                
+                x_defect = min(x_defect, (*defects)[defect_idx].Getpos_xSup());
             }
         }
         // Si aucun défaut n'est présent
@@ -262,7 +267,7 @@ bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool
             if(y >= maxY){
                 y = minY;
                 y_defect = y;
-                x++;
+                x = x_defect;
             }
         }
     }
