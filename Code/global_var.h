@@ -103,7 +103,7 @@ const string LOGFILE = "/results.csv";
 #define SEQUENCE_ERROR_MASK                 32
 #define SEQUENCE_ERROR_OFFSET               5
 
-extern unsigned int active_log; // Once log file is generated this var will be cleared.
+extern int active_log; // Once log file is generated this var will be cleared.
 extern ofstream log_file; // Reference to log file.
 
 extern ofstream statistics_file; // Reference to statisticsLog file.
