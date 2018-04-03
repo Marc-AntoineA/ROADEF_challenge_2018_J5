@@ -216,7 +216,7 @@ void Greedy::run(const method& m){
  * Renvoie la position (x, y) où placer un item orienté pour un node donné 
  * (le plus à gauche en bas possible)
  * output: false si aucun emplacement possible
- * Complexité = algo intelligent pour la répartition en Y mais pas en X
+ * Complexité = algo intelligent pour la répartition en Y ET en X
 **/
 bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool rotated, int& x, int& y){
     // Initialisation, piece en bas à gauche
@@ -257,6 +257,7 @@ bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool
                 y = minY;
                 y_defect = y;
                 x = x_defect;
+                x_defect = maxX;
             }
         }
     }
