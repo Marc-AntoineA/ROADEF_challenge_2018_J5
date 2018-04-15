@@ -1,23 +1,24 @@
 #include "greedy.h"
+
 #include <string>
 #include <iostream>
 #include <stack>
-#include <cmath>
-#include <algorithm>
 
 using namespace std;
 
 float Greedy::score(const GlassNode& node, const GlassItem& item, const bool& rotated, const int& x, const int& y,  method m){
-    //coefficients positifs
-    float alpha_h=0;
-    float alpha_w=0;
-    float alpha_surface=1;
-
-    int item_h=item.Getitem_h(rotated);
-    int item_w=item.Getitem_w(rotated);
-    int item_surface=item_h*item_w;
-
-    return alpha_surface*item_surface+alpha_h*item_h+alpha_w*item_w;
+    if (m==simple_score){
+        //coefficients positifs
+        float alpha_h=0;
+        float alpha_w=0;
+        float alpha_surface=1;
+    
+        int item_h=item.Getitem_h(rotated);
+        int item_w=item.Getitem_w(rotated);
+        int item_surface=item_h*item_w;
+    
+        return alpha_surface*item_surface+alpha_h*item_h+alpha_w*item_w;
+    }
 }
 
 bool Greedy::decision(method meth){
@@ -39,7 +40,7 @@ bool Greedy::decision(method meth){
         return false;
     }
     else{
-        float best_score = 0;
+        float best_score=0;
         GlassItem best_item;
         bool best_rotated;
         for (int i=0;i<stacks.size();i++){
@@ -48,7 +49,7 @@ bool Greedy::decision(method meth){
                 rotated = true;
                 if (position_defects(current_node, current_item, rotated, x, y)){
                     float item_score=score(current_node, current_item, rotated, x, y, meth);
-                    if (item_score > best_score){
+                    if (item_score>best_score){
                         best_score=item_score;
                         best_item=current_item;
                         best_rotated=rotated;
@@ -57,7 +58,7 @@ bool Greedy::decision(method meth){
                 rotated = false;
                 if (position_defects(current_node, current_item, rotated, x, y)){
                     float item_score=score(current_node, current_item, rotated, x, y, meth);
-                    if (item_score > best_score){
+                    if (item_score>best_score){
                         best_score=item_score;
                         best_item=current_item;
                         best_rotated=rotated;
@@ -65,13 +66,11 @@ bool Greedy::decision(method meth){
                 }
             }
         }
-        if (best_score < 0.001){
+        if (best_score==0){
             return false;
         }
         else{
-            current_item = best_item;
-            rotated = best_rotated;
-            return position_defects(current_node, current_item, rotated, x, y);
+            return position_defects(current_node, best_item, best_rotated, x, y);
         }
     }
 }
@@ -122,6 +121,7 @@ void Greedy::cut(){
             node.Setpos_x(x + w);
             node.Setwidth(X + W - x - w);
             node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
         }
         // Le noeud du centre
@@ -131,9 +131,13 @@ void Greedy::cut(){
 
         // on regarde si on ne vient pas de couper un nouvel item
         if (h == H){
+
             stacks[current_item.Getitem_stack()].Pop();
+
             // Les items découpés sont ajoutés à la solution ici
-            node.Settype(current_item.Getitem_id());
+
+            node.Setnode_id(getNewNodeId());
+
             sol.push_back(node);
         }
         else
@@ -141,7 +145,9 @@ void Greedy::cut(){
         if (x - X > 0){
             node.Setpos_x(X);
             node.Setwidth(x - X);
+
             node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
         }
     }
@@ -152,12 +158,15 @@ void Greedy::cut(){
         if (y + h < Y + H){
             node.Setpos_y(y + h);
             node.Setheight(Y + H - y - h);
+
             node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
         }
         // le noeud du centre
         node.Setpos_y(y);
         node.Setheight(h);
+
         node.Setnode_id(getNewNodeId());
 
         // on regarde si on ne vient pas de couper un nouvel item
@@ -173,7 +182,9 @@ void Greedy::cut(){
         if (y - Y > 0){
             node.Setpos_y(Y);
             node.Setheight(y - Y);
+
             node.Setnode_id(getNewNodeId());
+
             nodes_to_visit.push(node);
         }
     }
@@ -216,7 +227,7 @@ void Greedy::run(const method& m){
  * Renvoie la position (x, y) où placer un item orienté pour un node donné 
  * (le plus à gauche en bas possible)
  * output: false si aucun emplacement possible
- * Complexité = algo intelligent pour la répartition en Y ET en X
+ * Complexité = algo intelligent pour la répartition en Y mais pas en X
 **/
 bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool rotated, int& x, int& y){
     // Initialisation, piece en bas à gauche
@@ -235,16 +246,13 @@ bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool
     int maxX = x + WW - w + 1;
     int maxY = y + HH - h + 1;
     int y_defect = y; // Plus grande ordonnée du défaut qui bloque la piece
-    int x_defect = maxX; // Plus petite abscisse
-
+    
     vector<GlassDefect>* defects = plates[node.Getplate_id()].Getdefects();
     bool location_found = false;
-
     while(!location_found && x < maxX && y < maxY){
         for(int defect_idx = 0; defect_idx < plates[node.Getplate_id()].Getdefect_nbr(); defect_idx++){
             if(intersect(x, y, w, h, (*defects)[defect_idx])){
-                y_defect = max(y_defect, (*defects)[defect_idx].Getpos_ySup());                
-                x_defect = min(x_defect, (*defects)[defect_idx].Getpos_xSup());
+                y_defect = (*defects)[defect_idx].Getpos_ySup();                
             }
         }
         // Si aucun défaut n'est présent
@@ -256,8 +264,7 @@ bool Greedy::position_defects(const GlassNode& node, const GlassItem& item, bool
             if(y >= maxY){
                 y = minY;
                 y_defect = y;
-                x = x_defect;
-                x_defect = maxX;
+                x++;
             }
         }
     }
