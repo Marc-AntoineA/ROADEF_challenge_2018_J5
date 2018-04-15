@@ -26,7 +26,7 @@ public:
     Algorithm(const string& instance);
 
     // renvoie la valeur du score correspondant à la déf. de la roadef
-    unsigned int get_score_roadef();
+    int get_score_roadef();
 
     // s'assure que toutes les contraintes sont vérifiées en utilisant le code fourni
     // a priori long mais pas besoin de l'utiliser en fonctionnement normal

@@ -21,7 +21,7 @@ class Greedy: public Algorithm{
 public:
 
     // Le constructeur prend en entrée le nom de l'instance courante à étudier
-    Greedy(const string& instance): Algorithm(instance){}
+    Greedy(const string& instance): Algorithm(instance){node_id = -1;}
 
 
     // ---------------------------------------------
@@ -69,7 +69,7 @@ protected:
     bool rotated;
     int x;
     int y;
-    int node_id = -1;
+    int node_id;  //vaut -1 pour le Greedy
 
     int getNewNodeId(){
         node_id++;

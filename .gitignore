@@ -24,3 +24,5 @@ Algo_python/__pycache__/
 
 Datasets/dataset_A/*.~lock.*
 checker/instances_checker/*
+
+Build/*
