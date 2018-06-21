@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -std=c++11   CMakeFiles/checker.dir/GlassDefect.cpp.o CMakeFiles/checker.dir/GlassItem.cpp.o CMakeFiles/checker.dir/GlassNode.cpp.o CMakeFiles/checker.dir/GlassPlate.cpp.o CMakeFiles/checker.dir/GlassStack.cpp.o CMakeFiles/checker.dir/main.cpp.o  -o checker -rdynamic 

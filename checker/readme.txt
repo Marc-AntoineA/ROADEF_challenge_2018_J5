@@ -16,9 +16,10 @@ The Checker visualization is a tool to visualize a user generated solution on vi
 Environment:
 --------------
 This algorithm is coded in C++ language.
-The checker is a CodeBlocks project, to recompile it you can download CodeBlocks IDE, or with a g++ compile command.
-example:
-    g++ -o main main.cpp
+The checker is a CodeBlocks project, to recompile it you can download CodeBlocks IDE, 
+or with a g++ compile command: g++ -O2 -Iinclude src/*.cpp -o checker
+
+To use it and check instance A0, you can call: ./checker A0
 
 The Checker visualization requires a browser that supports HTML5.
 
@@ -53,8 +54,8 @@ The Checker algorithm gives the user the following menu.
     2 - Defects superposing
     3 - Identity and Sequence
     4 - Items dimensions
-    5 - Display plates wasted & used surface (%)
-    6 - All constraints (1-4)
+    5 - All constraints (1-4)
+    6 - Display plates wasted & used surface (%)
     0 - Exit
     Pressed key:
 

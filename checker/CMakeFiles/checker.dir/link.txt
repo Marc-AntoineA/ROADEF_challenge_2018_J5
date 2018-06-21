@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/checker.dir/src/main.cpp.o CMakeFiles/checker.dir/src/GlassDefect.cpp.o CMakeFiles/checker.dir/src/GlassItem.cpp.o CMakeFiles/checker.dir/src/GlassNode.cpp.o CMakeFiles/checker.dir/src/GlassPlate.cpp.o CMakeFiles/checker.dir/src/GlassStack.cpp.o  -o checker -rdynamic 

@@ -2,7 +2,7 @@ NAME;VALUE
 nPlates;100
 widthPlates;6000
 heightPlates;3210
-minXX;100
-maxXX;3500
-minYY;100
+min1Cut;100
+max1Cut;3500
+min2Cut;100
 minWaste;20

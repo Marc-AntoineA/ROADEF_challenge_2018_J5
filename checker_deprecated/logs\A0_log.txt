@@ -1,0 +1,72 @@
+
+		----------- Start files parsing -----------
+
+	--- Parsing Optimization Parameters file ---
+	Optimization Parameters file path: instances_checker/global_param.csv
+	nPlates: 100
+	widthPlates: 6000
+	heightPlates: 3210
+	min1Cut: 100
+	max1Cut: 3500
+	min2Cut: 100
+	minWaste: 20
+	--- Optimization Parameters file parsed successfully ---
+
+	--- Parsing Batch file ---
+	Batch file path: instances_checker/A0_batch.csv
+	Items: 3
+	Stacks: 1
+	--- Batch file parsed successfully ---
+
+	--- Parsing Solution file ---
+	Solution file path: instances_checker/A0_solution.csv
+	Plates: 1
+	Nodes: 10
+	branches: 3
+	Items: 3
+	Residuals: 1
+	Waste: 3
+	Used Cut Stages: 3
+	Tree structure built
+	--- Solution file parsed successfully ---
+
+	--- Parsing Defects file ---
+	Defects file path: instances_checker/A0_defects.csv
+	Defects: 3
+	Defects on used plates: 2
+	--- Defects file parsed successfully ---
+
+		----------- End of files parsing ----------
+
+	--- Item production constraint verification ---
+	ERROR -- Item 0: is duplicated
+	ERROR -- Item 1: is not produced
+	ERROR -- Item 2: is not produced
+	ERROR -- Item production constraint violated
+	--- End of Item production constraint verification ---
+
+	--- Superposing with defects constraint verification ---
+	Superposing with defects constraint verified successfully
+	--- End of Superposing with defects constraint verification ---
+
+	--- Sequence & Identity constraints verification ---
+	ERROR -- Unable to verify Sequence & Identity constraints due to Item Production ERROR
+	--- End of Sequence & Identity constraints verification ---
+
+	--- Dimensions constraint verification ---
+	Dimension constraint verified successfully
+	--- End of Dimension constraint verification ---
+
+	--- Display Plates Area Usage ---
+	ERROR -- Unable to verify Display Plates Area Usage due to INVALID SOLUTION
+	--- End of Display Plates Area Usage ---
+
+	------------------------------------------------------------
+	                  Violated Constraints List                 
+	------------------------------------------------------------
+	- Items production Constraint violated
+	------------------------------------------------------------
+
+	------------------------------------------------------------
+                       INVALID SOLUTION                     
+	------------------------------------------------------------
