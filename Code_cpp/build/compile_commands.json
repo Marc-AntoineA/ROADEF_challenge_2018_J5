@@ -1,0 +1,62 @@
+[
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/main.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/main.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/main.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/instance.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/instance.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/instance.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/red_monster.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/red_monster.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/red_monster.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/red_point.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/red_point.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/red_point.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_item.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_item.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_item.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_stack.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_stack.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_stack.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_node.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_node.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_node.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_plate.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_plate.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_plate.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/location.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/location.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/location.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_defect.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_defect.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_defect.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_algorithm.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_algorithm.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_algorithm.cpp"
+},
+{
+  "directory": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build",
+  "command": "/usr/bin/c++     -Wall -Wextra -std=c++11 -O3 -DNDEBUG   -o CMakeFiles/toukeute.dir/glass_cut.cpp.o -c \"/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_cut.cpp\"",
+  "file": "/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code cpp/glass_cut.cpp"
+}
+]

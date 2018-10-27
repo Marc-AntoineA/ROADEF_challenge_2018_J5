@@ -1,0 +1,77 @@
+
+		----------- Start files parsing -----------
+
+	--- Parsing Optimization Parameters file ---
+	Optimization Parameters file path: instances_checker/global_param.csv
+	nPlates: 100
+	widthPlates: 6000
+	heightPlates: 3210
+	min1Cut: 100
+	max1Cut: 3500
+	min2Cut: 100
+	minWaste: 20
+	--- Optimization Parameters file parsed successfully ---
+
+	--- Parsing Batch file ---
+	Batch file path: instances_checker/A1_batch.csv
+	Items: 5
+	Stacks: 1
+	--- Batch file parsed successfully ---
+
+	--- Parsing Solution file ---
+	Solution file path: instances_checker/A1_solution.csv
+	Plates: 1
+	Node 16: is a WASTE that should be considered as a RESIDUAL
+	Nodes: 17
+	branches: 5
+	Items: 5
+	Residuals: 1
+	Waste: 5
+	Used Cut Stages: 3
+	Tree structure built
+	--- Solution file parsed successfully ---
+
+	--- Parsing Defects file ---
+	Defects file path: instances_checker/A1_defects.csv
+	Defects: 293
+	Defects on used plates: 5
+	--- Defects file parsed successfully ---
+
+		----------- End of files parsing ----------
+
+	--- Item production constraint verification ---
+	Item production constraint verified successfully
+	--- End of Item production constraint verification ---
+
+	--- Superposing with defects constraint verification ---
+	Superposing with defects constraint verified successfully
+	--- End of Superposing with defects constraint verification ---
+
+	--- Sequence & Identity constraints verification ---
+	Sequence Constraint verified successfully
+	Identity Constraint verified successfully
+	--- End of Sequence & Identity constraints verification ---
+
+	--- Dimensions constraint verification ---
+	Dimension constraint verified successfully
+	--- End of Dimension constraint verification ---
+
+	--- Display Plates Area Usage ---
+	---------------------- Summary --------------------------
+	|  Plates               |  Used Area    |  Wasted Area  |
+	---------------------------------------------------------
+	|  Plate 0		|  63.1834%	|  36.8175%	|
+	---------------------------------------------------------
+	|  Total (1 plate)	|  63.1828%	|  36.8172%	|
+	---------------------------------------------------------
+
+	------------------------ Residual -----------------------
+	|  Plate id             |  Width        |  Area %       |
+	---------------------------------------------------------
+	|  Plate 0		|  3774mm  	|  62%  	|
+	---------------------------------------------------------
+	--- End of Display Plates Area Usage ---
+
+	------------------------------------------------------------
+               SOLUTION VALIDATED SUCCESSFULLY               
+	------------------------------------------------------------

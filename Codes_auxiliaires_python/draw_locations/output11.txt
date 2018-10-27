@@ -1,0 +1,918 @@
+marc-antoinea@marcantoinea-K56CB ~/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build $ ./toukeute
+Chargement de l'instance : A4 - en cours
+        Chargement des items
+        Chargement des plaques (défauts)
+Chargement effectué
+Construction des stacks - en cours
+Construction effectuée
+Début du test random
+0
+RedMonster #0 -- 0pt(s) 0 items :
+
+Tentative : 0 : (0, 0, 315, 1142)
+0 : (0, 0, 315, 1142)
+0
+RedMonster #0 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (315, 1142)
+
+1 : (232, 1142, 547, 2284)
+Tentative : 1 : (0, 1142, 1142, 1457)
+1 : (0, 1142, 1142, 1457)
+0
+RedMonster #0 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (1142, 1457)
+
+2 : (232, 1457, 1790, 2359)
+2 : (232, 1457, 1134, 3015)
+Tentative : 2 : (0, 2151, 1558, 3053)
+Tree too depth
+Tentative : 2 : (232, 1457, 1790, 2359)
+Tree too depth
+Tentative : 2 : (232, 1457, 1134, 3015)
+Tree too depth
+Tentative : 2 : (1142, 0, 2700, 902)
+2 : (1142, 0, 2700, 902)
+0
+RedMonster #0 -- 2pt(s) 3 items :
+        2 --> -1 : 2 - (1142, 1457)
+        3 --> -1 : 3 - (2700, 902)
+
+3 : (232, 1457, 748, 2361)
+3 : (232, 0, 1136, 516)
+Tentative : 3 : (0, 1457, 904, 1973)
+Tree too depth
+Tentative : 3 : (0, 2151, 516, 3055)
+Tree too depth
+Tentative : 3 : (232, 1457, 748, 2361)
+Tree too depth
+Tentative : 3 : (1142, 902, 2046, 1418)
+3 : (1142, 902, 2046, 1418)
+0
+RedMonster #0 -- 3pt(s) 4 items :
+        2 --> -1 : 2 - (1142, 1457)
+        4 --> -1 : 4 - (2046, 1418)
+        3 --> -1 : 3 - (2700, 902)
+
+4 : (232, 1457, 748, 2361)
+4 : (232, 0, 1136, 516)
+Tentative : 4 : (0, 1457, 904, 1973)
+Tree too depth
+Tentative : 4 : (0, 2151, 516, 3055)
+Tree too depth
+Tentative : 4 : (232, 1457, 748, 2361)
+Tree too depth
+Tentative : 4 : (1142, 1418, 2046, 1934)
+4 : (1142, 1418, 2046, 1934)
+0
+RedMonster #0 -- 2pt(s) 5 items :
+        5 --> -1 : 5 - (2046, 1934)
+        5 --> -1 : 4 - (2700, 1418)
+
+5 : (232, 1934, 506, 2782)
+5 : (232, 1934, 1080, 2208)
+5 : (232, 0, 1080, 274)
+Tentative : 5 : (0, 2151, 274, 2999)
+Tree too depth
+Tentative : 5 : (232, 1934, 506, 2782)
+Tree too depth
+Tentative : 5 : (0, 2151, 848, 2425)
+Tree too depth
+Tentative : 5 : (232, 1934, 1080, 2208)
+Tree too depth
+Tentative : 5 : (2046, 1418, 2320, 2266)
+5 : (2046, 1418, 2320, 2266)
+0
+RedMonster #0 -- 2pt(s) 6 items :
+        6 --> -1 : 6 - (2320, 2266)
+        6 --> -1 : 5 - (2700, 1934)
+
+6 : (232, 2266, 506, 3114)
+6 : (232, 2266, 1080, 2540)
+6 : (232, 0, 1080, 274)
+Tentative : 6 : (232, 2266, 506, 3114)
+Tree too depth
+Tentative : 6 : (232, 2266, 1080, 2540)
+Tree too depth
+Tentative : 6 : (2320, 1934, 2594, 2782)
+Tree too depth
+Tentative : 6 : (2320, 1934, 3168, 2208)
+Tree too depth
+Tentative : 6 : (2700, 0, 2974, 848)
+6 : (2700, 0, 2974, 848)
+0
+RedMonster #0 -- 2pt(s) 7 items :
+        7 --> -1 : 6 - (2700, 2266)
+        7 --> -1 : 7 - (2974, 848)
+
+7 : (232, 2266, 1336, 2854)
+7 : (232, 848, 1336, 1436)
+7 : (232, 0, 1336, 588)
+7 : (232, 0, 820, 1104)
+Tentative : 7 : (232, 2266, 1336, 2854)
+Tree too depth
+Tentative : 7 : (232, 848, 1336, 1436)
+Trimming failed
+Tentative : 7 : (2700, 848, 3288, 1952)
+7 : (2700, 848, 3288, 1952)
+0
+RedMonster #0 -- 2pt(s) 8 items :
+        7 --> -1 : 6 - (2700, 2266)
+        8 --> -1 : 8 - (3288, 1952)
+
+8 : (232, 2266, 738, 3028)
+8 : (232, 2266, 994, 2772)
+8 : (232, 1952, 994, 2458)
+8 : (232, 0, 738, 762)
+8 : (232, 0, 994, 506)
+Tentative : 8 : (232, 2266, 738, 3028)
+Tree too depth
+Tentative : 8 : (232, 2266, 994, 2772)
+Tree too depth
+Tentative : 8 : (2700, 1952, 3206, 2714)
+8 : (2700, 1952, 3206, 2714)
+0
+RedMonster #0 -- 2pt(s) 9 items :
+        9 --> -1 : 9 - (3206, 2714)
+        8 --> -1 : 8 - (3288, 1952)
+
+9 : (232, 1952, 2079, 2648)
+9 : (232, 0, 2079, 696)
+9 : (232, 0, 928, 1847)
+Tentative : 9 : (232, 1952, 2079, 2648)
+Trimming failed
+Tentative : 9 : (3288, 130, 5135, 826)
+Tree too depth
+Tentative : 9 : (232, 0, 2079, 696)
+Trimming failed
+Tentative : 9 : (3288, 130, 3984, 1977)
+Tree too depth
+Tentative : 9 : (232, 0, 928, 1847)
+Trimming failed
+1
+RedMonster #1 -- 0pt(s) 0 items :
+
+Tentative : 9 : (0, 0, 696, 1847)
+9 : (0, 0, 696, 1847)
+1
+RedMonster #1 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (696, 1847)
+
+10 : (345, 1847, 802, 2794)
+Tentative : 10 : (0, 1847, 947, 2304)
+10 : (0, 1847, 947, 2304)
+1
+RedMonster #1 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (947, 2304)
+
+11 : (123, 2509, 700, 2908)
+11 : (123, 2509, 522, 3086)
+Tentative : 11 : (123, 2509, 700, 2908)
+Tree too depth
+Tentative : 11 : (123, 2509, 522, 3086)
+Tree too depth
+Tentative : 11 : (947, 0, 1524, 399)
+11 : (947, 0, 1524, 399)
+1
+RedMonster #1 -- 2pt(s) 3 items :
+        2 --> -1 : 2 - (947, 2304)
+        3 --> -1 : 3 - (1524, 399)
+
+12 : (123, 2509, 700, 2908)
+12 : (123, 2509, 522, 3086)
+Tentative : 12 : (123, 2509, 700, 2908)
+Tree too depth
+Tentative : 12 : (123, 2509, 522, 3086)
+Tree too depth
+Tentative : 12 : (947, 399, 1524, 798)
+12 : (947, 399, 1524, 798)
+1
+RedMonster #1 -- 2pt(s) 4 items :
+        2 --> -1 : 2 - (947, 2304)
+        4 --> -1 : 4 - (1524, 798)
+
+13 : (2746, 2304, 4871, 2974)
+13 : (123, 798, 2248, 1468)
+13 : (345, 798, 1015, 2923)
+13 : (123, 0, 2248, 670)
+Tentative : 13 : (2746, 2304, 4871, 2974)
+Tree too depth
+Tentative : 13 : (123, 798, 2248, 1468)
+Trimming failed
+Tentative : 13 : (345, 798, 1015, 2923)
+Trimming failed
+Tentative : 13 : (1524, 57, 3649, 727)
+Tree too depth
+Tentative : 13 : (123, 0, 2248, 670)
+Trimming failed
+Tentative : 13 : (1524, 0, 2194, 2125)
+13 : (1524, 0, 2194, 2125)
+1
+RedMonster #1 -- 2pt(s) 5 items :
+        2 --> -1 : 2 - (947, 2304)
+        5 --> -1 : 5 - (2194, 2125)
+
+14 : (1116, 2304, 2571, 2929)
+14 : (1116, 2125, 2571, 2750)
+14 : (123, 0, 1578, 625)
+14 : (123, 0, 748, 1455)
+Tentative : 14 : (1116, 2304, 2571, 2929)
+Tree too depth
+Tentative : 14 : (1116, 2125, 2571, 2750)
+Tree too depth
+Tentative : 14 : (2194, 57, 3649, 682)
+Tree too depth
+Tentative : 14 : (123, 0, 1578, 625)
+Trimming failed
+Tentative : 14 : (2194, 57, 2819, 1512)
+Tree too depth
+Tentative : 14 : (123, 0, 748, 1455)
+Trimming failed
+2
+RedMonster #2 -- 0pt(s) 0 items :
+
+14 : (424, 0, 1049, 1455)
+14 : (424, 0, 1879, 625)
+Tentative : 14 : (0, 84, 625, 1539)
+Tree too depth
+Tentative : 14 : (424, 0, 1049, 1455)
+Tree too depth
+Tentative : 14 : (0, 84, 1455, 709)
+Tree too depth
+Tentative : 14 : (424, 0, 1879, 625)
+Tree too depth
+3
+RedMonster #3 -- 0pt(s) 0 items :
+
+Tentative : 14 : (0, 0, 625, 1455)
+14 : (0, 0, 625, 1455)
+3
+RedMonster #3 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (625, 1455)
+
+Tentative : 15 : (0, 1455, 2155, 2054)
+15 : (0, 1455, 2155, 2054)
+3
+RedMonster #3 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (2155, 2054)
+
+16 : (767, 0, 2922, 599)
+16 : (767, 0, 1366, 2155)
+Tentative : 16 : (0, 2517, 2155, 3116)
+Tree too depth
+Tentative : 16 : (2155, 41, 4310, 640)
+Tree too depth
+Tentative : 16 : (767, 0, 2922, 599)
+Trimming failed
+Tentative : 16 : (767, 0, 1366, 2155)
+Trimming failed
+4
+RedMonster #4 -- 0pt(s) 0 items :
+
+Tentative : 16 : (0, 0, 599, 2155)
+16 : (0, 0, 599, 2155)
+4
+RedMonster #4 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (599, 2155)
+
+17 : (57, 2155, 2212, 2754)
+Tentative : 17 : (57, 2155, 2212, 2754)
+Tree too depth
+Tentative : 17 : (599, 0, 2754, 599)
+Unfeasible cut
+Tentative : 17 : (599, 0, 1198, 2155)
+17 : (599, 0, 1198, 2155)
+4
+RedMonster #4 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (1198, 2155)
+
+18 : (57, 2155, 2212, 2754)
+Tentative : 18 : (57, 2155, 2212, 2754)
+Tree too depth
+Tentative : 18 : (1198, 0, 3353, 599)
+18 : (1198, 0, 3353, 599)
+4
+RedMonster #4 -- 2pt(s) 3 items :
+        2 --> -1 : 2 - (1198, 2155)
+        3 --> -1 : 3 - (3353, 599)
+
+19 : (57, 2155, 637, 2805)
+19 : (57, 2155, 707, 2735)
+Tentative : 19 : (57, 2155, 637, 2805)
+Tree too depth
+Tentative : 19 : (57, 2155, 707, 2735)
+Tree too depth
+Tentative : 19 : (1198, 599, 1778, 1249)
+19 : (1198, 599, 1778, 1249)
+4
+RedMonster #4 -- 3pt(s) 4 items :
+        2 --> -1 : 2 - (1198, 2155)
+        4 --> -1 : 4 - (1778, 1249)
+        3 --> -1 : 3 - (3353, 599)
+
+20 : (57, 2155, 367, 2712)
+Tentative : 20 : (0, 2155, 557, 2465)
+Tree too depth
+Tentative : 20 : (57, 2155, 367, 2712)
+Tree too depth
+Tentative : 20 : (1198, 1249, 1755, 1559)
+20 : (1198, 1249, 1755, 1559)
+4
+RedMonster #4 -- 3pt(s) 5 items :
+        2 --> -1 : 2 - (1198, 2155)
+        5 --> -1 : 5 - (1755, 1559)
+        5 --> -1 : 4 - (3353, 1249)
+
+21 : (57, 2155, 1004, 2735)
+21 : (57, 2155, 637, 3102)
+Tentative : 21 : (57, 2155, 1004, 2735)
+Tree too depth
+Tentative : 21 : (57, 2155, 637, 3102)
+Tree too depth
+Tentative : 21 : (1198, 1559, 2145, 2139)
+21 : (1198, 1559, 2145, 2139)
+4
+RedMonster #4 -- 3pt(s) 6 items :
+        2 --> -1 : 2 - (1198, 2155)
+        6 --> -1 : 6 - (2145, 2139)
+        6 --> -1 : 5 - (3353, 1559)
+
+22 : (57, 2155, 994, 2735)
+22 : (57, 2155, 637, 3092)
+Tentative : 22 : (57, 2155, 994, 2735)
+Tree too depth
+Tentative : 22 : (57, 2155, 637, 3092)
+Tree too depth
+Tentative : 22 : (1198, 2139, 2135, 2719)
+22 : (1198, 2139, 2135, 2719)
+4
+RedMonster #4 -- 2pt(s) 7 items :
+        7 --> -1 : 7 - (2135, 2719)
+        7 --> -1 : 6 - (3353, 2139)
+
+23 : (57, 2719, 774, 3159)
+Tentative : 23 : (57, 2719, 774, 3159)
+Tree too depth
+Tentative : 23 : (2135, 2139, 2852, 2579)
+23 : (2135, 2139, 2852, 2579)
+4
+RedMonster #4 -- 1pt(s) 8 items :
+        8 --> -1 : 7 - (3353, 2719)
+
+24 : (57, 0, 752, 1207)
+Tentative : 24 : (3353, 0, 4560, 695)
+24 : (3353, 0, 4560, 695)
+4
+RedMonster #4 -- 2pt(s) 9 items :
+        8 --> -1 : 7 - (3353, 2719)
+        9 --> -1 : 9 - (4560, 695)
+
+25 : (57, 2719, 384, 3209)
+25 : (57, 2719, 547, 3046)
+Tentative : 25 : (57, 2719, 384, 3209)
+Unfeasible cut
+Tentative : 25 : (57, 2719, 547, 3046)
+Unfeasible cut
+Tentative : 25 : (3353, 695, 3680, 1185)
+25 : (3353, 695, 3680, 1185)
+4
+RedMonster #4 -- 3pt(s) 10 items :
+        8 --> -1 : 7 - (3353, 2719)
+        10 --> -1 : 10 - (3680, 1185)
+        9 --> -1 : 9 - (4560, 695)
+
+26 : (57, 2719, 752, 2996)
+26 : (57, 1185, 752, 1462)
+26 : (57, 695, 752, 972)
+Tentative : 26 : (57, 2719, 752, 2996)
+Unfeasible cut
+Tentative : 26 : (3353, 1185, 3630, 1880)
+26 : (3353, 1185, 3630, 1880)
+4
+RedMonster #4 -- 3pt(s) 11 items :
+        8 --> -1 : 7 - (3353, 2719)
+        11 --> -1 : 11 - (3630, 1880)
+        11 --> -1 : 10 - (4560, 1185)
+
+27 : (57, 1880, 1334, 2779)
+27 : (57, 1880, 956, 3157)
+27 : (57, 1185, 1334, 2084)
+27 : (57, 1185, 956, 2462)
+Tentative : 27 : (57, 1880, 1334, 2779)
+Unfeasible cut
+Tentative : 27 : (57, 1880, 956, 3157)
+Unfeasible cut
+Tentative : 27 : (3630, 1813, 4907, 2712)
+Tree too depth
+Tentative : 27 : (57, 1185, 1334, 2084)
+Unfeasible cut
+Tentative : 27 : (3630, 1813, 4529, 3090)
+Tree too depth
+Tentative : 27 : (57, 1185, 956, 2462)
+Unfeasible cut
+Tentative : 27 : (4560, 0, 5837, 899)
+27 : (4560, 0, 5837, 899)
+4
+RedMonster #4 -- 3pt(s) 12 items :
+        8 --> -1 : 7 - (3353, 2719)
+        12 --> -1 : 11 - (4560, 1880)
+        12 --> -1 : 12 - (5837, 899)
+
+28 : (57, 1880, 1334, 2779)
+28 : (57, 1880, 956, 3157)
+Tentative : 28 : (57, 1880, 1334, 2779)
+Unfeasible cut
+Tentative : 28 : (57, 1880, 956, 3157)
+Unfeasible cut
+Tentative : 28 : (4560, 899, 5837, 1798)
+28 : (4560, 899, 5837, 1798)
+4
+RedMonster #4 -- 3pt(s) 13 items :
+        8 --> -1 : 7 - (3353, 2719)
+        12 --> -1 : 11 - (4560, 1880)
+        13 --> -1 : 13 - (5837, 1798)
+
+29 : (57, 2719, 1004, 3176)
+29 : (57, 1880, 1004, 2337)
+Tentative : 29 : (57, 2719, 1004, 3176)
+Unfeasible cut
+Tentative : 29 : (57, 1880, 1004, 2337)
+Unfeasible cut
+Tentative : 29 : (3353, 1880, 3810, 2827)
+Tree too depth
+Tentative : 29 : (4560, 1798, 5507, 2255)
+29 : (4560, 1798, 5507, 2255)
+4
+RedMonster #4 -- 3pt(s) 14 items :
+        8 --> -1 : 7 - (3353, 2719)
+        14 --> -1 : 14 - (5507, 2255)
+        13 --> -1 : 13 - (5837, 1798)
+
+30 : (57, 2255, 864, 2781)
+Tentative : 30 : (57, 2255, 864, 2781)
+Unfeasible cut
+Tentative : 30 : (3353, 2255, 3879, 3062)
+Tree too depth
+Tentative : 30 : (5507, 1798, 6314, 2324)
+(6314, 0, 6000, 3210) -t -2 -d 1;
+
+Waste too small
+Tentative : 30 : (5507, 1798, 6033, 2605)
+(6033, 0, 6000, 3210) -t -2 -d 1;
+
+Waste too small
+5
+RedMonster #5 -- 0pt(s) 0 items :
+
+Tentative : 30 : (0, 0, 526, 807)
+30 : (0, 0, 526, 807)
+5
+RedMonster #5 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (526, 807)
+
+Tentative : 31 : (0, 807, 807, 1333)
+31 : (0, 807, 807, 1333)
+5
+RedMonster #5 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (807, 1333)
+
+Tentative : 32 : (0, 1333, 807, 1859)
+32 : (0, 1333, 807, 1859)
+5
+RedMonster #5 -- 1pt(s) 3 items :
+        3 --> -1 : 3 - (807, 1859)
+
+Tentative : 33 : (0, 1859, 1187, 2354)
+33 : (0, 1859, 1187, 2354)
+5
+RedMonster #5 -- 1pt(s) 4 items :
+        4 --> -1 : 4 - (1187, 2354)
+
+Tentative : 34 : (0, 2354, 1097, 2849)
+34 : (0, 2354, 1097, 2849)
+5
+RedMonster #5 -- 2pt(s) 5 items :
+        5 --> -1 : 5 - (1097, 2849)
+        4 --> -1 : 4 - (1187, 2354)
+
+Tentative : 35 : (1097, 2354, 2194, 2849)
+35 : (1097, 2354, 2194, 2849)
+5
+RedMonster #5 -- 1pt(s) 6 items :
+        6 --> -1 : 6 - (2194, 2849)
+
+36 : (2469, 0, 2964, 1187)
+Tentative : 36 : (2194, 0, 3381, 495)
+36 : (2194, 0, 3381, 495)
+5
+RedMonster #5 -- 2pt(s) 7 items :
+        6 --> -1 : 6 - (2194, 2849)
+        7 --> -1 : 7 - (3381, 495)
+
+Tentative : 37 : (0, 2849, 392, 3171)
+Trimming failed
+Tentative : 37 : (2194, 495, 2586, 817)
+37 : (2194, 495, 2586, 817)
+5
+RedMonster #5 -- 3pt(s) 8 items :
+        6 --> -1 : 6 - (2194, 2849)
+        8 --> -1 : 8 - (2586, 817)
+        7 --> -1 : 7 - (3381, 495)
+
+38 : (2469, 817, 2971, 1169)
+38 : (2469, 817, 2821, 1319)
+Tentative : 38 : (0, 2849, 502, 3201)
+Trimming failed
+Tentative : 38 : (2194, 939, 2696, 1291)
+Tree too depth
+Tentative : 38 : (2469, 817, 2971, 1169)
+Tree too depth
+Tentative : 38 : (2194, 939, 2546, 1441)
+Tree too depth
+Tentative : 38 : (2469, 817, 2821, 1319)
+Tree too depth
+Tentative : 38 : (2586, 495, 3088, 847)
+38 : (2586, 495, 3088, 847)
+5
+RedMonster #5 -- 3pt(s) 9 items :
+        6 --> -1 : 6 - (2194, 2849)
+        9 --> -1 : 9 - (3088, 847)
+        9 --> -1 : 8 - (3381, 817)
+
+39 : (2469, 847, 3544, 1590)
+39 : (2469, 847, 3212, 1922)
+39 : (2469, 817, 3544, 1560)
+39 : (2469, 0, 3544, 743)
+39 : (2469, 0, 3212, 1075)
+Tentative : 39 : (2194, 939, 3269, 1682)
+Tree too depth
+Tentative : 39 : (2469, 847, 3544, 1590)
+Tree too depth
+Tentative : 39 : (2194, 939, 2937, 2014)
+Tree too depth
+Tentative : 39 : (2469, 847, 3212, 1922)
+Tree too depth
+Tentative : 39 : (2469, 817, 3544, 1560)
+Trimming failed
+Tentative : 39 : (3088, 817, 3831, 1892)
+Tree too depth
+Tentative : 39 : (3381, 257, 4456, 1000)
+Tree too depth
+Tentative : 39 : (2469, 0, 3544, 743)
+Trimming failed
+Tentative : 39 : (3381, 257, 4124, 1332)
+Tree too depth
+Tentative : 39 : (2469, 0, 3212, 1075)
+Trimming failed
+6
+RedMonster #6 -- 0pt(s) 0 items :
+
+Tentative : 39 : (0, 0, 743, 1075)
+39 : (0, 0, 743, 1075)
+6
+RedMonster #6 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (743, 1075)
+
+Tentative : 40 : (0, 1075, 804, 1434)
+40 : (0, 1075, 804, 1434)
+6
+RedMonster #6 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (804, 1434)
+
+Tentative : 41 : (0, 1434, 1604, 1978)
+41 : (0, 1434, 1604, 1978)
+6
+RedMonster #6 -- 1pt(s) 3 items :
+        3 --> -1 : 3 - (1604, 1978)
+
+Tentative : 42 : (0, 1978, 1604, 2522)
+42 : (0, 1978, 1604, 2522)
+6
+RedMonster #6 -- 1pt(s) 4 items :
+        4 --> -1 : 4 - (1604, 2522)
+
+Tentative : 43 : (0, 2522, 1604, 3066)
+43 : (0, 2522, 1604, 3066)
+6
+RedMonster #6 -- 1pt(s) 5 items :
+        5 --> -1 : 5 - (1604, 3066)
+
+Tentative : 44 : (1604, 0, 3035, 704)
+44 : (1604, 0, 3035, 704)
+6
+RedMonster #6 -- 2pt(s) 6 items :
+        5 --> -1 : 5 - (1604, 3066)
+        6 --> -1 : 6 - (3035, 704)
+
+Tentative : 45 : (1604, 704, 2572, 1153)
+45 : (1604, 704, 2572, 1153)
+6
+RedMonster #6 -- 3pt(s) 7 items :
+        5 --> -1 : 5 - (1604, 3066)
+        7 --> -1 : 7 - (2572, 1153)
+        6 --> -1 : 6 - (3035, 704)
+
+Tentative : 46 : (1604, 1153, 3171, 1477)
+46 : (1604, 1153, 3171, 1477)
+6
+RedMonster #6 -- 2pt(s) 8 items :
+        5 --> -1 : 5 - (1604, 3066)
+        8 --> -1 : 8 - (3171, 1477)
+
+Tentative : 47 : (1604, 1477, 3171, 1801)
+47 : (1604, 1477, 3171, 1801)
+6
+RedMonster #6 -- 2pt(s) 9 items :
+        5 --> -1 : 5 - (1604, 3066)
+        9 --> -1 : 9 - (3171, 1801)
+
+Tentative : 48 : (1604, 1801, 3171, 2125)
+48 : (1604, 1801, 3171, 2125)
+6
+RedMonster #6 -- 2pt(s) 10 items :
+        5 --> -1 : 5 - (1604, 3066)
+        10 --> -1 : 10 - (3171, 2125)
+
+Tentative : 49 : (1604, 2125, 3171, 2449)
+49 : (1604, 2125, 3171, 2449)
+6
+RedMonster #6 -- 2pt(s) 11 items :
+        5 --> -1 : 5 - (1604, 3066)
+        11 --> -1 : 11 - (3171, 2449)
+
+Tentative : 50 : (1604, 2449, 3004, 2913)
+50 : (1604, 2449, 3004, 2913)
+6
+RedMonster #6 -- 3pt(s) 12 items :
+        5 --> -1 : 5 - (1604, 3066)
+        12 --> -1 : 12 - (3004, 2913)
+        11 --> -1 : 11 - (3171, 2449)
+
+51 : (3682, 2449, 4506, 2951)
+Tentative : 51 : (3682, 2449, 4506, 2951)
+Tree too depth
+Tentative : 51 : (3171, 0, 3995, 502)
+51 : (3171, 0, 3995, 502)
+6
+RedMonster #6 -- 3pt(s) 13 items :
+        5 --> -1 : 5 - (1604, 3066)
+        13 --> -1 : 12 - (3171, 2913)
+        13 --> -1 : 13 - (3995, 502)
+
+Tentative : 52 : (3171, 774, 3698, 1076)
+Tree too depth
+Tentative : 52 : (3171, 502, 3473, 1029)
+52 : (3171, 502, 3473, 1029)
+6
+RedMonster #6 -- 4pt(s) 14 items :
+        5 --> -1 : 5 - (1604, 3066)
+        13 --> -1 : 12 - (3171, 2913)
+        14 --> -1 : 14 - (3473, 1029)
+        13 --> -1 : 13 - (3995, 502)
+
+53 : (3682, 1029, 4509, 1588)
+53 : (3682, 1029, 4241, 1856)
+Tentative : 53 : (3682, 1029, 4509, 1588)
+Tree too depth
+Tentative : 53 : (3682, 1029, 4241, 1856)
+Tree too depth
+Tentative : 53 : (3473, 774, 4300, 1333)
+Tree too depth
+Tentative : 53 : (3473, 774, 4032, 1601)
+Tree too depth
+Tentative : 53 : (3995, 0, 4822, 559)
+53 : (3995, 0, 4822, 559)
+6
+RedMonster #6 -- 4pt(s) 15 items :
+        5 --> -1 : 5 - (1604, 3066)
+        13 --> -1 : 12 - (3171, 2913)
+        15 --> -1 : 14 - (3995, 1029)
+        15 --> -1 : 15 - (4822, 559)
+
+54 : (3682, 1029, 4509, 1588)
+54 : (3682, 1029, 4241, 1856)
+Tentative : 54 : (3682, 1029, 4509, 1588)
+Tree too depth
+Tentative : 54 : (3682, 1029, 4241, 1856)
+Tree too depth
+Tentative : 54 : (3995, 559, 4822, 1118)
+54 : (3995, 559, 4822, 1118)
+6
+RedMonster #6 -- 3pt(s) 16 items :
+        5 --> -1 : 5 - (1604, 3066)
+        13 --> -1 : 12 - (3171, 2913)
+        16 --> -1 : 16 - (4822, 1118)
+
+55 : (3682, 1118, 4509, 1679)
+55 : (3682, 1118, 4243, 1945)
+Tentative : 55 : (3682, 1118, 4509, 1679)
+Tree too depth
+Tentative : 55 : (3682, 1118, 4243, 1945)
+Tree too depth
+Tentative : 55 : (4822, 0, 5649, 561)
+55 : (4822, 0, 5649, 561)
+6
+RedMonster #6 -- 4pt(s) 17 items :
+        5 --> -1 : 5 - (1604, 3066)
+        13 --> -1 : 12 - (3171, 2913)
+        16 --> -1 : 16 - (4822, 1118)
+        17 --> -1 : 17 - (5649, 561)
+
+56 : (3682, 1118, 4509, 1679)
+56 : (3682, 1118, 4243, 1945)
+Tentative : 56 : (3682, 1118, 4509, 1679)
+Tree too depth
+Tentative : 56 : (3682, 1118, 4243, 1945)
+Tree too depth
+Tentative : 56 : (4822, 561, 5649, 1122)
+56 : (4822, 561, 5649, 1122)
+6
+RedMonster #6 -- 3pt(s) 18 items :
+        5 --> -1 : 5 - (1604, 3066)
+        13 --> -1 : 12 - (3171, 2913)
+        18 --> -1 : 18 - (5649, 1122)
+
+57 : (3682, 1122, 4479, 1661)
+57 : (3682, 1122, 4221, 1919)
+Tentative : 57 : (3682, 1122, 4479, 1661)
+Tree too depth
+Tentative : 57 : (3682, 1122, 4221, 1919)
+Tree too depth
+7
+RedMonster #7 -- 0pt(s) 0 items :
+
+Tentative : 57 : (0, 0, 539, 797)
+57 : (0, 0, 539, 797)
+7
+RedMonster #7 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (539, 797)
+
+Tentative : 58 : (0, 797, 797, 1336)
+58 : (0, 797, 797, 1336)
+7
+RedMonster #7 -- 1pt(s) 2 items :
+        2 --> -1 : 2 - (797, 1336)
+
+59 : (118, 1336, 477, 2140)
+Tentative : 59 : (0, 1336, 804, 1695)
+(797, 797, 804, 1336) -t -2 -d 3;
+
+Waste too small
+Tentative : 59 : (0, 1912, 359, 2716)
+Tree too depth
+Tentative : 59 : (118, 1336, 477, 2140)
+Tree too depth
+Tentative : 59 : (797, 0, 1601, 359)
+59 : (797, 0, 1601, 359)
+7
+RedMonster #7 -- 2pt(s) 3 items :
+        2 --> -1 : 2 - (797, 1336)
+        3 --> -1 : 3 - (1601, 359)
+
+60 : (118, 1336, 1240, 1931)
+60 : (118, 1336, 713, 2458)
+60 : (118, 359, 713, 1481)
+Tentative : 60 : (0, 1912, 1122, 2507)
+Tree too depth
+Tentative : 60 : (118, 1336, 1240, 1931)
+Tree too depth
+Tentative : 60 : (0, 1912, 595, 3034)
+Tree too depth
+Tentative : 60 : (118, 1336, 713, 2458)
+Tree too depth
+Tentative : 60 : (797, 359, 1919, 954)
+60 : (797, 359, 1919, 954)
+7
+RedMonster #7 -- 2pt(s) 4 items :
+        2 --> -1 : 2 - (797, 1336)
+        4 --> -1 : 4 - (1919, 954)
+
+61 : (118, 1336, 980, 2167)
+61 : (118, 1336, 949, 2198)
+61 : (118, 954, 980, 1785)
+61 : (118, 954, 949, 1816)
+Tentative : 61 : (0, 1912, 862, 2743)
+Tree too depth
+Tentative : 61 : (118, 1336, 980, 2167)
+Tree too depth
+Tentative : 61 : (0, 1912, 831, 2774)
+Tree too depth
+Tentative : 61 : (118, 1336, 949, 2198)
+Tree too depth
+Tentative : 61 : (797, 1124, 1659, 1955)
+Tree too depth
+Tentative : 61 : (118, 954, 980, 1785)
+Trimming failed
+Tentative : 61 : (797, 1124, 1628, 1986)
+Tree too depth
+Tentative : 61 : (118, 954, 949, 1816)
+Trimming failed
+Tentative : 61 : (1919, 0, 2781, 831)
+61 : (1919, 0, 2781, 831)
+7
+RedMonster #7 -- 3pt(s) 5 items :
+        2 --> -1 : 2 - (797, 1336)
+        4 --> -1 : 4 - (1919, 954)
+        5 --> -1 : 5 - (2781, 831)
+
+62 : (118, 1336, 395, 3011)
+Tentative : 62 : (0, 1912, 1675, 2189)
+Tree too depth
+Tentative : 62 : (118, 1336, 395, 3011)
+Tree too depth
+Tentative : 62 : (797, 1124, 2472, 1401)
+Tree too depth
+Tentative : 62 : (797, 954, 1074, 2629)
+Tree too depth
+Tentative : 62 : (1919, 831, 3594, 1108)
+62 : (1919, 831, 3594, 1108)
+7
+RedMonster #7 -- 2pt(s) 6 items :
+        2 --> -1 : 2 - (797, 1336)
+        6 --> -1 : 6 - (3594, 1108)
+
+63 : (118, 1336, 641, 3011)
+Tentative : 63 : (0, 1912, 1675, 2435)
+Unfeasible cut
+Tentative : 63 : (118, 1336, 641, 3011)
+Unfeasible cut
+Tentative : 63 : (797, 1124, 2472, 1647)
+Tree too depth
+Tentative : 63 : (797, 1108, 1320, 2783)
+Tree too depth
+Tentative : 63 : (3594, 0, 5269, 523)
+63 : (3594, 0, 5269, 523)
+7
+RedMonster #7 -- 3pt(s) 7 items :
+        2 --> -1 : 2 - (797, 1336)
+        6 --> -1 : 6 - (3594, 1108)
+        7 --> -1 : 7 - (5269, 523)
+
+64 : (118, 1336, 1122, 2639)
+64 : (118, 1108, 1122, 2411)
+Tentative : 64 : (0, 1912, 1303, 2916)
+Unfeasible cut
+Tentative : 64 : (118, 1336, 1122, 2639)
+Unfeasible cut
+Tentative : 64 : (797, 1124, 2100, 2128)
+Unfeasible cut
+Tentative : 64 : (797, 1124, 1801, 2427)
+Unfeasible cut
+Tentative : 64 : (118, 1108, 1122, 2411)
+Unfeasible cut
+Tentative : 64 : (3594, 523, 4897, 1527)
+64 : (3594, 523, 4897, 1527)
+7
+RedMonster #7 -- 2pt(s) 8 items :
+        8 --> -1 : 8 - (4897, 1527)
+        7 --> -1 : 7 - (5269, 523)
+
+65 : (118, 1527, 1122, 2830)
+Tentative : 65 : (0, 1912, 1303, 2916)
+Unfeasible cut
+Tentative : 65 : (118, 1527, 1122, 2830)
+Unfeasible cut
+Tentative : 65 : (4897, 523, 6200, 1527)
+(6200, 0, 6000, 3210) -t -2 -d 1;
+
+Waste too small
+Tentative : 65 : (4897, 523, 5901, 1826)
+65 : (4897, 523, 5901, 1826)
+7
+RedMonster #7 -- 1pt(s) 9 items :
+        9 --> -1 : 9 - (5901, 1826)
+
+66 : (118, 1826, 563, 2566)
+66 : (118, 1826, 858, 2271)
+Tentative : 66 : (0, 1912, 445, 2652)
+Unfeasible cut
+Tentative : 66 : (118, 1826, 563, 2566)
+Unfeasible cut
+Tentative : 66 : (0, 1912, 740, 2357)
+Unfeasible cut
+Tentative : 66 : (118, 1826, 858, 2271)
+Unfeasible cut
+8
+RedMonster #8 -- 0pt(s) 0 items :
+
+Tentative : 66 : (0, 0, 740, 445)
+66 : (0, 0, 740, 445)
+8
+RedMonster #8 -- 1pt(s) 1 items :
+        1 --> -1 : 1 - (740, 445)
+
+Tentative : 67 : (0, 445, 1315, 1037)
+67 : (0, 445, 1315, 1037)
+Solution trouvée par le test
+Score atteint : 158301150
+Sauvegarde de l'instance A4
+Build done
+Build done
+Build done
+Build done
+Build done
+Build done
+Build done
+Build done
+Build done
+Sauvegarde effectuée avec succès
+marc-antoinea@marcantoinea-K56CB ~/Documents/4-Projets_et_realisations/ROADEF/Code cpp/build $

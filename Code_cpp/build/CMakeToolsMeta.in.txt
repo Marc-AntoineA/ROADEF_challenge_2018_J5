@@ -1,0 +1,2 @@
+executable;toukeute;$<TARGET_FILE:toukeute>
+system;Linux;x86_64;GNU

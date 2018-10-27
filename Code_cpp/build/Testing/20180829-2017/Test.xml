@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="(empty)"
+	BuildStamp="20180829-2017-Experimental"
+	Name="(empty)"
+	Generator="ctest-3.5.1"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="marcantoinea-K56CB"
+	OSRelease="4.8.0-53-generic"
+	OSVersion="#56~16.04.1-Ubuntu SMP Tue May 16 01:18:56 UTC 2017"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="58"
+	ProcessorCacheSize="4096"
+	NumberOfLogicalCPU="4"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="0"
+	TotalPhysicalMemory="7868"
+	LogicalProcessorsPerPhysical="4"
+	ProcessorClockFrequency="2726.14"
+	>
+	<Testing>
+		<StartDateTime>Aug 29 22:18 CEST</StartDateTime>
+		<StartTestTime>1535573884</StartTestTime>
+		<TestList/>
+		<EndDateTime>Aug 29 22:18 CEST</EndDateTime>
+		<EndTestTime>1535573884</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
