@@ -26,3 +26,4 @@ Datasets/dataset_A/*.~lock.*
 checker/instances_checker/*
 
 Build/*
+/Code_cpp/build/

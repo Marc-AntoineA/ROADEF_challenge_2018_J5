@@ -18,8 +18,8 @@ const int nbPlates = 100;
 
 const bool VERBOSE = false;
 
-//const std::string PATH = "../checker/instances_checker/";
-const std::string PATH = "";
+const std::string PATH = "instances_checker/";
+//const std::string PATH = "";
 
 class Instance {
 
