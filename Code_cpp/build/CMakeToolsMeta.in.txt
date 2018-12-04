@@ -1,2 +1,2 @@
-executable;toukeute;$<TARGET_FILE:toukeute>
+executable;Tookeute;$<TARGET_FILE:Tookeute>
 system;Linux;x86_64;GNU
