@@ -15,9 +15,11 @@ class Heuristic {
 
     private:
     void initRandomlySequence();
+    unsigned int computeScore();
 
     GlassInstance instance;
     GlassCutter cutter;
+
 
     std::vector<GlassMove> poolMoves;
 

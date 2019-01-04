@@ -38,3 +38,8 @@ void Heuristic::displaySequence() {
         std::cout << sequence[index] << ", ";
     std::cout << sequence[sequence.size() - 1] << "]" << std::endl;
 }
+
+unsigned int Heuristic::computeScore() {
+    cutter.initWithSequence(sequence);
+    return cutter.getCurrentScore();
+}
