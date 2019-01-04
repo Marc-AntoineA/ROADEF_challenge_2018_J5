@@ -1,10 +1,11 @@
 #include "heuristic.h"
 
+#include "../GlassCutter/glassCutter.h"
 #include "glassRand.h"
 
 #include <iostream>
 
-Heuristic::Heuristic(GlassInstance instance): instance(instance){
+Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance){
     initRandomlySequence();
 }
 

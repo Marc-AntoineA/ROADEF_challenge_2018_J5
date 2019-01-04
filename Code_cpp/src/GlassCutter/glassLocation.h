@@ -4,7 +4,7 @@
 
 class GlassLocation {
     public:
-    GlassLocation(): itemIndex(-1), binId(-1), x(-1), y(-1), rotated(false), instance(NULL), locationSequence(0) {}
+    GlassLocation(): itemIndex(0), binId(0), x(0), y(0), rotated(false), instance(NULL), locationSequence(0) {}
     
     GlassLocation(unsigned int itemIndex, unsigned int binId, unsigned int x, unsigned int y, bool rotated, 
         GlassInstance* instance, unsigned int locationSequence)
