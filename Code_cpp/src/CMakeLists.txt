@@ -37,6 +37,9 @@ add_executable(tookeute
 
     # GlassKernel
     GlassKernel/heuristic.h GlassKernel/heuristic.cpp
+    GlassKernel/glassMove.h
+    GlassKernel/glassRand.h
+    GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
     GlassKernel/main.cpp 
 )
 
@@ -58,5 +61,8 @@ add_executable(glassTests
 
     # GlassKernel
     GlassKernel/heuristic.h GlassKernel/heuristic.cpp
+    GlassKernel/glassMove.h
+    GlassKernel/glassRand.h
+    GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
     GlassKernel/mainTest.cpp 
 )

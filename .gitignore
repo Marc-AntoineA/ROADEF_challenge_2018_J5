@@ -27,3 +27,5 @@ checker/instances_checker/*
 
 Build/*
 /Code_cpp/build/
+Code_cpp_old/
+file.txt

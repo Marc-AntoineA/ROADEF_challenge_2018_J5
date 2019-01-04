@@ -15,6 +15,7 @@ class GlassInstance {
     std::string& getInstancePath() { return instancePath; }
     unsigned int getItemsArea() { return itemsArea; }
     GlassPlate& getPlate(unsigned int plateIndex) { return plates[plateIndex]; }
+    std::vector<GlassItem>& getItems() { return items; }
 
     private:
     void computeItemsArea();
