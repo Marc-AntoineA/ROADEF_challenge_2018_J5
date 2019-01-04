@@ -25,8 +25,7 @@ add_executable(tookeute
     GlassData/glassInstance.h GlassData/glassInstance.cpp
     GlassData/glassItem.h GlassData/glassItem.cpp
     GlassData/glassPlate.h GlassData/glassPlate.cpp
-    GlassData/glassStack.h GlassData/glassStack.cpp
-    GlassData/glassPlate.h GlassData/glassPlate.cpp
+    GlassData/glassConstants.h
 
     # GlassCutter
     GlassCutter/glassCut.h GlassCutter/glassCut.cpp
@@ -39,4 +38,25 @@ add_executable(tookeute
     # GlassKernel
     GlassKernel/heuristic.h GlassKernel/heuristic.cpp
     GlassKernel/main.cpp 
+)
+
+add_executable(glassTests
+    # GlassData
+    GlassData/glassDefect.h GlassData/glassDefect.cpp
+    GlassData/glassInstance.h GlassData/glassInstance.cpp
+    GlassData/glassItem.h GlassData/glassItem.cpp
+    GlassData/glassPlate.h GlassData/glassPlate.cpp
+    GlassData/glassConstants.h
+
+    # GlassCutter
+    GlassCutter/glassCut.h GlassCutter/glassCut.cpp
+    GlassCutter/glassCutter.h GlassCutter/glassCutter.cpp
+    GlassCutter/glassLocation.h GlassCutter/glassLocation.cpp
+    GlassCutter/glassNode.h GlassCutter/glassNode.cpp
+    GlassCutter/redMonster.h GlassCutter/redMonster.cpp
+    GlassCutter/redPoint.h GlassCutter/redPoint.cpp
+
+    # GlassKernel
+    GlassKernel/heuristic.h GlassKernel/heuristic.cpp
+    GlassKernel/mainTest.cpp 
 )

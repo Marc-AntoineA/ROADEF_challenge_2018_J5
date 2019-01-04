@@ -1,2 +1,0 @@
-executable;Tookeute;/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code_cpp/build/bin/Tookeute
-system;Linux;x86_64;GNU
