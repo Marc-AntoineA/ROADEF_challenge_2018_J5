@@ -29,17 +29,25 @@ void GlassStack::push() {
 unsigned int GlassStack::pop() {
     unsigned int item = top();
     currentIndex++;
+    return item;
 }
 
 bool GlassStack::isEmpty() {
     return currentIndex == items.size();
 }
 
-std::ostream& operator<<(std::ostream& os, GlassStack glassStack) {
-    os << "GlassStack #" << glassStack.getStackId();
-    os << " -Top: item# " << glassStack.top();
+void GlassStack::reset() {
+    currentIndex = 0;
+}
+
+std::ostream& operator<<(std::ostream& os, GlassStack stack) {
+    os << "GlassStack #" << stack.getStackId();
+    if (!stack.isEmpty())
+        os << " -Top: item# " << stack.top();
+    else    
+        os << " -Top: empty stack";
     os << " -items: [";
-    for (unsigned int itemIndex: glassStack.getItems()) {
+    for (unsigned int itemIndex: stack.getItems()) {
         os << itemIndex << ", ";
     }
     os << "]" << std::endl;

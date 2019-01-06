@@ -17,8 +17,6 @@ void GlassCutter::reset() {
         monster.reset();
 }
 
-
-
 void GlassCutter::initWithSequence(const std::vector<unsigned int>& sequence){
     // todo
 }

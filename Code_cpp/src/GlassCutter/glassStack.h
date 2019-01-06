@@ -9,6 +9,7 @@ class GlassStack {
 
     void insert(const GlassItem& item);
     void push();
+    void reset();
     unsigned int pop();
     unsigned int top();
     bool isEmpty();
