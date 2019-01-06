@@ -34,6 +34,7 @@ add_executable(tookeute
     GlassCutter/glassNode.h GlassCutter/glassNode.cpp
     GlassCutter/redMonster.h GlassCutter/redMonster.cpp
     GlassCutter/redPoint.h GlassCutter/redPoint.cpp
+    GlassCutter/glassStack.h GlassCutter/glassStack.cpp
 
     # GlassKernel
     GlassKernel/heuristic.h GlassKernel/heuristic.cpp
@@ -58,6 +59,7 @@ add_executable(glassTests
     GlassCutter/glassNode.h GlassCutter/glassNode.cpp
     GlassCutter/redMonster.h GlassCutter/redMonster.cpp
     GlassCutter/redPoint.h GlassCutter/redPoint.cpp
+    GlassCutter/glassStack.h GlassCutter/glassStack.cpp
 
     # GlassKernel
     GlassKernel/heuristic.h GlassKernel/heuristic.cpp

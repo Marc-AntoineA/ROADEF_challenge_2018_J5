@@ -3,6 +3,7 @@
 #include "../GlassCutter/glassLocation.h"
 #include "../GlassCutter/redMonster.h"
 #include "../GlassCutter/glassNode.h"
+#include "../GlassCutter/glassStack.h"
 #include "../GlassData/glassInstance.h"
 
 #include <vector>
@@ -15,8 +16,12 @@ class GlassCutter {
     unsigned int getCurrentScore() { return currentScore; }
     
     bool computeCutAndReturnIfFeasable() const;
+    void displayStacks();
 
     private:
+    void buildStacks();
+    void buildMonsters();
+    void buildNodes();
     void build();
     void reset();
     
@@ -28,4 +33,5 @@ class GlassCutter {
     std::vector<GlassLocation> locations;
     std::vector<RedMonster> monsters;
     std::vector<GlassNode> nodes;
+    std::vector<GlassStack> stacks;
 };
