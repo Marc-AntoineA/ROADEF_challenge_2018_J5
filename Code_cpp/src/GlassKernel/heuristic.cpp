@@ -7,6 +7,8 @@
 
 Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance){
     initRandomlySequence();
+    displaySequence();
+    cutter.initWithSequence(sequence);
 }
 
 void Heuristic::initRandomlySequence() {

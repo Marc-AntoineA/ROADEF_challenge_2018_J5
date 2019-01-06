@@ -13,16 +13,16 @@ class RedMonster {
     void reset();
     void setInstance(GlassInstance* instance) { this->instance = instance; }
     void setPlateIndex(unsigned int plateIndex) { this->plateIndex = plateIndex; }
-
-    private:
     void incrRedMonster(const GlassLocation& location);
     void revert();
+    std::vector<GlassLocation> getLocationsForItemIndex(unsigned int itemIndex);
+
+    private:
     void incrGreenStar(const RedPoint& point);
     void killRedPointByIndex(unsigned int index);
     void cleanLocation(const GlassLocation& location);
-    bool checkLocationFaisability(const GlassLocation& location);
-    std::vector<GlassLocation> getLocationsForItemIndex(unsigned int itemIndex);
-    void addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation> locations);
+    bool isFeasibleLocation(const GlassLocation& location);
+    void addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation>& locations);
     void reviveRedPoint(RedPoint& point);
     unsigned int getXMax();
 

@@ -7,9 +7,9 @@ class RedPoint {
 
     public:
     RedPoint(unsigned int x, unsigned int y, unsigned int time)
-        :x(x), y(y), sequencePosition(time), birthTime(time), deathTime(std::numeric_limits<unsigned int>::max()) {}
+        :x(x), y(y), sequencePosition(time), birthTime(time), deathTime(0) {}
     RedPoint(unsigned int birth)
-        :birthTime(birth), deathTime(std::numeric_limits<unsigned int>::max()) {}
+        :birthTime(birth), deathTime(0) {}
 
     bool isAfter(const RedPoint& other) const;
     void eat(const RedPoint& casualty);
@@ -43,7 +43,7 @@ RedPoint max(RedPoint pointA, RedPoint pointB, unsigned int birth);
 std::ostream& operator<<(std::ostream& os, const RedPoint& point);
 
 struct sortRedPointsByDeathTime {
-    bool operator() (RedPoint a, RedPoint b) {
+    bool operator() (RedPoint& a, RedPoint& b) {
         return (a.getDeathTime() < b.getDeathTime());
     }
 };

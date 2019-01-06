@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 // est-ce qu'on insère forcément à la fin
 void GlassStack::insert(const GlassItem& item) {

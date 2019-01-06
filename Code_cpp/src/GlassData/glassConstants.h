@@ -9,4 +9,5 @@
 #define MIN_WASTE_AREA 20
 #define PATH "instances_checker/"
 #define VERBOSE true
-
+#define ROTATED true
+#define NOT_ROTATED false

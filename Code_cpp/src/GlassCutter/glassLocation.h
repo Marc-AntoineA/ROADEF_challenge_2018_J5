@@ -19,6 +19,7 @@ class GlassLocation {
     unsigned int getBinId() const { return binId; }
     unsigned int getLocationSequence() const { return locationSequence; }
     unsigned int getItemIndex() const { return itemIndex; }
+    unsigned int getStackId() const { return getItem().getStackId(); }
     bool getRotated() const { return rotated; }
 
     private:

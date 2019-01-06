@@ -5,7 +5,7 @@ void RedPoint::kill(unsigned int time) {
 }
 
 void RedPoint::revive() {
-    deathTime = std::numeric_limits<unsigned int>::max();
+    deathTime = 0;
 }
 
 bool RedPoint::isAfter(const RedPoint& other) const {

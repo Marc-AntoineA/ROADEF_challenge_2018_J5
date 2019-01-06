@@ -13,5 +13,6 @@ int main(int argc, char* argv[])
     GlassInstance instance("instances_checker/A3");
     Heuristic heuristic(instance);
     heuristic.displaySequence();
+    
     return 0;
 }
