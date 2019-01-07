@@ -18,10 +18,12 @@ class GlassCutter {
     
     bool computeCutAndReturnIfFeasable() const;
     void displayStacks();
+    void displayLocations();
 
     private:
     void incrBinId();
     void decrBinId();
+    void setBinId(unsigned int binId);
     void buildStacks();
     void buildMonsters();
     void buildNodes();
@@ -29,7 +31,7 @@ class GlassCutter {
     void build();
     void reset();
     bool attempt(const GlassLocation& location);
-    unsigned int deepScore(const GlassLocation& location);
+    double deepScore(unsigned int sequenceIndex);
     void revert();
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     RedMonster* currentMonster() { return &monsters[currentBinId]; }

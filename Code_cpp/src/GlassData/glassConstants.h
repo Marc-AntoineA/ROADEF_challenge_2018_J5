@@ -8,6 +8,6 @@
 #define MAX_XX 3500
 #define MIN_WASTE_AREA 20
 #define PATH "instances_checker/"
-#define VERBOSE true
+#define VERBOSE false
 #define ROTATED true
 #define NOT_ROTATED false

@@ -30,7 +30,7 @@ unsigned int GlassItem::getHeight() const {
 }
 
 unsigned int GlassItem::getHeight(bool rotated) const {
-    return rotated ? width: height;
+    return rotated ? width : height;
 }
 
 unsigned int GlassItem::getWidth() const {
@@ -38,7 +38,7 @@ unsigned int GlassItem::getWidth() const {
 }
 
 unsigned int GlassItem::getWidth(bool rotated) const {
-    return rotated ? height: width;
+    return rotated ? height : width;
 }
 
 unsigned int GlassItem::getArea() const {

@@ -2,6 +2,7 @@
 
 #include "../GlassData/glassConstants.h"
 
+#include <cassert>
 
 RedMonster::RedMonster() {
     time = 0;
@@ -76,46 +77,56 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     const GlassItem& item = instance->getItem(index);
     unsigned int w = item.getWidth();
     unsigned int h = item.getHeight();
-    unsigned int xMax = WIDTH_PLATES - w;
-    unsigned int yMax = HEIGHT_PLATES - h;
-    unsigned int xMaxRotated = WIDTH_PLATES - h;
-    unsigned int yMaxRotated = HEIGHT_PLATES - w;
+    int xMax = WIDTH_PLATES - w;
+    int yMax = HEIGHT_PLATES - h;
+    int xMaxRotated = WIDTH_PLATES - h;
+    int yMaxRotated = HEIGHT_PLATES - w;
     std::vector<GlassLocation> locations;
     if (points.empty()) {
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, 0, ROTATED, instance, time), locations);
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, 0, NOT_ROTATED, instance, time), locations);
+        if (0 <= xMax && 0 <= yMax)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, 0, ROTATED, instance, time + 1), locations);
+        if (0 <= xMaxRotated && 0 <= yMaxRotated)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, 0, NOT_ROTATED, instance, time + 1), locations);
         return locations;
     }
 
-    unsigned int x = 0;
-    unsigned int y = points[0].getY();
-    if (y <= yMax) 
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time), locations);
-    if (y <= yMaxRotated)
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time), locations);
+    int x = 0;
+    int y = points[0].getY();
+    assert(y != 0);
+    if (0 <= xMax && y <= yMax) 
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, y, NOT_ROTATED, instance, time + 1), locations);
+    if (0 <= xMaxRotated && y <= yMaxRotated)
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, y, ROTATED, instance, time + 1), locations);
    
     unsigned int pointIndex = 0;
     while (pointIndex < points.size() - 1 && x < std::max(xMax, xMaxRotated)) {
         x = points[pointIndex].getX();
         y = points[pointIndex + 1].getY();
-        if (y <= yMax)
-            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time), locations);
-        if (y <= yMaxRotated)
-            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time), locations);
-        
+        assert(x != 0);
+        assert(y != 0);
+        if (x <= xMax && y <= yMax)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time + 1), locations);
+        if (x <= xMaxRotated && y <= yMaxRotated)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time + 1), locations);
         pointIndex++;
     }
 
-    if (x <= xMax)  
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time), locations);
-    if (x <= xMaxRotated)
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time), locations);
+    x = points.back().getX();
+    y = 0;
+    if (x <= xMax && y <= yMax)   
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time + 1), locations);
+    if (x <= xMaxRotated && y <= yMaxRotated)
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time + 1), locations);
     
     return locations;
 }
 
 // todo
 bool RedMonster::isFeasibleLocation(const GlassLocation& location) {
+    if (location.getXW() > WIDTH_PLATES)
+    std::cout << location << std::endl;
+    assert(location.getXW() <= WIDTH_PLATES);
+    assert(location.getYH() <= HEIGHT_PLATES);
     return true;
 }
 
