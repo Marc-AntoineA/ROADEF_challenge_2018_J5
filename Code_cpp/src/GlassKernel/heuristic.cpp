@@ -5,10 +5,11 @@
 
 #include <iostream>
 
-Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance){
+Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance, sequence){
     initRandomlySequence();
     displaySequence();
-    cutter.initWithSequence(sequence);
+    cutter.setSequence(sequence);
+    cutter.cut();
 }
 
 void Heuristic::initRandomlySequence() {
@@ -43,6 +44,7 @@ void Heuristic::displaySequence() {
 }
 
 unsigned int Heuristic::computeScore() {
-    cutter.initWithSequence(sequence);
+    cutter.setSequence(sequence); // TODO a priori inutile
+    cutter.cut();
     return cutter.getCurrentScore();
 }

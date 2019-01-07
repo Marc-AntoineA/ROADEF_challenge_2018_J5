@@ -15,6 +15,7 @@ class RedMonster {
     void setPlateIndex(unsigned int plateIndex) { this->plateIndex = plateIndex; }
     void incrRedMonster(const GlassLocation& location);
     void revert();
+    unsigned int getXMax();
     std::vector<GlassLocation> getLocationsForItemIndex(unsigned int itemIndex);
 
     private:
@@ -24,7 +25,6 @@ class RedMonster {
     bool isFeasibleLocation(const GlassLocation& location);
     void addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation>& locations);
     void reviveRedPoint(RedPoint& point);
-    unsigned int getXMax();
 
     GlassInstance* instance;
     unsigned int plateIndex;

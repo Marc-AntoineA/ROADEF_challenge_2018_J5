@@ -11,9 +11,10 @@
 class GlassCutter {
     public:
 
-    GlassCutter(GlassInstance* instance);
-    void initWithSequence(const std::vector<unsigned int>& sequence);
-    unsigned int getCurrentScore() { return currentScore; }
+    GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence);
+    void setSequence(std::vector<unsigned int>& sequence) { this->sequence = sequence; }
+    void cut();
+    unsigned int getCurrentScore();
     
     bool computeCutAndReturnIfFeasable() const;
     void displayStacks();
@@ -28,21 +29,22 @@ class GlassCutter {
     void build();
     void reset();
     bool attempt(const GlassLocation& location);
+    unsigned int deepScore(const GlassLocation& location);
     void revert();
+    std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     RedMonster* currentMonster() { return &monsters[currentBinId]; }
     GlassNode* currentNode() { return &nodes[currentBinId]; }
     std::vector<GlassLocation>* currentLocations() { return &locations[currentBinId]; }
 
     GlassInstance* instance;
-
-    unsigned int currentScore;
+    
     unsigned int currentBinId;
 
     std::vector<std::vector<GlassLocation> > locations;
     std::vector<RedMonster> monsters;
     std::vector<GlassNode> nodes;
     std::vector<GlassStack> stacks;
-
+    std::vector<unsigned int>& sequence;
     unsigned int nbRollbacks;
     unsigned int nbAttempts;
 };

@@ -148,5 +148,11 @@ void RedMonster::revert() {
         }
         points.erase(points.begin() + index);
     }
+}
 
+unsigned int RedMonster::getXMax() {
+    if (points.empty()) 
+        return 0;
+    return points.back().getX();
+    
 }
