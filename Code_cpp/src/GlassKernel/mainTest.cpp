@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    srand(4);
+    srand(6);
     GlassInstance instance("instances_checker/A2");
     Heuristic heuristic(instance);
     heuristic.displaySequence();

@@ -34,7 +34,6 @@ std::vector<GlassLocation> GlassCutter::getLocationsForItemIndexAndIncreaseBinId
 void GlassCutter::cut(){
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     for (unsigned int sequenceIndex = 0; sequenceIndex < sequence.size(); sequenceIndex++) {
-        std::cout << sequenceIndex << std::endl;
         unsigned int stackId = sequence[sequenceIndex];
         if (VERBOSE) std::cout << "StackId#" << stackId;
         unsigned int itemIndex = stacks[stackId].top();
@@ -53,13 +52,15 @@ void GlassCutter::cut(){
             }
         }
         if (bestScore > 0) {
-            std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
+            //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
             attempt(bestLocation);
         } else { 
             sequenceIndex--;
             incrBinId();
         }
     }
+    std::cout << "SCORE : " << getCurrentScore() << std::endl;
+    displayLocations();
 }
 
 double GlassCutter::deepScore(unsigned int sequenceIndex) {
@@ -92,7 +93,7 @@ double GlassCutter::deepScore(unsigned int sequenceIndex) {
 }
 
 unsigned int GlassCutter::getCurrentScore() {
-    return currentBinId*WIDTH_PLATES + currentMonster()->getXMax();
+    return (currentBinId*WIDTH_PLATES + currentMonster()->getXMax())*HEIGHT_PLATES;
 }
 
 void GlassCutter::buildStacks() {
@@ -114,10 +115,12 @@ void GlassCutter::displayStacks(){
 }
 
 void GlassCutter::displayLocations() {
+    std::cout << "==================" << std::endl;
     for (const std::vector<GlassLocation> locationsIt: locations) {
         for (const GlassLocation& location: locationsIt) 
             std::cout << location << std::endl;
     }
+    std::cout << "==================" << std::endl;
 }
 
 void GlassCutter::buildNodes() {
@@ -146,7 +149,7 @@ void GlassCutter::buildLocations() {
 void GlassCutter::incrBinId() {
     currentBinId++;
     if(VERBOSE) std::cout << "Incr bin id to " << currentBinId << std::endl;
-    std::cout << "incrBinId" << std::endl;
+    //std::cout << "incrBinId" << std::endl;
 }
 
 void GlassCutter::decrBinId() {
@@ -154,7 +157,7 @@ void GlassCutter::decrBinId() {
     currentMonster()->reset();
     currentLocations()->clear();
     currentBinId--;
-    std::cout << "decrBinId" << std::endl;
+    //std::cout << "decrBinId" << std::endl;
 }
 
 void GlassCutter::setBinId(unsigned int binId) {
@@ -166,7 +169,9 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
         currentNode()->buildNodeAndReturnNbItemsCuts(currentLocations()->begin(), currentLocations()->end());
         return true;
     } catch (const std::runtime_error& e) {
+        std::cout << "---|||---|||---" << std::endl;
         std::cout << e.what() << std::endl;
+        displayLocations();
         return false;
     }
 }
@@ -179,6 +184,7 @@ bool GlassCutter::attempt(const GlassLocation& location) {
     stacks[location.getStackId()].pop();
     currentMonster()->incrRedMonster(location);
     currentLocations()->push_back(location);
+    //displayLocations();
     if (!checkTreeFeasibilityAndBuildCurrentNode()) {
         revert();
         return false;

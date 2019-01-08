@@ -139,9 +139,9 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first) {
     for (const RealCut& cut: realCuts) {
         if (cut.x != prevAbscissa) {
             if (isVerticalCut())
-                sons.push_back(GlassNode(instance, plateIndex, prevAbscissa, y, cut.x - prevAbscissa, height, BRANCH, depth + 1));
+                sons.push_back(GlassNode(instance, plateIndex, prevAbscissa, y, cut.x - prevAbscissa, height, depth + 1, BRANCH));
             else
-                sons.push_back(GlassNode(instance, plateIndex, x, prevAbscissa, width, cut.x - prevAbscissa, BRANCH, depth + 1));
+                sons.push_back(GlassNode(instance, plateIndex, x, prevAbscissa, width, cut.x - prevAbscissa, depth + 1, BRANCH));
             nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(first + nbPrevItems, first + cut.nbItems);
             prevAbscissa = cut.x;
             nbPrevItems = cut.nbItems;
@@ -174,7 +174,9 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(const GlassLocationIt& fir
 
     checkTooDepth();
     buildCutsAvailable(first, last);
+    //displayCutsAvailable();
     buildRealCuts();
+    //displayRealCuts();
     unsigned int nbItemsCuts = cutRealCuts(first);
     if (std::distance(first, last) != nbItemsCuts)
         throw std::runtime_error("Infeasible cut (not enough items cut)");
@@ -189,5 +191,7 @@ void GlassNode::displayCutsAvailable() const {
 }
 
 void GlassNode::displayRealCuts() const {
-    // TODO
+    for (const RealCut& cut: realCuts) {
+        std::cout << "cut. abscissa " << cut.x << " & nbItems " << cut.nbItems << std::endl; 
+    }
 }

@@ -82,21 +82,24 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     int xMaxRotated = WIDTH_PLATES - h;
     int yMaxRotated = HEIGHT_PLATES - w;
     std::vector<GlassLocation> locations;
+    
+    int x = 0;
+    int y = 0;
     if (points.empty()) {
-        if (0 <= xMax && 0 <= yMax)
-            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, 0, ROTATED, instance, time + 1), locations);
-        if (0 <= xMaxRotated && 0 <= yMaxRotated)
-            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, 0, NOT_ROTATED, instance, time + 1), locations);
+        if (x <= xMax && y <= yMax)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time + 1), locations);
+        if (x <= xMaxRotated && y <= yMaxRotated)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time + 1), locations);
         return locations;
     }
 
-    int x = 0;
-    int y = points[0].getY();
+    x = 0;
+    y = points[0].getY();
     assert(y != 0);
-    if (0 <= xMax && y <= yMax) 
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, y, NOT_ROTATED, instance, time + 1), locations);
-    if (0 <= xMaxRotated && y <= yMaxRotated)
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, 0, y, ROTATED, instance, time + 1), locations);
+    if (x <= xMax && y <= yMax) 
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time + 1), locations);
+    if (x <= xMaxRotated && y <= yMaxRotated)
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time + 1), locations);
    
     unsigned int pointIndex = 0;
     while (pointIndex < points.size() - 1 && x < std::max(xMax, xMaxRotated)) {
@@ -123,7 +126,7 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
 
 // todo
 bool RedMonster::isFeasibleLocation(const GlassLocation& location) {
-    if (location.getXW() > WIDTH_PLATES)
+    if (location.getYH() > HEIGHT_PLATES)
     std::cout << location << std::endl;
     assert(location.getXW() <= WIDTH_PLATES);
     assert(location.getYH() <= HEIGHT_PLATES);
