@@ -34,6 +34,7 @@ std::vector<GlassLocation> GlassCutter::getLocationsForItemIndexAndIncreaseBinId
 void GlassCutter::cut(){
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     for (unsigned int sequenceIndex = 0; sequenceIndex < sequence.size(); sequenceIndex++) {
+        std::cout << sequenceIndex << std::endl;
         unsigned int stackId = sequence[sequenceIndex];
         if (VERBOSE) std::cout << "StackId#" << stackId;
         unsigned int itemIndex = stacks[stackId].top();
@@ -51,8 +52,13 @@ void GlassCutter::cut(){
                 bestLocation = location;
             }
         }
-        std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
-        attempt(bestLocation);
+        if (bestScore > 0) {
+            std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
+            attempt(bestLocation);
+        } else { 
+            sequenceIndex--;
+            incrBinId();
+        }
     }
 }
 
@@ -155,6 +161,16 @@ void GlassCutter::setBinId(unsigned int binId) {
     currentBinId = binId;
 }
 
+bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
+    try {
+        currentNode()->buildNodeAndReturnNbItemsCuts(currentLocations()->begin(), currentLocations()->end());
+        return true;
+    } catch (const std::runtime_error& e) {
+        std::cout << e.what() << std::endl;
+        return false;
+    }
+}
+
 // TODO build pour guillotine cut?
 bool GlassCutter::attempt(const GlassLocation& location) {
     if (VERBOSE) std::cout << "attempt location: " << location << std::endl;
@@ -163,6 +179,10 @@ bool GlassCutter::attempt(const GlassLocation& location) {
     stacks[location.getStackId()].pop();
     currentMonster()->incrRedMonster(location);
     currentLocations()->push_back(location);
+    if (!checkTreeFeasibilityAndBuildCurrentNode()) {
+        revert();
+        return false;
+    }
     return true;
 }
 

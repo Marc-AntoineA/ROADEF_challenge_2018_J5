@@ -16,6 +16,8 @@ class GlassLocation {
     unsigned int getY() const { return y; }
     unsigned int getXW() const { return x + getItem().getWidth(rotated); }
     unsigned int getYH() const { return y + getItem().getHeight(rotated); }
+    unsigned int getWidth() const { return getItem().getWidth(rotated); }
+    unsigned int getHeight() const { return getItem().getHeight(rotated); }
     unsigned int getBinId() const { return binId; }
     unsigned int getLocationSequence() const { return locationSequence; }
     unsigned int getItemIndex() const { return itemIndex; }

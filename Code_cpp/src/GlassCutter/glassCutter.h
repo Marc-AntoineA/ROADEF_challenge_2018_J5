@@ -33,6 +33,7 @@ class GlassCutter {
     bool attempt(const GlassLocation& location);
     double deepScore(unsigned int sequenceIndex);
     void revert();
+    bool checkTreeFeasibilityAndBuildCurrentNode();
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     RedMonster* currentMonster() { return &monsters[currentBinId]; }
     GlassNode* currentNode() { return &nodes[currentBinId]; }

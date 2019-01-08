@@ -11,3 +11,4 @@
 #define VERBOSE false
 #define ROTATED true
 #define NOT_ROTATED false
+#define MAX_DEPTH 3
