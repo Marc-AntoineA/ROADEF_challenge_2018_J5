@@ -142,6 +142,7 @@ bool RedMonster::isFeasibleLocation(const GlassLocation& location) {
 // TODO gérer les 'free of defects'
 void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation>& locations) {
     if (!isFeasibleLocation(location)) return;
+    assert(getPlate().rectangleIsFreeOutOfDefects(location.getX(), location.getY(), location.getXW(), location.getYH()));
     locations.push_back(location);
 }
 

@@ -27,6 +27,7 @@ class RedMonster {
     bool isFeasibleLocation(const GlassLocation& location);
     void addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation>& locations);
     void reviveRedPoint(RedPoint& point);
+    const GlassPlate& getPlate() { return instance->getPlate(plateIndex); }
 
     GlassInstance* instance;
     unsigned int plateIndex;

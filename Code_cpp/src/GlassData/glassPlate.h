@@ -11,6 +11,7 @@ class GlassPlate {
     void setPlateId(unsigned int plateId) { this->plateId = plateId; }
     unsigned int getPlateId() { return plateId; }
     void addDefect(GlassDefect defect);
+    bool rectangleIsFreeOutOfDefects(unsigned int x, unsigned int y, unsigned int xw, unsigned int yh) const;
 
     private:
     unsigned int plateId;
