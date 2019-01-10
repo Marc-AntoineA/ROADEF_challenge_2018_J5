@@ -2,6 +2,12 @@
 
 #include <iostream>
 
+
+GlassMove::GlassMove(Heuristic* heuristic): heuristic(heuristic), nbImproved(0), nbAccepted(0), nbRefused(0) {
+    
+}
+
+
 void GlassMove::addStat(MOVE_STATISTIC statistic) {
     switch (statistic) {
         case IMPROVE:

@@ -7,6 +7,7 @@
 #include <iostream>
 
 bool Swap::attempt() {
+    addTested();
     std::cout << "============" << std::endl;
     std::vector<unsigned int>& sequence = heuristic->getSequence();
     for (unsigned int seq: sequence) std::cout << seq << " ";

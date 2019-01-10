@@ -12,9 +12,8 @@ enum MOVE_STATISTIC {
 
 class GlassMove {
     public:
-    GlassMove(Heuristic* heuristic): heuristic(heuristic) {}
-    GlassMove() {}
-
+    GlassMove(Heuristic* heuristic);
+    
     virtual void commit() {}
     virtual void revert() {}
     virtual bool attempt() {return true;}

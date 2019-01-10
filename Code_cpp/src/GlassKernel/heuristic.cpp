@@ -15,9 +15,8 @@ Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instan
     initRandomlySequence();
     buildMoves();
     displaySequence();
-    //cutter.setSequence(sequence);
     localSearch();
-    //cutter.cut();
+    displayMoveStatistics();
 }
 
 void Heuristic::buildMoves() {
@@ -70,7 +69,7 @@ unsigned int Heuristic::computeScore() {
 
 void Heuristic::localSearch() {
     unsigned int previousScore = computeScore();
-    for (unsigned int k = 0; k < 600; k++) {
+    for (unsigned int k = 0; k < 100; k++) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         if(!move->attempt()) continue;
@@ -78,10 +77,12 @@ void Heuristic::localSearch() {
         unsigned int score = computeScore();
         if (score <= previousScore) {
             move->commit();
+            move->addStat(score < previousScore ? IMPROVE : ACCEPTED);
             std::cout << " Nouveau score " << score << " vs " << previousScore << std::endl;
             previousScore = score;
         } else {
             move->revert();
+            move->addStat(REFUSED);
         }
     }
     std::cout << " Best score " << previousScore << std::endl;

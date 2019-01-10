@@ -4,7 +4,7 @@
 
 class Swap: public GlassMove {
     public:
-    Swap(Heuristic* heuristic) {this->heuristic = heuristic;}
+    Swap(Heuristic* heuristic) : GlassMove(heuristic) { this->name="Swap";}
     virtual bool attempt();
     void commit();
     void revert();
