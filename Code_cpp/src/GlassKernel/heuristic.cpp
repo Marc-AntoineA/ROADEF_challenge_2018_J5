@@ -86,3 +86,9 @@ void Heuristic::localSearch() {
     }
     std::cout << " Best score " << previousScore << std::endl;
 }
+
+void Heuristic::displayMoveStatistics() {
+    for (GlassMove* move: poolMoves) {
+        move->displayStatistics();
+    }
+}

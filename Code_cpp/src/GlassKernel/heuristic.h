@@ -16,6 +16,7 @@ class Heuristic {
     unsigned int glassRandint(unsigned int first, unsigned int last);
     unsigned int computeScore();
     void localSearch();
+    void displayMoveStatistics();
 
     private:
     void initRandomlySequence();
