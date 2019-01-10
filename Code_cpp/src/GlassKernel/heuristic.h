@@ -14,21 +14,21 @@ class Heuristic {
     std::vector<unsigned int>& getSequence() { return sequence; }
     void displaySequence();
     unsigned int glassRandint(unsigned int first, unsigned int last);
-    unsigned int computeScore(unsigned int depth);
     void localSearch(unsigned int depth);
     void displayMoveStatistics();
+    unsigned int getBestScore() const { return bestScore; }
+    void saveBest(std::string name);
 
     private:
     void initRandomlySequence();
     void buildMoves(); 
     void resetStacks();
+    unsigned int computeScore(unsigned int depth);
     GlassInstance instance;
     GlassCutter cutter;
 
     std::vector<GlassMove*> poolMoves;
 
     std::vector<unsigned int> sequence;
-    unsigned int score;
-    std::vector<unsigned int> bestSequence;
     unsigned int bestScore;
 };

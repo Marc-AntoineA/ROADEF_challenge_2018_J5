@@ -3,6 +3,8 @@
 
 #include <limits>
 #include <cassert>
+#include <fstream>
+#include <sstream>
 
 GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence)
     :instance(instance), sequence(sequence) {
@@ -218,4 +220,23 @@ void GlassCutter::revert() {
     currentMonster()->revert();
     if (currentLocations()->empty()) 
         decrBinId();    
+}
+
+void GlassCutter::saveBest(std::string name) {
+    if (VERBOSE) std::cout << "Sauvegarde de l'instance " << name << std::endl;
+    std::ofstream outputFile;
+    outputFile.open(name.c_str());
+    outputFile << "PLATE ID;NODE ID;X;Y;WIDTH;HEIGHT;TYPE;CUT;PARENT" << std::endl;
+
+    unsigned int lastBinId = 0;
+    for (unsigned int binId=0; binId < locations.size(); binId++){
+        if (locations[binId].empty()) break;
+        lastBinId++;
+    }
+    int maxSonId = -1;
+    for (unsigned int binId=0; binId < lastBinId; binId++){
+        maxSonId = nodes[binId].saveNode(outputFile, maxSonId + 1, -1, binId == lastBinId - 1);
+    }
+
+    std::cout << "Sauvegarde effectuée avec succès " << std::endl;
 }

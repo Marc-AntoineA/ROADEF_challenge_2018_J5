@@ -20,6 +20,7 @@ class GlassCutter {
     void displayStacks();
     void displayLocations();
     void reset();
+    void saveBest(std::string name);
 
     private:
     void incrBinId();

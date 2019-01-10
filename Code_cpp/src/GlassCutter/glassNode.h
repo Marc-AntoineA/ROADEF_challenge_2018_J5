@@ -38,7 +38,7 @@ class GlassNode {
     void reset();
     unsigned int buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last);    
     void checkNode(const GlassLocationIt& first, const GlassLocationIt& last);
-    void saveNode(std::ofstream& outputFile, unsigned int nodeId, unsigned int parentId, bool last);
+    unsigned int saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last);
 
     private:
     void buildCutsAvailable(const GlassLocationIt& first, const GlassLocationIt& last);
@@ -56,8 +56,8 @@ class GlassNode {
     void checkTooDepth() const;
     bool isNodeFitLocation(const GlassLocation& location) const;
     
-    unsigned int plateIndex;
     GlassInstance* instance;
+    unsigned int plateIndex;
     unsigned int x;
     unsigned int y;
     unsigned int width;

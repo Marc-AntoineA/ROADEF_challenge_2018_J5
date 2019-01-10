@@ -2,10 +2,13 @@
 
 #include "../GlassCutter/glassCutter.h"
 #include "../GlassKernel/glassMove.h"
+#include "../GlassData/glassConstants.h"
 #include "../GlassKernel/GlassMoves/swap.h"
 #include "../GlassKernel/GlassMoves/kConsecutivePermutation.h"
 
 #include <cstdlib>
+#include <sstream>
+#include <fstream>
 #include <iostream>
 
 unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
@@ -18,6 +21,7 @@ Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instan
     displaySequence();
     localSearch(5);
     displayMoveStatistics();
+    computeScore(5);
 }
 
 void Heuristic::buildMoves() {
@@ -69,28 +73,32 @@ unsigned int Heuristic::computeScore(unsigned int depth) {
 }
 
 void Heuristic::localSearch(unsigned int depth) {
-    unsigned int previousScore = computeScore(depth);
+    bestScore = computeScore(depth);
     for (unsigned int k = 0; k < 1000; k++) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         if(!move->attempt()) continue;
         displaySequence();
         unsigned int score = computeScore(depth);
-        if (score <= previousScore) {
+        if (score <= bestScore) {
             move->commit();
-            move->addStat(score < previousScore ? IMPROVE : ACCEPTED);
-            std::cout << " Nouveau score " << score << " vs " << previousScore << std::endl;
-            previousScore = score;
+            move->addStat(score < bestScore ? IMPROVE : ACCEPTED);
+            std::cout << " Nouveau score " << score << " vs " << bestScore << std::endl;
+            bestScore = score;
         } else {
             move->revert();
             move->addStat(REFUSED);
         }
     }
-    std::cout << " Best score " << previousScore << std::endl;
+    std::cout << " Best score " << bestScore << std::endl;
 }
 
 void Heuristic::displayMoveStatistics() {
     for (GlassMove* move: poolMoves) {
         move->displayStatistics();
     }
+}
+
+void Heuristic::saveBest(std::string name) {
+    cutter.saveBest(name);
 }

@@ -5,6 +5,8 @@
 #include <cassert>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
+#include <ostream>
 
 GlassNode::GlassNode(GlassInstance* instance, unsigned int plateIndex, 
     unsigned int x, unsigned int y, unsigned int width, unsigned int height,
@@ -160,9 +162,9 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first) {
     unsigned int endNodeAbscissa = isVerticalCut() ? x + width : y + height;
     if (prevAbscissa != endNodeAbscissa) {
         if (isVerticalCut())
-            sons.push_back(GlassNode(instance, plateIndex, prevAbscissa, y, endNodeAbscissa - prevAbscissa, height, BRANCH, depth + 1));
+            sons.push_back(GlassNode(instance, plateIndex, prevAbscissa, y, endNodeAbscissa - prevAbscissa, height, depth + 1, BRANCH));
         else
-            sons.push_back(GlassNode(instance, plateIndex, x, prevAbscissa, width, endNodeAbscissa - prevAbscissa, BRANCH, depth + 1));
+            sons.push_back(GlassNode(instance, plateIndex, x, prevAbscissa, width, endNodeAbscissa - prevAbscissa, depth + 1, BRANCH));
         nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(first, first);
     }
     return nbItemsCuts;
@@ -204,4 +206,25 @@ void GlassNode::displayRealCuts() const {
     for (const RealCut& cut: realCuts) {
         std::cout << "cut. abscissa " << cut.x << " & nbItems " << cut.nbItems << std::endl; 
     }
+}
+
+unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last) {
+    std::cout << depth << std::endl;
+    outputFile << plateIndex << ";" << nodeId << ";";
+    outputFile << x << ";" << y << ";" << width << ";" << height << ";";
+    outputFile << type << ";" << depth << ";";
+    
+    if (parentId < 0)
+        outputFile << "" << std::endl;
+    else
+
+        outputFile << parentId << std::endl;
+
+    if (last)
+        sons.back().setType(RESIDUAL);
+    unsigned int maxSonId = nodeId;
+    for (GlassNode son: sons) {
+        maxSonId = son.saveNode(outputFile, maxSonId + 1, nodeId, !LAST_BIN);
+    }
+    return maxSonId;
 }
