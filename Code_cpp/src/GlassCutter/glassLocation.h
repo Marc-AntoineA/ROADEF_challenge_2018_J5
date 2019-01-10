@@ -2,6 +2,8 @@
 
 #include "../GlassData/glassInstance.h"
 
+#include <iostream>
+
 class GlassLocation {
     public:
     GlassLocation(): itemIndex(0), binId(0), x(0), y(0), rotated(false), instance(NULL), locationSequence(0) {}
@@ -11,6 +13,7 @@ class GlassLocation {
         : itemIndex(itemIndex), binId(binId), x(x), y(y), rotated(rotated),
          instance(instance), locationSequence(locationSequence){
     }
+    GlassLocation(unsigned int x, unsigned int y, const GlassLocation& location);
 
     unsigned int getX() const { return x; }
     unsigned int getY() const { return y; }
@@ -23,6 +26,7 @@ class GlassLocation {
     unsigned int getItemIndex() const { return itemIndex; }
     unsigned int getStackId() const { return getItem().getStackId(); }
     bool getRotated() const { return rotated; }
+    GlassInstance* getInstance() const { return instance; }
 
     private:
     GlassItem& getItem() const { return instance->getItem(itemIndex); }

@@ -53,5 +53,8 @@ void GlassInstance::buildPlates() {
         plates[defect.getPlateId()].addDefect(defect);
     }
     defectsFile.close();
+    for (unsigned int plateIndex = 0; plateIndex < NB_PLATES; plateIndex++){
+        plates[plateIndex].sortDefects();
+    }
     if (VERBOSE) std::cout << "\t... Chargement des plaques effectué" << std::endl;
 }

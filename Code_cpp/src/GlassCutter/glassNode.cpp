@@ -127,7 +127,7 @@ void GlassNode::buildRealCuts() {
             } else {
                 if (nbItemsSeen - nbPrevItems > 1) 
                     throw std::runtime_error("Trimming failed (more than 1 item)");
-                if (realCuts.size() > 1)
+                if (realCuts.size() >= 1)
                     throw std::runtime_error("Trimming failed (more than 1 cut)");
                 realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                 prevAbscissa = cut.getAbscissa();
@@ -209,7 +209,6 @@ void GlassNode::displayRealCuts() const {
 }
 
 unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last) {
-    std::cout << depth << std::endl;
     outputFile << plateIndex << ";" << nodeId << ";";
     outputFile << x << ";" << y << ";" << width << ";" << height << ";";
     outputFile << type << ";" << depth << ";";
@@ -217,7 +216,6 @@ unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId,
     if (parentId < 0)
         outputFile << "" << std::endl;
     else
-
         outputFile << parentId << std::endl;
 
     if (last)

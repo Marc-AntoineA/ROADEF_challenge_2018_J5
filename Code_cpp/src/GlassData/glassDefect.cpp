@@ -28,7 +28,7 @@ GlassDefect::GlassDefect(std::string inputLine){
 }
 
 // TODO checker mais ça semble correct
-bool GlassDefect::intersectLine(int otherX, int otherY,  int otherHeight, bool vertical) const {
+bool GlassDefect::intersectLine(unsigned int otherX, unsigned int otherY, unsigned int otherHeight, bool vertical) const {
     if (vertical){
         if (x <= otherX && x + width > otherX && y >= otherY && y <= otherY + otherHeight)
             return true;

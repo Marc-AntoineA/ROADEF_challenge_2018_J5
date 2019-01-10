@@ -69,7 +69,7 @@ void GlassCutter::cut(){
         }
     }
 
-    displayLocations();
+    //displayLocations();
     std::cout << "SCORE : " << getCurrentScore() << std::endl;
     std::cout << "nbRollbacks : " << nbRollbacks << std::endl;
     std::cout << "nbAttempts : " << nbAttempts << std::endl;

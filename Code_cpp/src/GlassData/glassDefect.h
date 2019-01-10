@@ -10,23 +10,23 @@ class GlassDefect {
          x(x), y(y), width(width), height(height), id(id), plateId(plateId) {} 
 
     GlassDefect(std::string input_line);
-    int getId() const { return id; } 
-    int getX() const { return x; }
-    int getY() const { return y; }
-    int getHeight() const { return height; }
-    int getWidth() const { return width; }
-    int getXWidth() const { return x + width; }
-    int getYHeight() const { return y + height; }
-    int getPlateId() const { return plateId; }
-    bool intersectLine(int otherX, int otherY, int otherHeight, bool vertical) const;
+    unsigned int getId() const { return id; } 
+    unsigned int getX() const { return x; }
+    unsigned int getY() const { return y; }
+    unsigned int getHeight() const { return height; }
+    unsigned int getWidth() const { return width; }
+    unsigned int getXWidth() const { return x + width; }
+    unsigned int getYHeight() const { return y + height; }
+    unsigned int getPlateId() const { return plateId; }
+    bool intersectLine(unsigned int otherX, unsigned int otherY, unsigned int otherHeight, bool vertical) const;
 
     private:
-    int x;
-    int y;
-    int width;
-    int height;
-    int id;
-    int plateId;
+    unsigned int x;
+    unsigned int y;
+    unsigned int width;
+    unsigned int height;
+    unsigned int id;
+    unsigned int plateId;
 };
 
 std::ostream& operator<<(std::ostream& os, const GlassDefect defect);

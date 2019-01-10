@@ -138,12 +138,73 @@ bool RedMonster::isFeasibleLocation(const GlassLocation& location) {
     return true;
 }
 
+bool RedMonster::isFreeOutOfDefects(const GlassLocation& location) {
+    return getPlate().rectangleIsFreeOutOfDefects(location.getX(), location.getY(), location.getXW(), location.getYH());
+}
 
 // TODO gérer les 'free of defects'
 void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation>& locations) {
     if (!isFeasibleLocation(location)) return;
-    assert(getPlate().rectangleIsFreeOutOfDefects(location.getX(), location.getY(), location.getXW(), location.getYH()));
-    locations.push_back(location);
+
+    if (isFreeOutOfDefects(location)) {
+        locations.push_back(location); 
+        return;
+    }
+
+    unsigned int width = location.getWidth();
+    unsigned int height = location.getHeight();
+
+    unsigned int currentX = location.getX();
+
+    unsigned int yMin = getPlate().getBestY(currentX, location.getY(), width, height);
+
+    if (yMin < HEIGHT_PLATES - height){
+        GlassLocation newLocation(currentX, yMin, location);
+        assert(isFeasibleLocation(newLocation));
+        assert(isFreeOutOfDefects(newLocation));
+        locations.push_back(newLocation);
+    }
+
+    // ça ne sert à rien d'aller plus bas
+    if (yMin == location.getY()) return;
+
+    unsigned int yPrev = yMin;
+
+    const std::vector<GlassDefect>& defects = getPlate().getDefects();
+    auto defectIt = defects.begin();
+    // Initialiser avec x % location.get_x()
+    while (defectIt != defects.end()) {
+        currentX = defectIt->getXWidth();
+        if (currentX != location.getX()) 
+            currentX = std::max(currentX, location.getX() + MIN_WASTE_AREA);
+
+        if (currentX + width != HEIGHT_PLATES && currentX + width + MIN_WASTE_AREA > HEIGHT_PLATES) { defectIt++; continue; }
+
+        yMin = getPlate().getBestY(currentX, location.getY(), width, height);
+
+        if (yMin > yPrev) break;
+        if (yMin < HEIGHT_PLATES && yMin == yPrev) break;
+
+        if (yMin < HEIGHT_PLATES - height){
+            if (yMin != location.getY()) yMin = std::max(yMin, location.getY() + MIN_WASTE_AREA);
+            GlassLocation newLocation(currentX, yMin, location);
+            assert(isFeasibleLocation(newLocation));
+            assert(isFreeOutOfDefects(newLocation));
+            locations.push_back(newLocation);
+        }
+        //std::cout << location << std::endl;
+        yPrev = yMin;
+        defectIt++;
+    }
+
+    // TODO remove
+    /*for (Location location:locations){
+        if (!is_free_out_of_defects(location)){
+            //std::cout << location << std::endl;
+        }
+        assert(is_free_out_of_defects(location));
+    }*/
+    return;
 }
 
 void RedMonster::reviveRedPoint(RedPoint& point) {
