@@ -3,6 +3,7 @@
 #include "../GlassCutter/glassCutter.h"
 #include "../GlassKernel/glassMove.h"
 #include "../GlassKernel/GlassMoves/swap.h"
+#include "../GlassKernel/GlassMoves/kConsecutivePermutation.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -15,15 +16,15 @@ Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instan
     initRandomlySequence();
     buildMoves();
     displaySequence();
-    localSearch();
+    localSearch(5);
     displayMoveStatistics();
 }
 
 void Heuristic::buildMoves() {
     poolMoves.clear();
     poolMoves.push_back(new Swap(this));
-    std::cout << "et avec le std::vector" << std::endl;
-    poolMoves.back()->attempt();
+    for (unsigned int k = 2; k <= 4; k++) 
+        poolMoves.push_back(new KConsecutivePermutation(this, k));
 }
 
 void Heuristic::initRandomlySequence() {
@@ -58,7 +59,7 @@ void Heuristic::displaySequence() {
 }
 
 
-unsigned int Heuristic::computeScore() {
+unsigned int Heuristic::computeScore(unsigned int depth) {
     std::cout << "compute score for sequence : ";
     displaySequence();
     cutter.setSequence(sequence); // TODO a priori inutile
@@ -67,14 +68,14 @@ unsigned int Heuristic::computeScore() {
     return cutter.getCurrentScore();
 }
 
-void Heuristic::localSearch() {
-    unsigned int previousScore = computeScore();
-    for (unsigned int k = 0; k < 100; k++) {
+void Heuristic::localSearch(unsigned int depth) {
+    unsigned int previousScore = computeScore(depth);
+    for (unsigned int k = 0; k < 1000; k++) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         if(!move->attempt()) continue;
         displaySequence();
-        unsigned int score = computeScore();
+        unsigned int score = computeScore(depth);
         if (score <= previousScore) {
             move->commit();
             move->addStat(score < previousScore ? IMPROVE : ACCEPTED);

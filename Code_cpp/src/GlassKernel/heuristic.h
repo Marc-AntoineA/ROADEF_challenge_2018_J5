@@ -14,8 +14,8 @@ class Heuristic {
     std::vector<unsigned int>& getSequence() { return sequence; }
     void displaySequence();
     unsigned int glassRandint(unsigned int first, unsigned int last);
-    unsigned int computeScore();
-    void localSearch();
+    unsigned int computeScore(unsigned int depth);
+    void localSearch(unsigned int depth);
     void displayMoveStatistics();
 
     private:
