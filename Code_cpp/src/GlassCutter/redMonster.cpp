@@ -62,7 +62,7 @@ void RedMonster::cleanLocation(const GlassLocation& location) {
         const RedPoint& nextPoint = points[pointIndex + 1];
 
         if ((point.isAfter(nextPoint) && X > point.getX() && Y <= nextPoint.getY()) 
-            || (!point.isAfter(nextPoint) && X <= point.getX() && Y >= nextPoint.getY())) {
+            || (!point.isAfter(nextPoint) && X <= point.getX() && Y >= point.getY())) {
                 RedPoint newPoint = max(point, nextPoint, time);
                 killRedPointByIndex(pointIndex);
                 killRedPointByIndex(pointIndex);
@@ -127,11 +127,17 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
 // todo
 bool RedMonster::isFeasibleLocation(const GlassLocation& location) {
     if (location.getYH() > HEIGHT_PLATES)
-    std::cout << location << std::endl;
     assert(location.getXW() <= WIDTH_PLATES);
     assert(location.getYH() <= HEIGHT_PLATES);
+    if (location.getXW() < WIDTH_PLATES && WIDTH_PLATES - location.getXW() < MIN_WASTE_AREA)
+        return false;
+    if (location.getYH() < HEIGHT_PLATES && HEIGHT_PLATES - location.getYH() < MIN_WASTE_AREA) 
+        return false;
+    if (getXMax() > location.getX() + MAX_XX)
+        return false;
     return true;
 }
+
 
 // TODO gérer les 'free of defects'
 void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& location, std::vector<GlassLocation>& locations) {
@@ -168,5 +174,14 @@ unsigned int RedMonster::getXMax() {
     if (points.empty()) 
         return 0;
     return points.back().getX();
-    
+}
+
+std::ostream& operator<<(std::ostream& os, const RedMonster& monster){
+    os << "RedMonster #" << monster.getPlateIndex() << " -- ";
+    os << monster.getPoints().size() << "pt(s) ";
+   
+   for (const RedPoint& point: monster.getPoints()){
+        std::cout << "\t" << point;
+    }
+    return os;
 }

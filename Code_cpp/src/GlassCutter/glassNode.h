@@ -50,6 +50,7 @@ class GlassNode {
 
     bool isFreeOfDefects(const GlassCut& cut) const;
     bool isCutPossibleForMinXY(unsigned int prevAbscissa, unsigned int abscissa);
+    bool isCutPossibleForMinWaste(unsigned int abscissa);
     bool isVerticalCut() const { return depth%2 == 0; }
     void checkTooSmall() const;
     void checkTooDepth() const;

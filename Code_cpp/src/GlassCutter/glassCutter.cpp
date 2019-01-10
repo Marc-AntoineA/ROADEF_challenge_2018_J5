@@ -2,12 +2,14 @@
 #include "../GlassData/glassConstants.h"
 
 #include <limits>
+#include <cassert>
 
 GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence)
     :instance(instance), sequence(sequence) {
     currentBinId = 0;
     nbRollbacks = 0;
     nbAttempts = 0;
+    nbInfeasible = 0;
     buildStacks();
     buildMonsters();
     buildNodes();
@@ -20,6 +22,10 @@ void GlassCutter::reset() {
         node.reset();
     for (RedMonster& monster: monsters)
         monster.reset();
+    for (GlassStack& stack: stacks)
+        stack.reset();
+    for (std::vector<GlassLocation>& locationsTmp: locations) 
+        locationsTmp.clear();
 }
 
 std::vector<GlassLocation> GlassCutter::getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex) {
@@ -32,6 +38,7 @@ std::vector<GlassLocation> GlassCutter::getLocationsForItemIndexAndIncreaseBinId
 }
 
 void GlassCutter::cut(){
+    //displayStacks();
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     for (unsigned int sequenceIndex = 0; sequenceIndex < sequence.size(); sequenceIndex++) {
         unsigned int stackId = sequence[sequenceIndex];
@@ -44,7 +51,7 @@ void GlassCutter::cut(){
         double bestScore = 0;
         for (const GlassLocation& location: locations) {
             if (!attempt(location)) continue;
-            double currentScore = deepScore(sequenceIndex);
+            double currentScore = deepScore(sequenceIndex, 4);
             revert();
             if (currentScore >= bestScore) {
                 bestScore = currentScore;
@@ -54,20 +61,24 @@ void GlassCutter::cut(){
         if (bestScore > 0) {
             //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
             attempt(bestLocation);
-        } else { 
+        } else {
             sequenceIndex--;
             incrBinId();
         }
     }
-    std::cout << "SCORE : " << getCurrentScore() << std::endl;
+
     displayLocations();
+    std::cout << "SCORE : " << getCurrentScore() << std::endl;
+    std::cout << "nbRollbacks : " << nbRollbacks << std::endl;
+    std::cout << "nbAttempts : " << nbAttempts << std::endl;
+    std::cout << "nbInfeasible : " << nbInfeasible << std::endl;
 }
 
-double GlassCutter::deepScore(unsigned int sequenceIndex) {
-    if (sequenceIndex + 1 == sequence.size()) 
+double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth) {
+    if (depth == 0 || sequenceIndex + 1 == sequence.size()) 
         return  1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
    
-    double score = 0;
+    double score = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
     unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
     const std::vector<GlassLocation>& locations = currentMonster()->getLocationsForItemIndex(itemIndex);
     if (locations.empty()) { //std::cout << "locations empty for sequenceIndex#" << sequenceIndex << std::endl;
@@ -81,19 +92,19 @@ double GlassCutter::deepScore(unsigned int sequenceIndex) {
             displayLocations();
         }*/
         if (!attempt(locationBis)) continue;
-        score = std::max(score, 1. + deepScore(sequenceIndex + 1));
+        score = std::max(score, 1. + deepScore(sequenceIndex + 1, depth - 1));
         revert();
         if (score > 10) 
             return score;
     }
-
+    assert (score < 10);
     //if (score > 15)
     //std::cout << "sequenceIndex#" << sequenceIndex << " -score: " << score << std::endl;
     return score;
 }
 
 unsigned int GlassCutter::getCurrentScore() {
-    return (currentBinId*WIDTH_PLATES + currentMonster()->getXMax())*HEIGHT_PLATES;
+    return (currentBinId*WIDTH_PLATES + currentMonster()->getXMax())*HEIGHT_PLATES - instance->getItemsArea();
 }
 
 void GlassCutter::buildStacks() {
@@ -169,9 +180,10 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
         currentNode()->buildNodeAndReturnNbItemsCuts(currentLocations()->begin(), currentLocations()->end());
         return true;
     } catch (const std::runtime_error& e) {
-        std::cout << "---|||---|||---" << std::endl;
+        /*std::cout << "---|||---|||---" << std::endl;
         std::cout << e.what() << std::endl;
-        displayLocations();
+        displayLocations();*/
+        nbInfeasible++;
         return false;
     }
 }
@@ -184,9 +196,9 @@ bool GlassCutter::attempt(const GlassLocation& location) {
     stacks[location.getStackId()].pop();
     currentMonster()->incrRedMonster(location);
     currentLocations()->push_back(location);
-    //displayLocations();
     if (!checkTreeFeasibilityAndBuildCurrentNode()) {
         revert();
+        //std::cout << (*currentMonster()) << std::endl;
         return false;
     }
     return true;

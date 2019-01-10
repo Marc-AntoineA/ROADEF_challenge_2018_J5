@@ -1,18 +1,16 @@
 #pragma once
 
-//#include "heuristic.h"
-
 class Heuristic;
 
 class GlassMove {
     public:
-    GlassMove(Heuristic* heuristic): heuristic(heuristic){};
+    GlassMove(Heuristic* heuristic): heuristic(heuristic) {}
     GlassMove() {}
 
-    virtual void commit() = 0;
-    virtual void revert() = 0;
-    virtual void attempt() = 0;
+    virtual void commit() {}
+    virtual void revert() {}
+    virtual bool attempt() {return true;}
 
-    private:
+    protected:
     Heuristic* heuristic;
 };

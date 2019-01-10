@@ -13,6 +13,8 @@ class RedMonster {
     void reset();
     void setInstance(GlassInstance* instance) { this->instance = instance; }
     void setPlateIndex(unsigned int plateIndex) { this->plateIndex = plateIndex; }
+    unsigned int getPlateIndex() const { return plateIndex; }
+    const std::vector<RedPoint>& getPoints() const { return points; }
     void incrRedMonster(const GlassLocation& location);
     void revert();
     unsigned int getXMax();
@@ -32,3 +34,5 @@ class RedMonster {
     std::priority_queue<RedPoint, std::vector<RedPoint>, sortRedPointsByDeathTime> previousPoints;
     unsigned int time;
 };
+
+std::ostream& operator<<(std::ostream& os, const RedMonster& monster);

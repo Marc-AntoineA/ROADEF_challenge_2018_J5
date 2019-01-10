@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../glassMove.h"
+#include "../../GlassKernel/glassMove.h"
 
 class Swap: public GlassMove {
     public:
-    void attempt();
+    Swap(Heuristic* heuristic) {this->heuristic = heuristic;}
+    virtual bool attempt();
     void commit();
     void revert();
 

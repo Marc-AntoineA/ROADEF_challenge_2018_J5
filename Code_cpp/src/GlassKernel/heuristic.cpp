@@ -1,15 +1,30 @@
 #include "heuristic.h"
 
 #include "../GlassCutter/glassCutter.h"
-#include "glassRand.h"
+#include "../GlassKernel/glassMove.h"
+#include "../GlassKernel/GlassMoves/swap.h"
 
+#include <cstdlib>
 #include <iostream>
+
+unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
+    return rand() % (last - begin) + begin;
+}
 
 Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance, sequence){
     initRandomlySequence();
+    buildMoves();
     displaySequence();
-    cutter.setSequence(sequence);
-    cutter.cut();
+    //cutter.setSequence(sequence);
+    localSearch();
+    //cutter.cut();
+}
+
+void Heuristic::buildMoves() {
+    poolMoves.clear();
+    poolMoves.push_back(new Swap(this));
+    std::cout << "et avec le std::vector" << std::endl;
+    poolMoves.back()->attempt();
 }
 
 void Heuristic::initRandomlySequence() {
@@ -23,7 +38,7 @@ void Heuristic::initRandomlySequence() {
 
     unsigned int nbItemsSelected = 0;
     while (nbItemsSelected < nbItems) {
-        unsigned int itemIndex = randint(0, nbItems);
+        unsigned int itemIndex = glassRandint(0, nbItems);
         if (itemsSelected[itemIndex]) continue;
         sequence.push_back(instance.getItem(itemIndex).getStackId());
         itemsSelected[itemIndex] = true;
@@ -43,8 +58,31 @@ void Heuristic::displaySequence() {
     std::cout << sequence[sequence.size() - 1] << "]" << std::endl;
 }
 
+
 unsigned int Heuristic::computeScore() {
+    std::cout << "compute score for sequence : ";
+    displaySequence();
     cutter.setSequence(sequence); // TODO a priori inutile
+    cutter.reset();
     cutter.cut();
     return cutter.getCurrentScore();
+}
+
+void Heuristic::localSearch() {
+    unsigned int previousScore = computeScore();
+    for (unsigned int k = 0; k < 600; k++) {
+        unsigned int moveIndex = glassRandint(0, poolMoves.size());
+        GlassMove* move = poolMoves[moveIndex];
+        if(!move->attempt()) continue;
+        displaySequence();
+        unsigned int score = computeScore();
+        if (score <= previousScore) {
+            move->commit();
+            std::cout << " Nouveau score " << score << " vs " << previousScore << std::endl;
+            previousScore = score;
+        } else {
+            move->revert();
+        }
+    }
+    std::cout << " Best score " << previousScore << std::endl;
 }

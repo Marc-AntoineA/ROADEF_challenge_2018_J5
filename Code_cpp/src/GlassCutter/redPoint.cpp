@@ -43,3 +43,9 @@ RedPoint max(RedPoint pointA, RedPoint pointB, unsigned int birth) {
     maxPoint.setSequencePosition(std::max(pointA.getSequencePosition(), pointB.getSequencePosition()));
     return maxPoint;
 }
+
+std::ostream& operator<<(std::ostream& os, const RedPoint& point){
+    os << point.getBirthTime() << " --> " << point.getDeathTime() << " : ";
+    os <<  point.getSequencePosition() << " - " <<"(" << point.getX() << ", " << point.getY();
+    os << ")" << std::endl;
+}

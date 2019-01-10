@@ -19,6 +19,7 @@ class GlassCutter {
     bool computeCutAndReturnIfFeasable() const;
     void displayStacks();
     void displayLocations();
+    void reset();
 
     private:
     void incrBinId();
@@ -29,9 +30,8 @@ class GlassCutter {
     void buildNodes();
     void buildLocations();
     void build();
-    void reset();
     bool attempt(const GlassLocation& location);
-    double deepScore(unsigned int sequenceIndex);
+    double deepScore(unsigned int sequenceIndex, unsigned int depth);
     void revert();
     bool checkTreeFeasibilityAndBuildCurrentNode();
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
@@ -48,6 +48,8 @@ class GlassCutter {
     std::vector<GlassNode> nodes;
     std::vector<GlassStack> stacks;
     std::vector<unsigned int>& sequence;
+
     unsigned int nbRollbacks;
     unsigned int nbAttempts;
+    unsigned int nbInfeasible;
 };

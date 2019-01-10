@@ -85,6 +85,16 @@ bool GlassNode::isCutPossibleForMinXY(unsigned int prevAbscissa, unsigned int ab
     return false;
 }
 
+bool GlassNode::isCutPossibleForMinWaste(unsigned int abscissa) {
+    return true;
+    for (const GlassCut& cut: cutsAvailable) {
+        if (cut.getAbscissa() != abscissa && abs((int)cut.getAbscissa() - (int)abscissa) < MIN_WASTE_AREA) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void GlassNode::buildRealCuts() {
     realCuts.clear();
     unsigned int openedCuts = 0;
@@ -98,7 +108,7 @@ void GlassNode::buildRealCuts() {
         if (!cut.isBegin()) { assert(openedCuts > 0); openedCuts--; }
 
         if (cut.getAbscissa() - prevAbscissa >= MIN_WASTE_AREA && openedCuts == 0
-            && maxItemSeen + 1 == nbItemsSeen && isFreeOfDefects(cut)) {
+            && maxItemSeen + 1 == nbItemsSeen && isCutPossibleForMinWaste(cut.getAbscissa()) && isFreeOfDefects(cut)) {
             bool isNotWasteCut = nbItemsSeen > nbPrevItems;
 
             if (depth < 3) {
