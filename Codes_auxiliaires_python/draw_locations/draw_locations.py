@@ -3,20 +3,21 @@ from matplotlib import pyplot as plt
 import cv2
 import numpy as np
 
-input_file = "output14.txt"
+input_file = "tmp.txt"
 
-regex = "(\d*) : \((\d*), (\d*), (\d*), (\d*)\)"
+regex = "(\d*) : \((\d*), (\d*), (\d*), (\d*)\) -sequence (\d*) -bin (\d*)"
 
 rects = []
 file = open(input_file)
 for line in file.readlines():
     result = re.match(regex, line)
     if not result is None:
-        rect = [result.group(1), result.group(2), result.group(3), result.group(4), result.group(5)]
+        rect = [result.group(6), result.group(2), result.group(3), result.group(4), result.group(5), result.group(7)]
         rect = [int(r) for r in rect]
         rects.append(rect)
-        
-r = 10
+
+current_bin = 0
+r = 5
 width_plates = 6000
 height_plates = 3210
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -24,7 +25,8 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 img = np.zeros((height_plates//r, width_plates//r, 3), np.uint8)
 
 for rect in rects[:]:
-    [id, x, y, xw, yh] = rect
+    if rect[-1] != current_bin: continue
+    [id, x, y, xw, yh, bin] = rect
     img = cv2.rectangle(img, (int(x//r), int(y//r)), 
                             (int(xw//r), int(yh//r)), 
                             (125, 0, 0), -1)
