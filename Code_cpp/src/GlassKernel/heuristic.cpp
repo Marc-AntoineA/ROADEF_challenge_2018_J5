@@ -18,9 +18,9 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance, sequence){
     initRandomlySequence();
     buildMoves();
-    localSearch(2);
+    localSearch(5);
     displayMoveStatistics();
-    computeScore(2);
+    computeScore(5);
 }
 
 void Heuristic::buildMoves() {
@@ -72,7 +72,7 @@ unsigned int Heuristic::computeScore(unsigned int depth) {
 
 void Heuristic::localSearch(unsigned int depth) {
     bestScore = computeScore(depth);
-    for (unsigned int k = 0; k < 2000; k++) {
+    for (unsigned int k = 0; k < 200; k++) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         if(!move->attempt()) continue;
