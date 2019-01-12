@@ -66,7 +66,10 @@ void GlassNode::buildCutsAvailable(const GlassLocationIt& first, const GlassLoca
 }
 
 bool GlassNode::isFreeOfDefects(const GlassCut& cut) const {
-    // TODO
+    if (cut.isVerticalCut())
+        return getPlate().cutIsFreeOutOfDefects(cut.getAbscissa(), y, height, cut.isVerticalCut());
+    else
+       return getPlate().cutIsFreeOutOfDefects(cut.getAbscissa(), x, width, cut.isVerticalCut());
     return true;
 }
 

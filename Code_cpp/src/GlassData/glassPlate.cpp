@@ -32,10 +32,16 @@ bool GlassPlate::rectangleIsFreeOutOfDefects(unsigned int x, unsigned int y,
     return true;
 }
 
-// TODO => trier les défauts
+bool GlassPlate::cutIsFreeOutOfDefects(unsigned int x, unsigned int y, unsigned int size, bool cutIsVertical) const {
+    for (const GlassDefect& defect: defects) {
+        if (defect.intersectLine(x, y, size, cutIsVertical)){
+            return false;
+        }
+    }
+    return true;
+}
 
-unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const {
-    
+unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const {    
     // Déterminer pour tous les défauts présents dans la marge, s'il y a la place de mettre
     // une pièce en hauteur, et à quel y ?
     unsigned int yMin = HEIGHT_PLATES;

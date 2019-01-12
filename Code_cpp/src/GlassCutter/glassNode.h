@@ -56,6 +56,8 @@ class GlassNode {
     void checkTooDepth() const;
     bool isNodeFitLocation(const GlassLocation& location) const;
     
+    GlassPlate& getPlate() const { return instance->getPlate(plateIndex); }
+
     GlassInstance* instance;
     unsigned int plateIndex;
     unsigned int x;

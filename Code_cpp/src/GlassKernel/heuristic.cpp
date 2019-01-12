@@ -18,10 +18,9 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance, sequence){
     initRandomlySequence();
     buildMoves();
-    displaySequence();
-    localSearch(7);
+    localSearch(2);
     displayMoveStatistics();
-    computeScore(7);
+    computeScore(2);
 }
 
 void Heuristic::buildMoves() {
@@ -65,20 +64,18 @@ void Heuristic::displaySequence() {
 
 unsigned int Heuristic::computeScore(unsigned int depth) {
     std::cout << "compute score for sequence : ";
-    displaySequence();
     cutter.setSequence(sequence); // TODO a priori inutile
     cutter.reset();
-    cutter.cut();
+    cutter.cut(depth);
     return cutter.getCurrentScore();
 }
 
 void Heuristic::localSearch(unsigned int depth) {
     bestScore = computeScore(depth);
-    for (unsigned int k = 0; k < 1000; k++) {
+    for (unsigned int k = 0; k < 2000; k++) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         if(!move->attempt()) continue;
-       // displaySequence();
         unsigned int score = computeScore(depth);
         if (score <= bestScore) {
             move->commit();

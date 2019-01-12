@@ -13,7 +13,7 @@ class GlassCutter {
 
     GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence);
     void setSequence(std::vector<unsigned int>& sequence) { this->sequence = sequence; }
-    void cut();
+    void cut(unsigned int depth);
     unsigned int getCurrentScore();
     
     bool computeCutAndReturnIfFeasable() const;

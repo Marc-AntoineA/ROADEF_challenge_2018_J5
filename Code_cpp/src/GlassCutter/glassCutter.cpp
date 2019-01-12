@@ -39,7 +39,7 @@ std::vector<GlassLocation> GlassCutter::getLocationsForItemIndexAndIncreaseBinId
     return locations;
 }
 
-void GlassCutter::cut(){
+void GlassCutter::cut(unsigned int depth){
     //displayStacks();
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     for (unsigned int sequenceIndex = 0; sequenceIndex < sequence.size(); sequenceIndex++) {
@@ -53,7 +53,7 @@ void GlassCutter::cut(){
         double bestScore = 0;
         for (const GlassLocation& location: locations) {
             if (!attempt(location)) continue;
-            double currentScore = deepScore(sequenceIndex, 4);
+            double currentScore = deepScore(sequenceIndex, depth);
             revert();
             if (currentScore >= bestScore) {
                 bestScore = currentScore;

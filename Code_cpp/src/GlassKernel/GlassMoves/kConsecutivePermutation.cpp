@@ -72,7 +72,6 @@ bool KConsecutivePermutation::attempt() {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
     firstIndex = heuristic->glassRandint(0, sequence.size() - k);
-    std::cout << "first index " << firstIndex << std::endl;
     if (doNothing()) return false;
     mixPermutation();
     applyPermutation();
