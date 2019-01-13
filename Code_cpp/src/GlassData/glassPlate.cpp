@@ -44,6 +44,7 @@ bool GlassPlate::cutIsFreeOutOfDefects(unsigned int x, unsigned int y, unsigned 
 unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const {    
     // Déterminer pour tous les défauts présents dans la marge, s'il y a la place de mettre
     // une pièce en hauteur, et à quel y ?
+    //std::cout << x << " " << y << " " << width << " " << height << std::endl;   
     unsigned int yMin = HEIGHT_PLATES;
     for (const GlassDefect& defect : defects) {
         if (defect.getXWidth() <= x) continue; // Défaut trop en amont
@@ -59,12 +60,13 @@ unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int w
             }
             if (defect2.getXWidth() <= x) continue; // Défaut trop en amont
             if (defect2.getX() > x + width) break; // Défauts trop en aval
-            if (defect2.getYHeight() < defect.getYHeight()) continue; // Défaut trop bas
+            if (defect2.getY() <= defect.getYHeight()) continue; // Défaut trop bas
             if (defect2.getY() < nextY)
                 nextY = defect2.getY();
         }
+        //std::cout << nextY << " && " << height << " + " << defect.getYHeight() << std::endl;
         // Rq nextY = HEIGHT_PLATES s'il n'y a pas de défauts
-        if (nextY  > height + defect.getYHeight()){
+        if (nextY > height + defect.getYHeight()){
             // Il y a de la place de mettre un élément au milieu
             yMin = std::min(yMin, defect.getYHeight());
         }

@@ -93,12 +93,14 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
         return locations;
     }
 
-    unsigned int stepSize = points.size() > 1 ? 0 : points[1].getX();
+    unsigned int stepWidth = points.size() > 1 ? 0 : points[1].getX();
+    unsigned int stepHeight = points.size() > 1 ? MIN_WASTE_AREA + 1 : points[0].getY() - points[1].getY();
+
     x = 0;
     y = points[0].getY();
     assert(y != 0);
-    int yRotated = y + (stepSize >= h ? 0: MIN_WASTE_AREA);
-    int yNotRotated = y + (stepSize >= w ? 0 : MIN_WASTE_AREA);
+    int yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
+    int yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
 
     if (x <= xMax && y +  yNotRotated <= yMax)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated,
@@ -112,9 +114,10 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     while (pointIndex < points.size() - 1 && x < std::max(xMax, xMaxRotated)) {
         x = points[pointIndex].getX();
         y = points[pointIndex + 1].getY();
-        stepSize = points[pointIndex + 1].getX() - x;
-        yNotRotated = y + (stepSize >= w ? 0 : MIN_WASTE_AREA);
-        yRotated = y + (stepSize >= h ? 0: MIN_WASTE_AREA);
+        stepWidth = points[pointIndex + 1].getX() - x;
+        stepHeight = points[pointIndex].getY(); - y;
+        yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
+        yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
 
         assert(x != 0);
         assert(y != 0);
@@ -166,7 +169,7 @@ void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& locat
     unsigned int currentX = location.getX();
 
     unsigned int yMin = getPlate().getBestY(currentX, location.getY(), width, height);
-
+    //std::cout << currentX << " --> " << yMin << std::endl;
     if (yMin < HEIGHT_PLATES - height){
         GlassLocation newLocation(currentX, yMin, location);
         assert(isFeasibleLocation(newLocation));
