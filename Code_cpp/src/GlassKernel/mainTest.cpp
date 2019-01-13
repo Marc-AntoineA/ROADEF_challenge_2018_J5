@@ -1,22 +1,25 @@
-#include <iostream>
-#include <ctime>
-#include <cstdlib>
 
 #include "../GlassData/glassInstance.h"
 #include "../GlassKernel/heuristic.h"
+
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <cmath>
+
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
 
-    int time_limit = -1;
+    unsigned int timeLimit = 60;
     string instance_name = "";
     string output_name = "";
-    int seed = -1;
+    int seed = 0;
     for (int i = 0; i < argc; i++){
         if (string(argv[i]).compare("-t") == 0)
-            time_limit = std::stoi(argv[i + 1]);
+            timeLimit = std::stoi(argv[i + 1]);
         if (string(argv[i]).compare("-p") == 0)
             instance_name = argv[i + 1];
         if (string(argv[i]).compare("-name") == 0){
@@ -30,7 +33,7 @@ int main(int argc, char* argv[])
     }
     srand(seed);
     GlassInstance instance("instances_checker/" + instance_name);
-    Heuristic heuristic(instance);
+    Heuristic heuristic(instance, std::round(timeLimit*.9));
     heuristic.saveBest(instance_name + ".csv");
     //heuristic.localSearch();
     heuristic.displaySequence();

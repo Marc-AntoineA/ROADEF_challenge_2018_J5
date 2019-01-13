@@ -5,11 +5,12 @@
 #include "../GlassKernel/glassMove.h"
 
 #include <vector>
+#include <ctime>
 
 class Heuristic {
 
     public:
-    Heuristic(GlassInstance instance);
+    Heuristic(GlassInstance instance, unsigned int timeLimit);
 
     std::vector<unsigned int>& getSequence() { return sequence; }
     void displaySequence();
@@ -32,4 +33,6 @@ class Heuristic {
 
     std::vector<unsigned int> sequence;
     unsigned int bestScore;
+    unsigned int timeLimit;
+    std::clock_t begin;
 };

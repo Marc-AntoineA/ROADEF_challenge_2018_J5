@@ -11,16 +11,17 @@
 #include <fstream>
 #include <iostream>
 
-unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
-    return rand() % (last - begin) + begin;
-}
-
-Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance, sequence){
+Heuristic::Heuristic(GlassInstance instance, unsigned int timeLimit):
+    instance(instance), cutter(&instance, sequence), timeLimit(timeLimit), begin(clock()) {
     initRandomlySequence();
     buildMoves();
     localSearch(4);
     displayMoveStatistics();
     computeScore(4);
+}
+
+unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
+    return rand() % (last - begin) + begin;
 }
 
 void Heuristic::buildMoves() {
@@ -76,7 +77,7 @@ unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSeque
 void Heuristic::localSearch(unsigned int depth) {
     bestScore = computeScore(depth);
     int beginSequenceIndex = 0;
-    for (unsigned int k = 0; k < 500; k++) {
+    while (double(clock() - begin) / CLOCKS_PER_SEC < timeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         int startingFrom = move->attempt();
@@ -94,8 +95,9 @@ void Heuristic::localSearch(unsigned int depth) {
             beginSequenceIndex = std::min(beginSequenceIndex, startingFrom);
         }
     }
-    std::cout << " Best score " << bestScore << std::endl;
-    std::cout << " Instance area : " << instance.getItemsArea() << std::endl;
+    std::cout << "Best score " << bestScore << std::endl;
+    std::cout << "Instance area : " << instance.getItemsArea() << std::endl;
+    std::cout << "Time elapsed :" << double((clock() - begin)) / CLOCKS_PER_SEC << "s" << std::endl;
 }
 
 void Heuristic::displayMoveStatistics() {
