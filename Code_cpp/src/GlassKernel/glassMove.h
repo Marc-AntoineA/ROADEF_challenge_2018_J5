@@ -2,6 +2,8 @@
 
 #include <string>
 
+#define NOTHING -1
+
 class Heuristic;
 
 enum MOVE_STATISTIC {
@@ -16,10 +18,11 @@ class GlassMove {
     
     virtual void commit() {}
     virtual void revert() {}
-    virtual bool attempt() {return true;}
+    virtual int attempt() { return NOTHING; }
     void addStat(MOVE_STATISTIC statistic);
     void addTested();
     void displayStatistics();
+    const std::string& getName() { return name; }
 
     protected:
     Heuristic* heuristic;

@@ -5,17 +5,18 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
-bool Swap::attempt() {
+int Swap::attempt() {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
-    firstIndex = heuristic->glassRandint(0, sequence.size());
-    lastIndex = heuristic->glassRandint(0, sequence.size());
-    if (firstIndex == lastIndex) return false;
-    if (sequence[firstIndex] == sequence[lastIndex]) return false;
+    firstIndex = heuristic->glassRandint(0, sequence.size() - 1);
+    lastIndex = heuristic->glassRandint(firstIndex + 1, sequence.size());
+    if (sequence[firstIndex] == sequence[lastIndex]) return NOTHING;
     unsigned int tmp = sequence[firstIndex];
     sequence[firstIndex] = sequence[lastIndex];
     sequence[lastIndex] = tmp;
+    return firstIndex;
 }
 
 

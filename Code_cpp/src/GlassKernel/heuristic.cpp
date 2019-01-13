@@ -18,9 +18,9 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 Heuristic::Heuristic(GlassInstance instance): instance(instance), cutter(&instance, sequence){
     initRandomlySequence();
     buildMoves();
-    localSearch(5);
+    localSearch(4);
     displayMoveStatistics();
-    computeScore(5);
+    computeScore(4);
 }
 
 void Heuristic::buildMoves() {
@@ -61,33 +61,41 @@ void Heuristic::displaySequence() {
     std::cout << sequence[sequence.size() - 1] << "]" << std::endl;
 }
 
-
 unsigned int Heuristic::computeScore(unsigned int depth) {
-    std::cout << "compute score for sequence : ";
+    return computeScore(depth, 0);
+}
+
+unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSequenceIndex) {
+    std::cout <<  beginSequenceIndex << std::endl;
     cutter.setSequence(sequence); // TODO a priori inutile
-    cutter.reset();
+    cutter.revertPlatesUntilSequenceIndex(beginSequenceIndex);
     cutter.cut(depth);
     return cutter.getCurrentScore();
 }
 
 void Heuristic::localSearch(unsigned int depth) {
     bestScore = computeScore(depth);
-    for (unsigned int k = 0; k < 200; k++) {
+    int beginSequenceIndex = 0;
+    for (unsigned int k = 0; k < 500; k++) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
-        if(!move->attempt()) continue;
-        unsigned int score = computeScore(depth);
+        int startingFrom = move->attempt();
+        if (startingFrom == NOTHING) continue;
+        unsigned int score = computeScore(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
         if (score <= bestScore) {
             move->commit();
             move->addStat(score < bestScore ? IMPROVE : ACCEPTED);
             std::cout << " Nouveau score " << score << " vs " << bestScore << std::endl;
             bestScore = score;
+            beginSequenceIndex = sequence.size();
         } else {
             move->revert();
             move->addStat(REFUSED);
+            beginSequenceIndex = std::min(beginSequenceIndex, startingFrom);
         }
     }
     std::cout << " Best score " << bestScore << std::endl;
+    std::cout << " Instance area : " << instance.getItemsArea() << std::endl;
 }
 
 void Heuristic::displayMoveStatistics() {

@@ -7,7 +7,7 @@
 class KConsecutivePermutation : public GlassMove {
     public:
     KConsecutivePermutation(Heuristic* heuristic, unsigned int k);
-    bool attempt();
+    int attempt();
     void commit();
     void revert();
 

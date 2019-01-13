@@ -24,6 +24,7 @@ class Heuristic {
     void buildMoves(); 
     void resetStacks();
     unsigned int computeScore(unsigned int depth);
+    unsigned int computeScore(unsigned int depth, unsigned int beginSequenceIndex);
     GlassInstance instance;
     GlassCutter cutter;
 

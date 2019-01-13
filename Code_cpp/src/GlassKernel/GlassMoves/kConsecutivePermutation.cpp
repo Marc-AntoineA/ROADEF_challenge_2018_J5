@@ -68,14 +68,14 @@ void KConsecutivePermutation::revertPermutation() {
     sequence[firstIndex + permutation[0]] = tmp;
 }
 
-bool KConsecutivePermutation::attempt() {
+int KConsecutivePermutation::attempt() {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
     firstIndex = heuristic->glassRandint(0, sequence.size() - k);
-    if (doNothing()) return false;
+    if (doNothing()) return NOTHING;
     mixPermutation();
     applyPermutation();
-    return true;
+    return firstIndex;
 }
 
 void KConsecutivePermutation::commit() {

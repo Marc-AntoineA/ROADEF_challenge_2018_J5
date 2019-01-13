@@ -12,6 +12,7 @@ GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& seq
     nbRollbacks = 0;
     nbAttempts = 0;
     nbInfeasible = 0;
+    currentSequenceIndex = 0;
     buildStacks();
     buildMonsters();
     buildNodes();
@@ -20,6 +21,7 @@ GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& seq
 
 void GlassCutter::reset() {
     currentBinId = 0;
+    currentSequenceIndex = 0;
     for (GlassNode& node: nodes) 
         node.reset();
     for (RedMonster& monster: monsters)
@@ -39,11 +41,28 @@ std::vector<GlassLocation> GlassCutter::getLocationsForItemIndexAndIncreaseBinId
     return locations;
 }
 
+void GlassCutter::revertPlatesUntilSequenceIndex(unsigned int sequenceIndex) {
+    currentBinId++;
+    while (currentSequenceIndex >= sequenceIndex) {
+        for (const GlassLocation& location: locations[currentBinId]){
+            stacks[location.getStackId()].push();
+            currentSequenceIndex--;
+        }
+        locations[currentBinId].clear();
+        monsters[currentBinId].reset();
+        nodes[currentBinId].reset();
+        if (currentBinId > 0)
+            currentBinId--;   
+        else
+            break;
+    }
+}
+
 void GlassCutter::cut(unsigned int depth){
     //displayStacks();
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
-    for (unsigned int sequenceIndex = 0; sequenceIndex < sequence.size(); sequenceIndex++) {
-        unsigned int stackId = sequence[sequenceIndex];
+    while (currentSequenceIndex < sequence.size()) {
+        unsigned int stackId = sequence[currentSequenceIndex];
         if (VERBOSE) std::cout << "StackId#" << stackId;
         unsigned int itemIndex = stacks[stackId].top();
         if (VERBOSE) std::cout << " & item#" << itemIndex << std::endl;
@@ -53,7 +72,7 @@ void GlassCutter::cut(unsigned int depth){
         double bestScore = 0;
         for (const GlassLocation& location: locations) {
             if (!attempt(location)) continue;
-            double currentScore = deepScore(sequenceIndex, depth);
+            double currentScore = deepScore(currentSequenceIndex, depth);
             revert();
             if (currentScore >= bestScore) {
                 bestScore = currentScore;
@@ -63,12 +82,12 @@ void GlassCutter::cut(unsigned int depth){
         if (bestScore > 0) {
             //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
             attempt(bestLocation);
+            currentSequenceIndex++;
         } else {
-            sequenceIndex--;
             incrBinId();
         }
     }
-
+    std::cout << "binId" << currentBinId << std::endl;
     //displayLocations();
     std::cout << "SCORE : " << getCurrentScore() << std::endl;
     std::cout << "nbRollbacks : " << nbRollbacks << std::endl;

@@ -20,6 +20,7 @@ class GlassCutter {
     void displayStacks();
     void displayLocations();
     void reset();
+    void revertPlatesUntilSequenceIndex(unsigned int sequenceIndex);
     void saveBest(std::string name);
 
     private:
@@ -30,7 +31,6 @@ class GlassCutter {
     void buildMonsters();
     void buildNodes();
     void buildLocations();
-    void build();
     bool attempt(const GlassLocation& location);
     double deepScore(unsigned int sequenceIndex, unsigned int depth);
     void revert();
@@ -43,6 +43,7 @@ class GlassCutter {
     GlassInstance* instance;
     
     unsigned int currentBinId;
+    unsigned int currentSequenceIndex;
 
     std::vector<std::vector<GlassLocation> > locations;
     std::vector<RedMonster> monsters;
