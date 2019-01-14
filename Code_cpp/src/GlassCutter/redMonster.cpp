@@ -170,9 +170,8 @@ void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& locat
 
     unsigned int yMin = getPlate().getBestY(currentX, location.getY(), width, height);
     //std::cout << currentX << " --> " << yMin << std::endl;
-    if (yMin < HEIGHT_PLATES - height){
+    if (yMin + height < HEIGHT_PLATES){
         GlassLocation newLocation(currentX, yMin, location);
-        assert(isFeasibleLocation(newLocation));
         assert(isFreeOutOfDefects(newLocation));
         locations.push_back(newLocation);
     }
@@ -200,7 +199,6 @@ void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& locat
         if (yMin < HEIGHT_PLATES - height){
             if (yMin != location.getY()) yMin = std::max(yMin, location.getY() + MIN_WASTE_AREA);
             GlassLocation newLocation(currentX, yMin, location);
-            assert(isFeasibleLocation(newLocation));
             assert(isFreeOutOfDefects(newLocation));
             locations.push_back(newLocation);
         }

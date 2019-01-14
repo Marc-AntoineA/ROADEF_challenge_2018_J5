@@ -16,7 +16,7 @@ Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit):
     instance(instance), cutter(instance, sequence), timeLimit(timeLimit), begin(clock()) {
     initRandomlySequence();
     buildMoves();
-    //localSearch(4);
+    localSearch(4);
     displayMoveStatistics();
     computeScore(4);
 }
@@ -34,8 +34,8 @@ void Heuristic::buildMoves() {
 
 void Heuristic::initRandomlySequence() {
     sequence.clear();
-    sequence = { 39, 69, 9, 24, 64, 1, 31, 12, 49, 35, 68, 45, 21, 22, 33, 44, 52, 16, 37, 55, 26, 70, 62, 15, 19, 60, 66, 5, 46, 11, 48, 34, 7, 63, 32, 40, 14, 67, 36, 29, 43, 20, 54, 4, 56, 17, 51, 65, 18, 41, 38, 2, 71, 57, 23, 0, 28, 53, 30, 61, 13, 42, 50, 8, 47, 10, 59, 6, 27, 58, 3, 25};
-    return;
+    //sequence = { 39, 69, 9, 24, 64, 1, 31, 12, 49, 35, 68, 45, 21, 22, 33, 44, 52, 16, 37, 55, 26, 70, 62, 15, 19, 60, 66, 5, 46, 11, 48, 34, 7, 63, 32, 40, 14, 67, 36, 29, 43, 20, 54, 4, 56, 17, 51, 65, 18, 41, 38, 2, 71, 57, 23, 0, 28, 53, 30, 61, 13, 42, 50, 8, 47, 10, 59, 6, 27, 58, 3, 25};
+    //return;
     unsigned int nbItems = instance->getNbItems();
 
     std::vector<bool> itemsSelected;
@@ -83,7 +83,6 @@ void Heuristic::localSearch(unsigned int depth) {
     while (double(clock() - begin) / CLOCKS_PER_SEC < timeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
-        std::cout << move->getName() << std::endl;
         int startingFrom = move->attempt();
         if (startingFrom == NOTHING) continue;
         unsigned int score = computeScore(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
