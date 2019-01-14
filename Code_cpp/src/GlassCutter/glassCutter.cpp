@@ -254,6 +254,8 @@ void GlassCutter::saveBest(std::string name) {
     }
     int maxSonId = -1;
     for (unsigned int binId=0; binId < lastBinId; binId++){
+        nodes[binId].reset();
+        nodes[binId].buildNodeAndReturnNbItemsCuts(locations[binId].begin(), locations[binId].end());
         maxSonId = nodes[binId].saveNode(outputFile, maxSonId + 1, -1, binId == lastBinId - 1);
     }
 

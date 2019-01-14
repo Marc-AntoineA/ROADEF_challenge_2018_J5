@@ -10,7 +10,6 @@
 int Swap::attempt() {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
-    std::cout << sequence.size() - 1 << std::endl;
     firstIndex = heuristic->glassRandint(0, sequence.size() - 1);
     lastIndex = heuristic->glassRandint(firstIndex + 1, sequence.size());
     if (sequence[firstIndex] == sequence[lastIndex]) return NOTHING;

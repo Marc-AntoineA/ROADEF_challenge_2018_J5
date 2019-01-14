@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     }
     srand(seed);
     GlassInstance instance("instances_checker/" + instance_name);
-    Heuristic heuristic(instance, std::round(timeLimit*.9));
+    Heuristic heuristic(&instance, std::round(timeLimit*.9));
     heuristic.saveBest(instance_name + ".csv");
     //heuristic.localSearch();
     heuristic.displaySequence();

@@ -10,7 +10,7 @@
 class Heuristic {
 
     public:
-    Heuristic(GlassInstance instance, unsigned int timeLimit);
+    Heuristic(GlassInstance* instance, unsigned int timeLimit);
 
     std::vector<unsigned int>& getSequence() { return sequence; }
     void displaySequence();
@@ -26,7 +26,7 @@ class Heuristic {
     void resetStacks();
     unsigned int computeScore(unsigned int depth);
     unsigned int computeScore(unsigned int depth, unsigned int beginSequenceIndex);
-    GlassInstance instance;
+    GlassInstance* instance;
     GlassCutter cutter;
 
     std::vector<GlassMove*> poolMoves;

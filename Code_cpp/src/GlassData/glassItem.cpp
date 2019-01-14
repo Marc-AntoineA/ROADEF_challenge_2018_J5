@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <cassert>
 
 GlassItem::GlassItem(std::string input_line){
 
@@ -38,6 +39,7 @@ unsigned int GlassItem::getWidth() const {
 }
 
 unsigned int GlassItem::getWidth(bool rotated) const {
+    if (width == 0) std::cout << (*this) << std::endl;
     return rotated ? height : width;
 }
 

@@ -27,15 +27,23 @@ class GlassNode {
         unsigned int x, unsigned int y, unsigned int width, unsigned int height,
         unsigned int depth, int type);
     void setPlateIndex(unsigned int plateIndex) { this->plateIndex = plateIndex; }
+    unsigned int getPlateIndex() const { return plateIndex; }
     void setInstance(GlassInstance* instance) { this->instance = instance; }
     void setX(unsigned int x) { this->x = x; }
+    unsigned int getX() const { return x; }
     void setY(unsigned int y) { this->y = y; }
+    unsigned int getY() const { return y; }
     void setWidth(unsigned int width) { this->width = width; }
+    unsigned int getWidth() const { return width; }
     void setHeight(unsigned int height) { this->height = height; }
+    unsigned int getHeight() const { return height; }
     void setDepth(unsigned int depth) { this->depth = depth; }
+    unsigned int getDepth() const { return depth; }
     void setType(int type) { this->type = type; }
+    unsigned int getType() const { return type; }
 
     void reset();
+    void displayNode(std::string prefix) const;
     unsigned int buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last);    
     void checkNode(const GlassLocationIt& first, const GlassLocationIt& last);
     unsigned int saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last);
@@ -70,3 +78,5 @@ class GlassNode {
     std::vector<GlassCut> cutsAvailable;
     std::vector<RealCut> realCuts;
 };
+
+std::ostream& operator<<(std::ostream& os, const GlassNode& node);

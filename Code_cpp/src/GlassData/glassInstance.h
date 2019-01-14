@@ -5,14 +5,14 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <cassert>
 
 class GlassInstance {
     public:
     GlassInstance (std::string instancePath);
-    GlassInstance() {}
     unsigned int getNbItems() const { return items.size(); }
-    GlassItem& getItem(unsigned int itemIndex) { assert(itemIndex < items.size()); return items[itemIndex]; }
+    const GlassItem& getItem(unsigned int itemIndex) { assert(itemIndex < items.size()); return items[itemIndex]; }
     std::string& getInstancePath() { return instancePath; }
     unsigned int getItemsArea() { return itemsArea; }
     GlassPlate& getPlate(unsigned int plateIndex) { return plates[plateIndex]; }

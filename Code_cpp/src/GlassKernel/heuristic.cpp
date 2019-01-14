@@ -12,11 +12,11 @@
 #include <iostream>
 #include <algorithm>
 
-Heuristic::Heuristic(GlassInstance instance, unsigned int timeLimit):
-    instance(instance), cutter(&instance, sequence), timeLimit(timeLimit), begin(clock()) {
+Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit):
+    instance(instance), cutter(instance, sequence), timeLimit(timeLimit), begin(clock()) {
     initRandomlySequence();
     buildMoves();
-    localSearch(4);
+    //localSearch(4);
     displayMoveStatistics();
     computeScore(4);
 }
@@ -34,12 +34,9 @@ void Heuristic::buildMoves() {
 
 void Heuristic::initRandomlySequence() {
     sequence.clear();
-    /*sequence.push_back(14);
-    sequence.push_back(54);
-    sequence.push_back(21);
-    sequence.push_back(39);
-    sequence.push_back(55);*/
-    unsigned int nbItems = instance.getNbItems();
+    sequence = { 39, 69, 9, 24, 64, 1, 31, 12, 49, 35, 68, 45, 21, 22, 33, 44, 52, 16, 37, 55, 26, 70, 62, 15, 19, 60, 66, 5, 46, 11, 48, 34, 7, 63, 32, 40, 14, 67, 36, 29, 43, 20, 54, 4, 56, 17, 51, 65, 18, 41, 38, 2, 71, 57, 23, 0, 28, 53, 30, 61, 13, 42, 50, 8, 47, 10, 59, 6, 27, 58, 3, 25};
+    return;
+    unsigned int nbItems = instance->getNbItems();
 
     std::vector<bool> itemsSelected;
     itemsSelected.resize(nbItems);
@@ -50,7 +47,7 @@ void Heuristic::initRandomlySequence() {
     while (nbItemsSelected < nbItems) {
         unsigned int itemIndex = glassRandint(0, nbItems);
         if (itemsSelected[itemIndex]) continue;
-        sequence.push_back(instance.getItem(itemIndex).getStackId());
+        sequence.push_back(instance->getItem(itemIndex).getStackId());
         itemsSelected[itemIndex] = true;
         nbItemsSelected++;
     }
@@ -104,7 +101,7 @@ void Heuristic::localSearch(unsigned int depth) {
     }
     displaySequence();
     std::cout << "Best score " << bestScore << std::endl;
-    std::cout << "Instance area : " << instance.getItemsArea() << std::endl;
+    std::cout << "Instance area : " << instance->getItemsArea() << std::endl;
     std::cout << "Time elapsed :" << double((clock() - begin)) / CLOCKS_PER_SEC << "s" << std::endl;
 }
 

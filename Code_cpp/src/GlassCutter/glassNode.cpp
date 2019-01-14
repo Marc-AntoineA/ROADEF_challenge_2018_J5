@@ -7,19 +7,18 @@
 #include <iostream>
 #include <fstream>
 #include <ostream>
+#include <iostream>
 
 GlassNode::GlassNode(GlassInstance* instance, unsigned int plateIndex, 
     unsigned int x, unsigned int y, unsigned int width, unsigned int height,
     unsigned int depth, int type)
     : instance(instance), plateIndex(plateIndex), x(x), y(y), width(width), height(height), depth(depth), type(type), 
     sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()) {
-
 }
 
 GlassNode::GlassNode()
     : x(0), y(0), width(WIDTH_PLATES), height(HEIGHT_PLATES), depth(0), type(BRANCH),
     sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()) {
-    
 }
 
 void GlassNode::reset() {
@@ -31,6 +30,7 @@ void GlassNode::reset() {
     setType(BRANCH);
     sons.clear();
     cutsAvailable.clear();
+    realCuts.clear();
 }
 
 void GlassNode::checkTooSmall() const {
@@ -69,7 +69,7 @@ bool GlassNode::isFreeOfDefects(const GlassCut& cut) const {
    if (cut.isVerticalCut())
         return getPlate().cutIsFreeOutOfDefects(cut.getAbscissa(), y, height, cut.isVerticalCut());
     else
-       return getPlate().cutIsFreeOutOfDefects(cut.getAbscissa(), x, width, cut.isVerticalCut());
+        return getPlate().cutIsFreeOutOfDefects(cut.getAbscissa(), x, width, cut.isVerticalCut());
     return true;
 }
 
@@ -193,8 +193,9 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(const GlassLocationIt& fir
     buildRealCuts();
     //displayRealCuts();
     unsigned int nbItemsCuts = cutRealCuts(first);
-    if (std::distance(first, last) != nbItemsCuts)
+    if (std::distance(first, last) != nbItemsCuts){
         throw std::runtime_error("Infeasible cut (not enough items cut)");
+    }
     return nbItemsCuts;
 }
 
@@ -211,6 +212,13 @@ void GlassNode::displayRealCuts() const {
     }
 }
 
+void GlassNode::displayNode(std::string prefix) const {
+    std::cout << prefix << plateIndex << " " << x << " " << y << " " << x + width << " " << y + height << std::endl;
+    for (const GlassNode& son: sons) {
+        son.displayNode(prefix + " ");
+    }
+}
+
 unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last) {
     outputFile << plateIndex << ";" << nodeId << ";";
     outputFile << x << ";" << y << ";" << width << ";" << height << ";";
@@ -223,9 +231,16 @@ unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId,
 
     if (last)
         sons.back().setType(RESIDUAL);
+
     unsigned int maxSonId = nodeId;
-    for (GlassNode son: sons) {
+    for (GlassNode& son: sons) {
         maxSonId = son.saveNode(outputFile, maxSonId + 1, nodeId, !LAST_BIN);
     }
     return maxSonId;
+}
+
+std::ostream& operator<<(std::ostream& os, const GlassNode& node) {
+    os << node.getPlateIndex() << " " << node.getX() << " " << node.getY() << " ";
+    os << node.getX() + node.getWidth() << " " << node.getY() + node.getHeight();
+    return os;
 }

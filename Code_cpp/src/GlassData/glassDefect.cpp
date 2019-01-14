@@ -24,7 +24,6 @@ GlassDefect::GlassDefect(std::string inputLine){
 
     std::getline(line, entity, ';');
     height = std::stoi(entity);
-
 }
 
 // TODO checker mais ça semble correct

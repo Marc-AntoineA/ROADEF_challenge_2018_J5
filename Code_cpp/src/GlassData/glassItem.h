@@ -4,12 +4,7 @@
 
 class GlassItem {
 
-    public:
-    GlassItem();
-    GlassItem(unsigned int width, unsigned int height, unsigned int id,
-     unsigned int stackId, unsigned int stack_sequence): 
-        width(width), height(height), id(id), stackId(stackId), stackSequence(stackSequence){}
-    
+    public:    
     GlassItem(std::string input_line);
     
     unsigned int getHeight() const;

@@ -44,7 +44,6 @@ bool GlassPlate::cutIsFreeOutOfDefects(unsigned int x, unsigned int y, unsigned 
 unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int width, unsigned int height) const {    
     // Déterminer pour tous les défauts présents dans la marge, s'il y a la place de mettre
     // une pièce en hauteur, et à quel y ?
-    //std::cout << x << " " << y << " " << width << " " << height << std::endl;   
     unsigned int yMin = HEIGHT_PLATES;
     for (const GlassDefect& defect : defects) {
         if (defect.getXWidth() <= x) continue; // Défaut trop en amont
