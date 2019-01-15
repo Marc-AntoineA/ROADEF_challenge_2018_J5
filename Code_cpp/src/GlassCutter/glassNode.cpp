@@ -108,6 +108,7 @@ void GlassNode::buildRealCuts() {
     unsigned int prevAbscissa = isVerticalCut() ? x : y;
     unsigned int nbPrevItems = 0;
 
+    //realCuts.push_back(RealCut(isVerticalCut() ? x : y, nbItemsSeen));
     for (const GlassCut& cut: cutsAvailable) {
         if (!cut.isBegin()) { assert(openedCuts > 0); openedCuts--; }
 
@@ -144,6 +145,7 @@ void GlassNode::buildRealCuts() {
             // TODO warning ici...
         }
     }
+    //realCuts.push_back(RealCut(isVerticalCut() ? x + width: y + height, nbItemsSeen));
 }
 
 unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts) {
@@ -162,8 +164,9 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int n
             nbPrevItems = cut.nbItems;
         }
     }
-
+    
     unsigned int endNodeAbscissa = isVerticalCut() ? x + width : y + height;
+    //assert(prevAbscissa == endNodeAbscissa);
     if (prevAbscissa != endNodeAbscissa) {
         if (isVerticalCut())
             sons.push_back(GlassNode(instance, plateIndex, prevAbscissa, y, endNodeAbscissa - prevAbscissa, height, depth + 1, BRANCH));

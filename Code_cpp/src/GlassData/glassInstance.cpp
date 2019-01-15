@@ -19,7 +19,7 @@ void GlassInstance::buildItems() {
     std::string filename = instancePath + "_batch.csv";
     std::ifstream batchFile(filename.c_str());
     items.clear();
-    if (!batchFile.is_open()) return;
+    if (!batchFile.is_open()) throw std::runtime_error("No batch file found");
     std::string line;
     std::getline(batchFile, line); // skip header
     while (std::getline(batchFile, line))
@@ -45,7 +45,7 @@ void GlassInstance::buildPlates() {
     initPlates();
     std::string filename = instancePath + "_defects.csv";
     std::ifstream defectsFile (filename.c_str());
-    if (!defectsFile.is_open()) return;
+    if (!defectsFile.is_open()) throw std::runtime_error("No defects file found");
     std::string line;
     std::getline(defectsFile, line); // skip header
     while (getline(defectsFile, line)){

@@ -40,8 +40,11 @@ void KConsecutivePermutation::displayPermutation() {
 
 bool KConsecutivePermutation::doNothing() {
     std::vector<unsigned int>& sequence = heuristic->getSequence();
+    if (firstIndex >= sequence.size()) std::cout << "???" << firstIndex << std::endl;
+    assert(firstIndex < sequence.size());
     unsigned int firstStack = sequence[firstIndex];
     for (unsigned int index = 1; index < k; index++) {
+        assert(firstIndex + index < sequence.size());
         if (sequence[firstIndex + index] != firstStack)
             return false;
     }
@@ -71,6 +74,8 @@ void KConsecutivePermutation::revertPermutation() {
 int KConsecutivePermutation::attempt() {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
+    if(k >= sequence.size()) std::cout << k << " & " << sequence.size() << std::endl;
+    assert(k < sequence.size());
     firstIndex = heuristic->glassRandint(0, sequence.size() - k);
     if (doNothing()) return NOTHING;
     mixPermutation();
