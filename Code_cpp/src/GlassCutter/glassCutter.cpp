@@ -18,6 +18,7 @@ GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& seq
     buildMonsters();
     buildNodes();
     buildLocations();
+    resetErrorsStatistics();
 }
 
 void GlassCutter::reset() {
@@ -194,6 +195,8 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
         currentNode()->buildNodeAndReturnNbItemsCuts(currentLocations()->begin(), currentLocations()->end());
         return true;
     } catch (const std::runtime_error& e) {
+        //std::cout << e.what() << std::endl;
+        addErrorStatistic(e.what());
         /*std::cout << "---|||---|||---" << std::endl;
         std::cout << e.what() << std::endl;
         displayLocations();*/
@@ -252,4 +255,39 @@ void GlassCutter::saveBest(std::string name) {
     }
 
     std::cout << "Sauvegarde effectuée avec succès " << std::endl;
+}
+
+void GlassCutter::addErrorStatistic(std::string errorMessage) {
+    if (errorMessage == "Trimming failed (more than 1 item)" 
+        || errorMessage == "Trimming failed (more than 1 cut)"){
+
+        nbTrimmingFailed++;
+        return;
+    }
+
+    if (errorMessage == "Tree too depth") {
+        nbTreeTooDepth++;
+        return;
+    }
+    
+    if (errorMessage == "Waste too small") {
+        nbWasteTooSmall++;
+        /*std::cout << "======" << std::endl;
+        displayLocations();*/
+        return;
+    }
+
+    std::cout << errorMessage << std::endl;
+}
+
+void GlassCutter::resetErrorsStatistics() {
+    nbTrimmingFailed = 0;
+    nbTreeTooDepth = 0;
+    nbWasteTooSmall = 0;
+}
+
+void GlassCutter::displayErrorStatistics() const {
+    std::cout << "Waste too small: " << nbWasteTooSmall << std::endl;
+    std::cout << "Tree too depth: " << nbTreeTooDepth << std::endl;
+    std::cout << "NbTrimmingFailed: " << nbTrimmingFailed << std::endl;
 }

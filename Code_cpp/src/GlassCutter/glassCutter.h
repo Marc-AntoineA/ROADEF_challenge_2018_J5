@@ -16,6 +16,7 @@ class GlassCutter {
     void cut(unsigned int depth);
     unsigned int getCurrentScore();
     
+    void displayErrorStatistics() const;
     void displayStacks();
     void displayLocations();
     void reset();
@@ -23,6 +24,8 @@ class GlassCutter {
     void saveBest(std::string name);
 
     private:
+    void addErrorStatistic(std::string errorMessage); 
+    void resetErrorsStatistics();
     void incrBinId();
     void decrBinId();
     void setBinId(unsigned int binId);
@@ -53,6 +56,10 @@ class GlassCutter {
     unsigned int nbRollbacks;
     unsigned int nbAttempts;
     unsigned int nbInfeasible;
+
+    unsigned int nbTrimmingFailed;
+    unsigned int nbWasteTooSmall;
+    unsigned int nbTreeTooDepth;
 
     unsigned int xLimit;
 };

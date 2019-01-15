@@ -34,8 +34,10 @@ void GlassNode::reset() {
 }
 
 void GlassNode::checkTooSmall() const {
-    if (width < MIN_WASTE_AREA || height < MIN_WASTE_AREA) 
+    if (width < MIN_WASTE_AREA || height < MIN_WASTE_AREA) {
+        //std::cout << (*this) << std::endl;
         throw std::runtime_error("Waste too small");
+    }
 }
 
 void GlassNode::checkTooDepth() const {
@@ -107,8 +109,8 @@ void GlassNode::buildRealCuts() {
     unsigned int nbItemsSeen = 0;
     unsigned int prevAbscissa = isVerticalCut() ? x : y;
     unsigned int nbPrevItems = 0;
-
-    //realCuts.push_back(RealCut(isVerticalCut() ? x : y, nbItemsSeen));
+    
+    //realCuts.push_back(RealCut(prevAbscissa, nbItemsSeen));
     for (const GlassCut& cut: cutsAvailable) {
         if (!cut.isBegin()) { assert(openedCuts > 0); openedCuts--; }
 
@@ -145,7 +147,7 @@ void GlassNode::buildRealCuts() {
             // TODO warning ici...
         }
     }
-    //realCuts.push_back(RealCut(isVerticalCut() ? x + width: y + height, nbItemsSeen));
+    realCuts.push_back(RealCut(isVerticalCut() ? x + width: y + height, nbItemsSeen));
 }
 
 unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts) {
