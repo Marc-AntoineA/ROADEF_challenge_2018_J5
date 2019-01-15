@@ -20,7 +20,7 @@ Code/*.cpp.autosave
 Code/toukeute
 Code/tests
 
-checker_instances/
+checker_instances
 private/
 
 Algo_python/__pycache__/
