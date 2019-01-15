@@ -1,10 +1,10 @@
 {
   "variant": {
-    "label": "Release",
+    "label": "Debug",
     "keywordSettings": {
-      "buildType": "release"
+      "buildType": "debug"
     },
-    "description": "Enable optimizations, omit debug info"
+    "description": "Emit debug information without performing optimizations"
   },
   "activeEnvironments": []
 }

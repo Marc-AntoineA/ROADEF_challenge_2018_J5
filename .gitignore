@@ -20,6 +20,9 @@ Code/*.cpp.autosave
 Code/toukeute
 Code/tests
 
+checker_instances/
+private/
+
 Algo_python/__pycache__/
 
 Datasets/dataset_A/*.~lock.*

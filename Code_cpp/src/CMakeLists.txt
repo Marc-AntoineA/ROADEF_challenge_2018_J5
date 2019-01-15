@@ -19,34 +19,6 @@ project(RoadefJ5)
 #add_subdirectory (GlassCutter)
 #add_subdirectory (GlassKernel)
 
-add_executable(tookeute
-    # GlassData
-    GlassData/glassDefect.h GlassData/glassDefect.cpp
-    GlassData/glassInstance.h GlassData/glassInstance.cpp
-    GlassData/glassItem.h GlassData/glassItem.cpp
-    GlassData/glassPlate.h GlassData/glassPlate.cpp
-    GlassData/glassConstants.h
-
-    # GlassCutter
-    GlassCutter/glassCut.h GlassCutter/glassCut.cpp
-    GlassCutter/glassCutter.h GlassCutter/glassCutter.cpp
-    GlassCutter/glassLocation.h GlassCutter/glassLocation.cpp
-    GlassCutter/glassNode.h GlassCutter/glassNode.cpp
-    GlassCutter/redMonster.h GlassCutter/redMonster.cpp
-    GlassCutter/redPoint.h GlassCutter/redPoint.cpp
-    GlassCutter/glassStack.h GlassCutter/glassStack.cpp
-
-    # GlassKernel
-    GlassKernel/heuristic.h GlassKernel/heuristic.cpp
-    GlassKernel/glassMove.h GlassKernel/glassMove.cpp
-    GlassKernel/glassRand.h
-    GlassKernel/main.cpp 
-
-    # Moves
-    GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
-    GlassKernel/GlassMoves/kConsecutivePermutation.h GlassKernel/GlassMoves/kConsecutivePermutation.cpp
-)
-
 add_executable(glassTests
     # GlassData
     GlassData/glassDefect.h GlassData/glassDefect.cpp
@@ -69,6 +41,34 @@ add_executable(glassTests
     GlassKernel/glassMove.h GlassKernel/glassMove.cpp
     GlassKernel/glassRand.h
     GlassKernel/mainTest.cpp 
+
+    # Moves
+    GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
+    GlassKernel/GlassMoves/kConsecutivePermutation.h GlassKernel/GlassMoves/kConsecutivePermutation.cpp
+)
+
+add_executable(tookeute
+    # GlassData
+    GlassData/glassDefect.h GlassData/glassDefect.cpp
+    GlassData/glassInstance.h GlassData/glassInstance.cpp
+    GlassData/glassItem.h GlassData/glassItem.cpp
+    GlassData/glassPlate.h GlassData/glassPlate.cpp
+    GlassData/glassConstants.h
+
+    # GlassCutter
+    GlassCutter/glassCut.h GlassCutter/glassCut.cpp
+    GlassCutter/glassCutter.h GlassCutter/glassCutter.cpp
+    GlassCutter/glassLocation.h GlassCutter/glassLocation.cpp
+    GlassCutter/glassNode.h GlassCutter/glassNode.cpp
+    GlassCutter/redMonster.h GlassCutter/redMonster.cpp
+    GlassCutter/redPoint.h GlassCutter/redPoint.cpp
+    GlassCutter/glassStack.h GlassCutter/glassStack.cpp
+
+    # GlassKernel
+    GlassKernel/heuristic.h GlassKernel/heuristic.cpp
+    GlassKernel/glassMove.h GlassKernel/glassMove.cpp
+    GlassKernel/glassRand.h
+    GlassKernel/main.cpp 
 
     # Moves
     GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
