@@ -77,6 +77,7 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     const GlassItem& item = instance->getItem(index);
     unsigned int w = item.getWidth();
     unsigned int h = item.getHeight();
+    int xMin = getXMax() - MAX_XX;
     int xMax = WIDTH_PLATES - w;
     int yMax = HEIGHT_PLATES - h;
     int xMaxRotated = WIDTH_PLATES - h;
@@ -102,17 +103,18 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     int yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
     int yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
 
-    if (x <= xMax && yNotRotated <= yMax)
+    if (x >= xMin && x <= xMax && yNotRotated <= yMax)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated,
             NOT_ROTATED, instance, time + 1), locations);
 
-    if (x <= xMaxRotated && yRotated <= yMaxRotated)
+    if (x >= xMin && x <= xMaxRotated && yRotated <= yMaxRotated)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yRotated,
             ROTATED, instance, time + 1), locations);
    
     unsigned int pointIndex = 0;
     while (pointIndex < points.size() - 1 && x < std::max(xMax, xMaxRotated)) {
         x = points[pointIndex].getX();
+        if (x < xMin) { pointIndex++; continue; }
         y = points[pointIndex + 1].getY();
         stepWidth = points[pointIndex + 1].getX() - x;
         stepHeight = points[pointIndex].getY(); - y;
@@ -169,10 +171,15 @@ void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& locat
 
     unsigned int yMin = getPlate().getBestY(currentX, location.getY(), width, height);
     //std::cout << currentX << " --> " << yMin << std::endl;
-    if (yMin + height + MIN_WASTE_AREA < HEIGHT_PLATES || yMin + height == HEIGHT_PLATES){
-        GlassLocation newLocation(currentX, yMin, location);
-        assert(isFreeOutOfDefects(newLocation));
-        locations.push_back(newLocation);
+    if (yMin + height < HEIGHT_PLATES) {
+        if (yMin + height + MIN_WASTE_AREA < HEIGHT_PLATES || yMin + height == HEIGHT_PLATES){
+            GlassLocation newLocation(currentX, yMin, location);
+            assert(isFreeOutOfDefects(newLocation));
+            locations.push_back(newLocation);
+        } else {
+            GlassLocation newLocation(currentX, HEIGHT_PLATES - height, location);
+            if (isFreeOutOfDefects(newLocation)) locations.push_back(newLocation);
+        }
     }
 
     // ça ne sert à rien d'aller plus bas
@@ -195,12 +202,17 @@ void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& locat
         if (yMin > yPrev) break;
         if (yMin < HEIGHT_PLATES && yMin == yPrev) break;
 
-        if (yMin + height + MIN_WASTE_AREA < HEIGHT_PLATES || yMin + height == HEIGHT_PLATES){
-            if (yMin != location.getY()) yMin = std::max(yMin, location.getY() + MIN_WASTE_AREA);
-            GlassLocation newLocation(currentX, yMin, location);
-            assert(isFreeOutOfDefects(newLocation));
-            locations.push_back(newLocation);
-        }
+        if (yMin != location.getY()) yMin = std::max(yMin, location.getY() + MIN_WASTE_AREA);   
+        if (yMin + height < HEIGHT_PLATES) {
+            if (yMin + height + MIN_WASTE_AREA || yMin + height == HEIGHT_PLATES){
+                GlassLocation newLocation(currentX, yMin, location);
+                assert(isFreeOutOfDefects(newLocation));
+                locations.push_back(newLocation);
+            } else {
+                GlassLocation newLocation(currentX, HEIGHT_PLATES - height, location);
+                if (isFreeOutOfDefects(newLocation)) locations.push_back(newLocation);
+            }
+    }   
         //std::cout << location << std::endl;
         yPrev = yMin;
         defectIt++;

@@ -63,6 +63,8 @@ class GlassNode {
     bool isVerticalCut() const { return depth%2 == 0; }
     void checkTooSmall() const;
     void checkTooDepth() const;
+    void checkDimensions(const GlassLocationIt& first, const GlassLocationIt& last) const;
+    void preCheckTrimming(const GlassLocationIt& first, const GlassLocationIt& last) const;
     bool isNodeFitLocation(const GlassLocation& location) const;
     
     GlassPlate& getPlate() const { return instance->getPlate(plateIndex); }

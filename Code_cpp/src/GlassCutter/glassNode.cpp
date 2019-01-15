@@ -45,6 +45,30 @@ void GlassNode::checkTooDepth() const {
         throw std::runtime_error("Tree too depth");
 }
 
+void GlassNode::preCheckTrimming(const GlassLocationIt& first, const GlassLocationIt& last) const {
+    if (depth < 3) return;
+        if (std::distance(first, last) > 1) throw std::runtime_error("Trimming failed (prechecked)");
+}
+
+void GlassNode::checkDimensions(const GlassLocationIt& first, const GlassLocationIt& last) const {
+    if (depth == 3) {
+        for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
+            if (locationIt->getX() != x || locationIt->getWidth() != width)
+                throw std::runtime_error("Other mistake");
+            if (locationIt->getY() != y && locationIt->getYH() != y + height)
+                throw std::runtime_error("Other mistake");
+        }
+        return;
+    } 
+
+    if (depth == 2) {
+        for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
+            if (locationIt->getY() != y && locationIt->getYH() != y + height)
+                throw std::runtime_error("Other mistake");
+        }
+    }
+}
+
 bool GlassNode::isNodeFitLocation(const GlassLocation& location) const {
     assert(location.getBinId() == plateIndex);
     return x == location.getX() && y == location.getY() 
@@ -192,8 +216,9 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(const GlassLocationIt& fir
         setType(first->getItemIndex());
         return 1;
     }
-
     checkTooDepth();
+    preCheckTrimming(first, last);
+    checkDimensions(first, last);
     buildCutsAvailable(first, last);
     //displayCutsAvailable();
     buildRealCuts();

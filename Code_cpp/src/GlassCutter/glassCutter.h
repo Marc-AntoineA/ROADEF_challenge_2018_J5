@@ -60,6 +60,7 @@ class GlassCutter {
     unsigned int nbTrimmingFailed;
     unsigned int nbWasteTooSmall;
     unsigned int nbTreeTooDepth;
+    unsigned int nbTrimmingPreChecked;
 
     unsigned int xLimit;
 };

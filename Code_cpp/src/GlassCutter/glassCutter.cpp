@@ -101,6 +101,10 @@ void GlassCutter::cut(unsigned int depth){
 }
 
 double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth) {
+
+    if (currentBinId * WIDTH_PLATES + currentMonster()->getXMax() > xLimit)
+        return -1000;
+
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) 
         return  1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
    
@@ -277,17 +281,24 @@ void GlassCutter::addErrorStatistic(std::string errorMessage) {
         return;
     }
 
-    std::cout << errorMessage << std::endl;
+    if (errorMessage == "Trimming failed (prechecked)") {
+        nbTrimmingPreChecked++;
+        return;
+    }
+
+    //8std::cout << errorMessage << std::endl;
 }
 
 void GlassCutter::resetErrorsStatistics() {
     nbTrimmingFailed = 0;
     nbTreeTooDepth = 0;
     nbWasteTooSmall = 0;
+    nbTrimmingPreChecked = 0;
 }
 
 void GlassCutter::displayErrorStatistics() const {
     std::cout << "Waste too small: " << nbWasteTooSmall << std::endl;
     std::cout << "Tree too depth: " << nbTreeTooDepth << std::endl;
     std::cout << "NbTrimmingFailed: " << nbTrimmingFailed << std::endl;
+    std::cout << "NbTrimmingPreChecked: " << nbTrimmingPreChecked << std::endl;
 }
