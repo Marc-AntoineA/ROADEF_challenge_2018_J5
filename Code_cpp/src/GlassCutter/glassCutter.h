@@ -16,7 +16,6 @@ class GlassCutter {
     void cut(unsigned int depth);
     unsigned int getCurrentScore();
     
-    bool computeCutAndReturnIfFeasable() const;
     void displayStacks();
     void displayLocations();
     void reset();
@@ -54,4 +53,6 @@ class GlassCutter {
     unsigned int nbRollbacks;
     unsigned int nbAttempts;
     unsigned int nbInfeasible;
+
+    unsigned int xLimit;
 };

@@ -102,7 +102,7 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     int yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
     int yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
 
-    if (x <= xMax && y +  yNotRotated <= yMax)
+    if (x <= xMax && yNotRotated <= yMax)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated,
             NOT_ROTATED, instance, time + 1), locations);
 
@@ -183,13 +183,13 @@ void RedMonster::addLocationsFreeOfDefectsForLocation(const GlassLocation& locat
 
     const std::vector<GlassDefect>& defects = getPlate().getDefects();
     auto defectIt = defects.begin();
-    // Initialiser avec x % location.get_x()
+    // Initialiser avec x % location.get_x() // TODO enlever avec les location.getX()
     while (defectIt != defects.end()) {
         currentX = defectIt->getXWidth();
         if (currentX != location.getX()) 
             currentX = std::max(currentX, location.getX() + MIN_WASTE_AREA);
 
-        if (currentX + width != HEIGHT_PLATES && currentX + width + MIN_WASTE_AREA > HEIGHT_PLATES) { defectIt++; continue; }
+        if (currentX + width != WIDTH_PLATES && currentX + width + MIN_WASTE_AREA > WIDTH_PLATES) { defectIt++; continue; }
 
         yMin = getPlate().getBestY(currentX, location.getY(), width, height);
 

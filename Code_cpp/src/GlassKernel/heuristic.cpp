@@ -28,14 +28,20 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 void Heuristic::buildMoves() {
     poolMoves.clear();
     poolMoves.push_back(new Swap(this));
-    for (unsigned int k = 2; k <= std::min((std::size_t)0, sequence.size() - 1); k++) 
+    for (unsigned int k = 2; k <= std::min((std::size_t)3, sequence.size() - 1); k++) 
         poolMoves.push_back(new KConsecutivePermutation(this, k));
 }
 
 void Heuristic::initRandomlySequence() {
     sequence.clear();
+    //std::vector<unsigned int> sequenceItems = {23,22,24,38, 18, 19, 3, 1, 12, 67, 68, 69, 48, 21, 32, 66,20,60,37,31,61,55,57,70,29,10,5};
+    //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4,5,11,6,12,7};
+    /*for (unsigned int itemIndex: sequenceItems){
+        unsigned int stackId = instance->getItem(itemIndex).getStackId();
+        sequence.push_back(stackId);
+    }
     //sequence = { 39, 69, 9, 24, 64, 1, 31, 12, 49, 35, 68, 45, 21, 22, 33, 44, 52, 16, 37, 55, 26, 70, 62, 15, 19, 60, 66, 5, 46, 11, 48, 34, 7, 63, 32, 40, 14, 67, 36, 29, 43, 20, 54, 4, 56, 17, 51, 65, 18, 41, 38, 2, 71, 57, 23, 0, 28, 53, 30, 61, 13, 42, 50, 8, 47, 10, 59, 6, 27, 58, 3, 25};
-    //return;
+    return;*/
     unsigned int nbItems = instance->getNbItems();
 
     std::vector<bool> itemsSelected;
@@ -70,7 +76,6 @@ unsigned int Heuristic::computeScore(unsigned int depth) {
 }
 
 unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSequenceIndex) {
-    std::cout <<  beginSequenceIndex << std::endl;
     cutter.setSequence(sequence); // TODO a priori inutile
     cutter.revertPlatesUntilSequenceIndex(beginSequenceIndex);
     cutter.cut(depth);
@@ -99,6 +104,7 @@ void Heuristic::localSearch(unsigned int depth) {
         }
     }
     displaySequence();
+    cutter.displayLocations();
     std::cout << "Best score " << bestScore << std::endl;
     std::cout << "Instance area : " << instance->getItemsArea() << std::endl;
     std::cout << "Time elapsed :" << double((clock() - begin)) / CLOCKS_PER_SEC << "s" << std::endl;

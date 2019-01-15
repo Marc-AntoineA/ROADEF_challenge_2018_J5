@@ -13,6 +13,7 @@ GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& seq
     nbAttempts = 0;
     nbInfeasible = 0;
     currentSequenceIndex = 0;
+    xLimit = NB_PLATES * WIDTH_PLATES;
     buildStacks();
     buildMonsters();
     buildNodes();
@@ -67,10 +68,11 @@ void GlassCutter::cut(unsigned int depth){
         unsigned int itemIndex = stacks[stackId].top();
         if (VERBOSE) std::cout << " & item#" << itemIndex << std::endl;
         const std::vector<GlassLocation>& locations = getLocationsForItemIndexAndIncreaseBinIdIfNecessary(itemIndex);
-        
+        if (itemIndex == 24) std::cout << locations.size() << std::endl;
         GlassLocation bestLocation;
         double bestScore = 0;
         for (const GlassLocation& location: locations) {
+            if (currentBinId * WIDTH_PLATES + location.getXW() > xLimit) continue;
             if (!attempt(location)) continue;
             double currentScore = deepScore(currentSequenceIndex, depth);
             revert();
@@ -81,13 +83,15 @@ void GlassCutter::cut(unsigned int depth){
         }
         if (bestScore > 0) {
             //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
-            attempt(bestLocation);
+            if(!attempt(bestLocation)) assert(false);
             currentSequenceIndex++;
         } else {
             incrBinId();
+            if (currentBinId * WIDTH_PLATES > xLimit) return;
         }
     }
-    std::cout << "binId" << currentBinId << std::endl;
+    unsigned int xMax = currentBinId * WIDTH_PLATES + currentMonster()->getXMax();
+    xLimit = std::min(xMax, xLimit);
     //displayLocations();
     std::cout << "SCORE : " << getCurrentScore() << std::endl;
     std::cout << "nbRollbacks : " << nbRollbacks << std::endl;
@@ -105,22 +109,12 @@ double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth) {
     if (locations.empty()) { //std::cout << "locations empty for sequenceIndex#" << sequenceIndex << std::endl;
         return 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;}
 
-    for (const GlassLocation& locationBis: locations) {        
-        //std::cout << locationBis << std::endl;
-        /*if (locationBis.getX() == 0 && locationBis.getY() == 0) { 
-            std::cout << "=====================" << std::endl;
-            std::cout << currentBinId << std::endl;
-            displayLocations();
-        }*/
-        if (!attempt(locationBis)) continue;
+    for (const GlassLocation& locationBis: locations) {
+        if (!attempt(locationBis)) { continue; }
+
         score = std::max(score, 1. + deepScore(sequenceIndex + 1, depth - 1));
         revert();
-        if (score > 10) 
-            return score;
     }
-    assert (score < 10);
-    //if (score > 15)
-    //std::cout << "sequenceIndex#" << sequenceIndex << " -score: " << score << std::endl;
     return score;
 }
 
@@ -181,7 +175,6 @@ void GlassCutter::buildLocations() {
 void GlassCutter::incrBinId() {
     currentBinId++;
     if(VERBOSE) std::cout << "Incr bin id to " << currentBinId << std::endl;
-    //std::cout << "incrBinId" << std::endl;
 }
 
 void GlassCutter::decrBinId() {
@@ -231,7 +224,6 @@ void GlassCutter::revert() {
         if (currentBinId == 0) throw std::runtime_error("Rollback impossible (not enough items).");
         decrBinId();
     }
-
     unsigned int stackId = currentLocations()->back().getStackId();
     if (VERBOSE) std::cout << "revert for location " << currentLocations()->back() << std::endl;
     stacks[stackId].push();

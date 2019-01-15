@@ -41,6 +41,7 @@ class GlassNode {
     unsigned int getDepth() const { return depth; }
     void setType(int type) { this->type = type; }
     unsigned int getType() const { return type; }
+    bool hasSons() const { return !sons.empty(); }
 
     void reset();
     void displayNode(std::string prefix) const;
@@ -51,7 +52,7 @@ class GlassNode {
     private:
     void buildCutsAvailable(const GlassLocationIt& first, const GlassLocationIt& last);
     void buildRealCuts();
-    unsigned int cutRealCuts(const GlassLocationIt& first);
+    unsigned int cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts);
     
     void displayCutsAvailable() const;
     void displayRealCuts() const;

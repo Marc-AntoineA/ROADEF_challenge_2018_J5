@@ -91,7 +91,6 @@ bool GlassNode::isCutPossibleForMinXY(unsigned int prevAbscissa, unsigned int ab
 }
 
 bool GlassNode::isCutPossibleForMinWaste(unsigned int abscissa) {
-    return true;
     for (const GlassCut& cut: cutsAvailable) {
         if (cut.getAbscissa() != abscissa && abs((int)cut.getAbscissa() - (int)abscissa) < MIN_WASTE_AREA) {
             return false;
@@ -147,10 +146,11 @@ void GlassNode::buildRealCuts() {
     }
 }
 
-unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first) {
+unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts) {
     unsigned int nbItemsCuts = 0;
     unsigned int prevAbscissa = isVerticalCut() ? x : y;
     unsigned int nbPrevItems = 0;
+    
     for (const RealCut& cut: realCuts) {
         if (cut.x != prevAbscissa) {
             if (isVerticalCut())
@@ -162,13 +162,14 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first) {
             nbPrevItems = cut.nbItems;
         }
     }
+
     unsigned int endNodeAbscissa = isVerticalCut() ? x + width : y + height;
     if (prevAbscissa != endNodeAbscissa) {
         if (isVerticalCut())
             sons.push_back(GlassNode(instance, plateIndex, prevAbscissa, y, endNodeAbscissa - prevAbscissa, height, depth + 1, BRANCH));
         else
             sons.push_back(GlassNode(instance, plateIndex, x, prevAbscissa, width, endNodeAbscissa - prevAbscissa, depth + 1, BRANCH));
-        nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(first, first);
+        nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(first + nbPrevItems, first + nbItemsToCuts);
     }
     return nbItemsCuts;
 }
@@ -176,7 +177,7 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first) {
 unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last) {
     sons.clear();
     checkTooSmall();
-
+    //std::cout << (*this) << std::endl;
     if (first == last) {
         type = WASTE;
         return 0;
@@ -192,7 +193,7 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(const GlassLocationIt& fir
     //displayCutsAvailable();
     buildRealCuts();
     //displayRealCuts();
-    unsigned int nbItemsCuts = cutRealCuts(first);
+    unsigned int nbItemsCuts = cutRealCuts(first, std::distance(first, last));
     if (std::distance(first, last) != nbItemsCuts){
         throw std::runtime_error("Infeasible cut (not enough items cut)");
     }
@@ -229,7 +230,7 @@ unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId,
     else
         outputFile << parentId << std::endl;
 
-    if (last)
+    if (last && !sons.back().hasSons())
         sons.back().setType(RESIDUAL);
 
     unsigned int maxSonId = nodeId;
@@ -240,7 +241,7 @@ unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId,
 }
 
 std::ostream& operator<<(std::ostream& os, const GlassNode& node) {
-    os << node.getPlateIndex() << " " << node.getX() << " " << node.getY() << " ";
+    os << node.getPlateIndex() << " " <<  node.getDepth() << " " << node.getX() << " " << node.getY() << " ";
     os << node.getX() + node.getWidth() << " " << node.getY() + node.getHeight();
     return os;
 }
