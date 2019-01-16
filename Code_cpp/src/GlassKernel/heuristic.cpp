@@ -16,9 +16,9 @@ Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit):
     instance(instance), cutter(instance, sequence), timeLimit(timeLimit), begin(clock()) {
     initRandomlySequence();
     buildMoves();
-    localSearch(5);
+    localSearch(4);
     displayMoveStatistics();
-    computeScore(5);
+    computeScore(4);
 }
 
 unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
@@ -34,14 +34,14 @@ void Heuristic::buildMoves() {
 
 void Heuristic::initRandomlySequence() {
     sequence.clear();
-    //std::vector<unsigned int> sequenceItems = {23,22,24,38, 18, 19, 3, 1, 12, 67, 68, 69, 48, 21, 32, 66,20,60,37,31,61,55,57,70,29,10,5, 13, 30, 43, 64, 59, 53, 51, 33, 35};
+   /* std::vector<unsigned int> sequenceItems = {23, 22,24,38, 18, 19, 3, 1, 12, 67, 68, 69, 48};//, 21, 32, 66,20,60,37,31,61,55,57,70,29,10,5, 13, 30, 43, 64, 59, 53, 51, 33, 35};
     //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4,5,11,6,12,7};
-    /*for (unsigned int itemIndex: sequenceItems){
+    for (unsigned int itemIndex: sequenceItems){
         unsigned int stackId = instance->getItem(itemIndex).getStackId();
         sequence.push_back(stackId);
-    }*/
+    }
     //sequence = { 39, 69, 9, 24, 64, 1, 31, 12, 49, 35, 68, 45, 21, 22, 33, 44, 52, 16, 37, 55, 26, 70, 62, 15, 19, 60, 66, 5, 46, 11, 48, 34, 7, 63, 32, 40, 14, 67, 36, 29, 43, 20, 54, 4, 56, 17, 51, 65, 18, 41, 38, 2, 71, 57, 23, 0, 28, 53, 30, 61, 13, 42, 50, 8, 47, 10, 59, 6, 27, 58, 3, 25};
-    //return;
+    return;*/
     unsigned int nbItems = instance->getNbItems();
     std::vector<bool> itemsSelected;
     itemsSelected.resize(nbItems);

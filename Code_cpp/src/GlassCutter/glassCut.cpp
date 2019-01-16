@@ -12,8 +12,8 @@ GlassCut::GlassCut(unsigned int abscissa, unsigned int itemSequencePosition, boo
 bool GlassCut::operator<(const GlassCut& other) const {
     if (abscissa == other.getAbscissa()) {
         if (beginItem == other.isBegin()) 
-            return itemSequencePosition < other.getItemSequencePosition();
+            return itemSequencePosition > other.getItemSequencePosition();
         return !beginItem;
     }
-    return abscissa < other.getAbscissa();
+    return abscissa > other.getAbscissa();
 }
