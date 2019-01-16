@@ -11,6 +11,8 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
 
 Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit)
     :instance(instance), cutter(instance, sequence), 
@@ -27,7 +29,9 @@ void Heuristic::start() {
 }
 
 unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
-    return rand() % (last - begin) + begin;
+    boost::uniform_int<> dist(begin, last - 1);
+    boost::variate_generator<boost::mt19937&, boost::uniform_int<> > die(gen, dist);
+    return die();
 }
 
 void Heuristic::buildMoves() {

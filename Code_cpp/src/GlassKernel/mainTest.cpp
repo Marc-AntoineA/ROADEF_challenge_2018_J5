@@ -8,9 +8,9 @@
 #include <cmath>
 #include <boost/thread.hpp>
 
-void solveThread(Heuristic& heuristic) {
+void solveThread(Heuristic* heuristic) {
     std::cout << "Un nouveau thread vient de partir " << std::endl;
-    //heuristic.start();
+    heuristic->start();
 }
 
 void test() {
@@ -56,22 +56,23 @@ int main(int argc, char* argv[])
 
     srand(seed); // TODO --> qu'est-ce qu'on en fait ?
     
-    std::vector<Heuristic> heuristics;
+    std::vector<Heuristic*> heuristics;
 
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        GlassInstance instance("instances_checker/" + instanceName);
-        Heuristic heuristic(&instance, timeLimit, depthLimit);
-        heuristics.push_back(heuristic);
+        GlassInstance* instance = new GlassInstance("instances_checker/" + instanceName);
+        heuristics.push_back(new Heuristic(instance, timeLimit, depthLimit));
+    }   
+
+    std::vector<boost::thread*> threads;
+    for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
+        threads.push_back(new boost::thread(solveThread, heuristics[threadIndex]));
     }
 
-    std::vector<boost::thread> threads;
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        threads.push_back(boost::thread(test));
+        threads[threadIndex]->join();
     }
-
-    for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        threads[threadIndex].join();
-    }
+    
+    // TODO delete heuristics and threads
     
     return 0;
 }

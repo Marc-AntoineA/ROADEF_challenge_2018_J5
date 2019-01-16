@@ -4,6 +4,7 @@
 #include "../GlassCutter/glassCutter.h"
 #include "../GlassKernel/glassMove.h"
 
+#include <boost/random/mersenne_twister.hpp>
 #include <vector>
 #include <ctime>
 
@@ -37,4 +38,6 @@ class Heuristic {
     unsigned int timeLimit;
     std::clock_t begin;
     unsigned int depthLimit;
+
+    boost::mt19937 gen;
 };
