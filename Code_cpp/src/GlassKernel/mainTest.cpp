@@ -8,7 +8,6 @@
 #include <cmath>
 
 void solveThread(Heuristic* heuristic) {
-    std::cout << "Un nouveau thread vient de partir " << std::endl;
     heuristic->start();
 }
 
@@ -62,14 +61,24 @@ int main(int argc, char* argv[])
         heuristics.push_back(new Heuristic(instance, timeLimit, depthLimit, rand()));
     }   
 
+    boost::thread_group group;
     std::vector<boost::thread*> threads;
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        threads.push_back(new boost::thread(solveThread, heuristics[threadIndex]));
+        group.add_thread(new boost::thread(solveThread, heuristics[threadIndex]));
     }
 
+    group.join_all();
+    unsigned int bestScore = std::numeric_limits<unsigned int>::max();
+    unsigned int bestThreadIndex = 0;
+
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        threads[threadIndex]->join();
+        if (heuristics[threadIndex]->getBestScore() < bestScore) {
+            bestScore = heuristics[threadIndex]->getBestScore();
+            bestThreadIndex = threadIndex;
+        }
     }
+    std::cout << "Meilleur score obtenu: " << bestScore << std::endl;
+    heuristics[bestThreadIndex]->saveBest(outputName);
     
     // TODO delete heuristics and threads
     

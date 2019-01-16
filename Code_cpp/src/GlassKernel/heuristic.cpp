@@ -29,7 +29,7 @@ void Heuristic::start() {
     initRandomlySequence();
     buildMoves();
     localSearch(depthLimit);
-    displayMoveStatistics();
+    //displayMoveStatistics();
     computeScore(depthLimit);
 }
 
