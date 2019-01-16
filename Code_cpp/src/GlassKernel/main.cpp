@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <cmath>
 
-
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -36,7 +35,7 @@ int main(int argc, char* argv[])
     timeLimit = 1000;
     srand(seed);
     GlassInstance instance("/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code_cpp/src/build/bin/instances_checker/" + instance_name);
-    Heuristic heuristic(&instance, std::round(timeLimit*.9));
+    Heuristic heuristic(&instance, std::round(timeLimit*.9), 4);
     heuristic.saveBest(instance_name + ".csv");
     //heuristic.localSearch();
     heuristic.displaySequence();

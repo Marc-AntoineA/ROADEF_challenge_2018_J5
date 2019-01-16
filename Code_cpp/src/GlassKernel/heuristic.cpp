@@ -12,13 +12,18 @@
 #include <iostream>
 #include <algorithm>
 
-Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit):
-    instance(instance), cutter(instance, sequence), timeLimit(timeLimit), begin(clock()) {
+Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit)
+    :instance(instance), cutter(instance, sequence), 
+    timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit) {
+   
+}
+
+void Heuristic::start() {
     initRandomlySequence();
     buildMoves();
-    localSearch(5);
+    localSearch(depthLimit);
     displayMoveStatistics();
-    computeScore(5);
+    computeScore(depthLimit);
 }
 
 unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {

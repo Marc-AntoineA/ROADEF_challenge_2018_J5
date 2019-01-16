@@ -4,20 +4,18 @@ cmake_minimum_required(VERSION 2.6)
 include(CMakeToolsHelpers OPTIONAL)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_CXX_STANDARD 11)
 project(RoadefJ5)
 
-#find_package(Boost REQUIRED)
-#include_directories(${Boost_INCLUDE_DIR})
-#link_directories(${Boost_LIBRARY_DIRS})
-#set(Boost_USE_STATIC_LIBS        OFF)
-#set(Boost_USE_MULTITHREADED      ON)
-#set(Boost_USE_STATIC_RUNTIME     OFF)
-#set(BOOST_ALL_DYN_LINK           ON)
-#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
+set(Boost_USE_STATIC_LIBS        OFF)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME     OFF)
+set(BOOST_ALL_DYN_LINK           ON)
 
-#add_subdirectory (./GlassData)
-#add_subdirectory (GlassCutter)
-#add_subdirectory (GlassKernel)
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 
 add_executable(glassTests
     # GlassData
@@ -74,3 +72,7 @@ add_executable(tookeute
     GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
     GlassKernel/GlassMoves/kConsecutivePermutation.h GlassKernel/GlassMoves/kConsecutivePermutation.cpp
 )
+
+
+target_link_libraries(tookeute ${Boost_LIBRARIES})
+target_link_libraries(glassTests ${Boost_LIBRARIES})

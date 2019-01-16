@@ -10,8 +10,9 @@
 class Heuristic {
 
     public:
-    Heuristic(GlassInstance* instance, unsigned int timeLimit);
+    Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit);
 
+    void start();
     std::vector<unsigned int>& getSequence() { return sequence; }
     void displaySequence();
     unsigned int glassRandint(unsigned int first, unsigned int last);
@@ -35,4 +36,5 @@ class Heuristic {
     unsigned int bestScore;
     unsigned int timeLimit;
     std::clock_t begin;
+    unsigned int depthLimit;
 };
