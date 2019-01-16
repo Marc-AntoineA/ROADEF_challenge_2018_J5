@@ -13,10 +13,11 @@
 #include <algorithm>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <boost/thread.hpp>
 
-Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit)
+Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit, unsigned int seed)
     :instance(instance), cutter(instance, sequence), 
-    timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit) {
+    timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit), nbIterations(0), gen(seed) {
    
 }
 
@@ -42,6 +43,7 @@ void Heuristic::buildMoves() {
 }
 
 void Heuristic::initRandomlySequence() {
+    this->begin = clock();
     sequence.clear();
    /* std::vector<unsigned int> sequenceItems = {23, 22,24,38, 18, 19, 3, 1, 12, 67, 68, 69, 48};//, 21, 32, 66,20,60,37,31,61,55,57,70,29,10,5, 13, 30, 43, 64, 59, 53, 51, 33, 35};
     //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4,5,11,6,12,7};
@@ -66,7 +68,7 @@ void Heuristic::initRandomlySequence() {
         nbItemsSelected++;
     }
     assert(sequence.size() == instance->getNbItems());
-    displaySequence();
+    //displaySequence();
 }
 
 void Heuristic::displaySequence() {
@@ -94,17 +96,21 @@ unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSeque
 
 void Heuristic::localSearch(unsigned int depth) {
     bestScore = computeScore(depth);
+    nbIterations = 0;
     int beginSequenceIndex = 0;
+
+    clock_t previousLogTime = clock();
     while (double(clock() - begin) / CLOCKS_PER_SEC < timeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         int startingFrom = move->attempt();
         if (startingFrom == NOTHING) continue;
+        nbIterations++;
         unsigned int score = computeScore(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
         if (score <= bestScore) {
             move->commit();
             move->addStat(score < bestScore ? IMPROVE : ACCEPTED);
-            std::cout << " Nouveau score " << score << " vs " << bestScore << std::endl;
+            //std::cout << " Nouveau score " << score << " vs " << bestScore << std::endl;
             bestScore = score;
             beginSequenceIndex = sequence.size();
         } else {
@@ -112,13 +118,22 @@ void Heuristic::localSearch(unsigned int depth) {
             move->addStat(REFUSED);
             beginSequenceIndex = std::min(beginSequenceIndex, startingFrom);
         }
+
+        if ((clock() - previousLogTime) > CLOCKS_PER_SEC) {
+            displayLog();
+        } 
     }
-    displaySequence();
+    /*displaySequence();
     cutter.displayLocations();
     cutter.displayErrorStatistics();
     std::cout << "Best score " << bestScore << std::endl;
     std::cout << "Instance area : " << instance->getItemsArea() << std::endl;
-    std::cout << "Time elapsed :" << double((clock() - begin)) / CLOCKS_PER_SEC << "s" << std::endl;
+    std::cout << "Time elapsed :" << double((clock() - begin)) / CLOCKS_PER_SEC << "s" << std::endl;*/
+}
+
+void Heuristic::displayLog() const {
+    unsigned int nbSecs = double(clock() - begin) / CLOCKS_PER_SEC;
+    std::cout << boost::this_thread::get_id() << "\t" << nbSecs << "s\t" << bestScore << "\t" << nbIterations << std::endl;
 }
 
 void Heuristic::displayMoveStatistics() {

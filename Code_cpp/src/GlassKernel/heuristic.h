@@ -7,11 +7,13 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <vector>
 #include <ctime>
+#include <boost/thread.hpp>
+
 
 class Heuristic {
 
     public:
-    Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit);
+    Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit, unsigned int seed);
 
     void start();
     std::vector<unsigned int>& getSequence() { return sequence; }
@@ -23,6 +25,7 @@ class Heuristic {
     void saveBest(std::string name);
 
     private:
+    void displayLog() const;
     void initRandomlySequence();
     void buildMoves(); 
     void resetStacks();
@@ -38,6 +41,8 @@ class Heuristic {
     unsigned int timeLimit;
     std::clock_t begin;
     unsigned int depthLimit;
+
+    unsigned nbIterations;
 
     boost::mt19937 gen;
 };

@@ -6,7 +6,6 @@
 #include <ctime>
 #include <cstdlib>
 #include <cmath>
-#include <boost/thread.hpp>
 
 void solveThread(Heuristic* heuristic) {
     std::cout << "Un nouveau thread vient de partir " << std::endl;
@@ -54,13 +53,13 @@ int main(int argc, char* argv[])
     std::cout << " - depthLimit: " << depthLimit << std::endl;
     std::cout << " - seed: " << seed << std::endl;
 
-    srand(seed); // TODO --> qu'est-ce qu'on en fait ?
+    srand(seed);
     
     std::vector<Heuristic*> heuristics;
 
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
         GlassInstance* instance = new GlassInstance("instances_checker/" + instanceName);
-        heuristics.push_back(new Heuristic(instance, timeLimit, depthLimit));
+        heuristics.push_back(new Heuristic(instance, timeLimit, depthLimit, rand()));
     }   
 
     std::vector<boost::thread*> threads;

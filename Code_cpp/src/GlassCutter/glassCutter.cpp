@@ -94,10 +94,10 @@ void GlassCutter::cut(unsigned int depth){
     unsigned int xMax = currentBinId * WIDTH_PLATES + currentMonster()->getXMax();
     xLimit = std::min(xMax, xLimit);
     //displayLocations();
-    std::cout << "SCORE : " << getCurrentScore() << std::endl;
+    /*std::cout << "SCORE : " << getCurrentScore() << std::endl;
     std::cout << "nbRollbacks : " << nbRollbacks << std::endl;
     std::cout << "nbAttempts : " << nbAttempts << std::endl;
-    std::cout << "nbInfeasible : " << nbInfeasible << std::endl;
+    std::cout << "nbInfeasible : " << nbInfeasible << std::endl;*/
 }
 
 double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth) {
