@@ -69,7 +69,6 @@ void GlassCutter::cut(unsigned int depth){
         unsigned int itemIndex = stacks[stackId].top();
         if (VERBOSE) std::cout << " & item#" << itemIndex << std::endl;
         const std::vector<GlassLocation>& locations = getLocationsForItemIndexAndIncreaseBinIdIfNecessary(itemIndex);
-        if (itemIndex == 24) std::cout << locations.size() << std::endl;
         GlassLocation bestLocation;
         double bestScore = 0;
         for (const GlassLocation& location: locations) {

@@ -8,7 +8,7 @@
 #include <vector>
 #include <ctime>
 #include <boost/thread.hpp>
-
+#include <boost/chrono.hpp>
 
 class Heuristic {
 
@@ -25,6 +25,7 @@ class Heuristic {
     void saveBest(std::string name);
 
     private:
+    int getCurrentDurationOnSeconds() const;
     void displayLog() const;
     void initRandomlySequence();
     void buildMoves(); 
@@ -39,7 +40,8 @@ class Heuristic {
     std::vector<unsigned int> sequence;
     unsigned int bestScore;
     unsigned int timeLimit;
-    std::clock_t begin;
+    boost::chrono::nanoseconds begin;
+    boost::chrono::system_clock systemClock;
     unsigned int depthLimit;
 
     unsigned nbIterations;

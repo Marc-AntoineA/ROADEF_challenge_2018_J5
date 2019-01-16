@@ -40,7 +40,6 @@ void KConsecutivePermutation::displayPermutation() {
 
 bool KConsecutivePermutation::doNothing() {
     std::vector<unsigned int>& sequence = heuristic->getSequence();
-    if (firstIndex >= sequence.size()) std::cout << "???" << firstIndex << std::endl;
     assert(firstIndex < sequence.size());
     unsigned int firstStack = sequence[firstIndex];
     for (unsigned int index = 1; index < k; index++) {

@@ -9,24 +9,33 @@
 #include <cstdlib>
 #include <sstream>
 #include <fstream>
+#include <cmath>
 #include <iostream>
 #include <algorithm>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/thread.hpp>
 
+using namespace boost::chrono;
+typedef duration<double> sec;
+
 Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit, unsigned int seed)
     :instance(instance), cutter(instance, sequence), 
     timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit), nbIterations(0), gen(seed) {
-   
 }
 
 void Heuristic::start() {
+    begin = systemClock.now().time_since_epoch();
     initRandomlySequence();
     buildMoves();
     localSearch(depthLimit);
     displayMoveStatistics();
     computeScore(depthLimit);
+}
+
+int Heuristic::getCurrentDurationOnSeconds() const {
+    sec duration = systemClock.now().time_since_epoch() - begin;
+    return (unsigned int)(round(duration.count()));
 }
 
 unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
@@ -43,7 +52,6 @@ void Heuristic::buildMoves() {
 }
 
 void Heuristic::initRandomlySequence() {
-    this->begin = clock();
     sequence.clear();
    /* std::vector<unsigned int> sequenceItems = {23, 22,24,38, 18, 19, 3, 1, 12, 67, 68, 69, 48};//, 21, 32, 66,20,60,37,31,61,55,57,70,29,10,5, 13, 30, 43, 64, 59, 53, 51, 33, 35};
     //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4,5,11,6,12,7};
@@ -99,8 +107,8 @@ void Heuristic::localSearch(unsigned int depth) {
     nbIterations = 0;
     int beginSequenceIndex = 0;
 
-    clock_t previousLogTime = clock();
-    while (double(clock() - begin) / CLOCKS_PER_SEC < timeLimit) {
+    unsigned int previousDuration = 0;
+    while (getCurrentDurationOnSeconds() < timeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         int startingFrom = move->attempt();
@@ -119,7 +127,8 @@ void Heuristic::localSearch(unsigned int depth) {
             beginSequenceIndex = std::min(beginSequenceIndex, startingFrom);
         }
 
-        if ((clock() - previousLogTime) > CLOCKS_PER_SEC) {
+        if (getCurrentDurationOnSeconds() > previousDuration) {
+            previousDuration = getCurrentDurationOnSeconds();
             displayLog();
         } 
     }
@@ -132,8 +141,7 @@ void Heuristic::localSearch(unsigned int depth) {
 }
 
 void Heuristic::displayLog() const {
-    unsigned int nbSecs = double(clock() - begin) / CLOCKS_PER_SEC;
-    std::cout << boost::this_thread::get_id() << "\t" << nbSecs << "s\t" << bestScore << "\t" << nbIterations << std::endl;
+    std::cout << boost::this_thread::get_id() << "\t" << getCurrentDurationOnSeconds() << "s\t" << bestScore << "\t" << nbIterations << std::endl;
 }
 
 void Heuristic::displayMoveStatistics() {
