@@ -16,9 +16,9 @@ Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit):
     instance(instance), cutter(instance, sequence), timeLimit(timeLimit), begin(clock()) {
     initRandomlySequence();
     buildMoves();
-    localSearch(4);
+    localSearch(5);
     displayMoveStatistics();
-    computeScore(4);
+    computeScore(5);
 }
 
 unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {

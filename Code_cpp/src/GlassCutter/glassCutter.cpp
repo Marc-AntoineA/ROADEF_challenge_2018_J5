@@ -264,7 +264,6 @@ void GlassCutter::saveBest(std::string name) {
 void GlassCutter::addErrorStatistic(std::string errorMessage) {
     if (errorMessage == "Trimming failed (more than 1 item)" 
         || errorMessage == "Trimming failed (more than 1 cut)"){
-
         nbTrimmingFailed++;
         return;
     }

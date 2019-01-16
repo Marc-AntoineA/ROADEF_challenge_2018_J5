@@ -52,6 +52,19 @@ void GlassNode::preCheckTrimming(const GlassLocationIt& first, const GlassLocati
 }
 
 void GlassNode::checkDimensions(const GlassLocationIt& first, const GlassLocationIt& last) const {
+    if (std::distance(first, last) == 0) return;
+
+    if (depth == 1) {
+        if (width > MAX_XX) 
+            throw std::runtime_error("1-cut failed");
+        if (width < MIN_XX)
+            throw std::runtime_error("1-cut failed");
+        return;
+    }
+    if (depth == 2) {
+        if (height < MIN_YY)
+            throw std::runtime_error("1-cut failed");
+    }
     if (depth == 3) {
         for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
             if (locationIt->getX() != x || locationIt->getWidth() != width)
@@ -135,7 +148,9 @@ void GlassNode::buildRealCuts() {
     int maxItemSeen = -1;
     
     unsigned int nbItemsSeen = 0;
-    unsigned int prevAbscissa = isVerticalCut() ? x + width : y + height;
+    unsigned int firstAbscissa = isVerticalCut() ? x : y;
+    unsigned int lastAbscissa = isVerticalCut() ? x + width : y + height;
+    unsigned int prevAbscissa = lastAbscissa;
     unsigned int nbPrevItems = 0;
     
     realCuts.push_back(RealCut(prevAbscissa, nbItemsSeen));
@@ -144,7 +159,8 @@ void GlassNode::buildRealCuts() {
 
         if (!cut.isBegin()) { assert(openedCuts > 0); openedCuts--; }
 
-        if (prevAbscissa - cut.getAbscissa() >= MIN_WASTE_AREA && openedCuts == 0
+        if (cut.getAbscissa() != firstAbscissa && cut.getAbscissa() != lastAbscissa
+            && prevAbscissa - cut.getAbscissa() >= MIN_WASTE_AREA && openedCuts == 0
             && maxItemSeen + 1 == nbItemsSeen && isCutPossibleForMinWaste(cut.getAbscissa()) && isFreeOfDefects(cut)) {
             bool isNotWasteCut = nbItemsSeen > nbPrevItems;
 
@@ -162,8 +178,9 @@ void GlassNode::buildRealCuts() {
             } else {
                 if (nbItemsSeen - nbPrevItems > 1) 
                     throw std::runtime_error("Trimming failed (more than 1 item)");
-                if (realCuts.size() >= 1)
+                if (realCuts.size() >= 2) {
                     throw std::runtime_error("Trimming failed (more than 1 cut)");
+                }
                 realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                 prevAbscissa = cut.getAbscissa();
                 nbPrevItems = nbItemsSeen;
@@ -177,7 +194,7 @@ void GlassNode::buildRealCuts() {
             // TODO warning ici...
         }
     }
-    realCuts.push_back(RealCut(isVerticalCut() ? x : y, nbItemsSeen));
+    realCuts.push_back(RealCut(firstAbscissa, nbItemsSeen));
     /*std::cout << "====|===" << std::endl;
     displayRealCuts();*/
 }
@@ -273,6 +290,7 @@ unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId,
         sons.back().setType(RESIDUAL);
 
     unsigned int maxSonId = nodeId;
+    std::reverse(sons.begin(), sons.end());
     for (GlassNode& son: sons) {
         maxSonId = son.saveNode(outputFile, maxSonId + 1, nodeId, !LAST_BIN);
     }
