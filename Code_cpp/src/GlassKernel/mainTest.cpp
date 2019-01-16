@@ -13,6 +13,10 @@ void solveThread(Heuristic& heuristic) {
     //heuristic.start();
 }
 
+void test() {
+    std::cout << "On tente sans mettre d'argument, juste pour voir ce que cela donne" << std::endl;
+}
+
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -60,14 +64,14 @@ int main(int argc, char* argv[])
         heuristics.push_back(heuristic);
     }
 
-    /*std::vector<std::thread> threads;
+    std::vector<boost::thread> threads;
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        threads.push_back(std::thread(solveThread(heuristics[threadIndex])));
+        threads.push_back(boost::thread(test));
     }
 
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
         threads[threadIndex].join();
-    }*/
+    }
     
     return 0;
 }

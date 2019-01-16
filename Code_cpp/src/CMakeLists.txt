@@ -7,7 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_CXX_STANDARD 11)
 project(RoadefJ5)
 
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED thread)
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 set(Boost_USE_STATIC_LIBS        OFF)
