@@ -43,6 +43,7 @@ add_executable(glassTests
     # Moves
     GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
     GlassKernel/GlassMoves/kConsecutivePermutation.h GlassKernel/GlassMoves/kConsecutivePermutation.cpp
+    GlassKernel/GlassMoves/kPermutation.h GlassKernel/GlassMoves/kPermutation.cpp
 )
 
 add_executable(tookeute
@@ -71,6 +72,7 @@ add_executable(tookeute
     # Moves
     GlassKernel/GlassMoves/swap.h GlassKernel/GlassMoves/swap.cpp
     GlassKernel/GlassMoves/kConsecutivePermutation.h GlassKernel/GlassMoves/kConsecutivePermutation.cpp
+    GlassKernel/GlassMoves/kPermutation.h GlassKernel/GlassMoves/kPermutation.cpp
 )
 
 

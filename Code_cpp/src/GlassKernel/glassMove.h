@@ -25,6 +25,7 @@ class GlassMove {
     const std::string& getName() { return name; }
 
     protected:
+    unsigned int getSequenceSize() const;
     Heuristic* heuristic;
     std::string name;
 

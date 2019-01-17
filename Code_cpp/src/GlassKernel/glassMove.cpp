@@ -1,7 +1,8 @@
 #include "glassMove.h"
 
-#include <iostream>
+#include "../GlassKernel/heuristic.h"
 
+#include <iostream>
 
 GlassMove::GlassMove(Heuristic* heuristic): heuristic(heuristic), nbImproved(0), nbAccepted(0), nbRefused(0) {
     this->name = "name";
@@ -32,4 +33,8 @@ void GlassMove::displayStatistics() {
     std::cout << "Move. " << name << ": ";  
     std::cout << nbImproved << " | " << nbAccepted;
     std::cout << " | " << nbRefused << " (" << nbTested << ")" << std::endl;  
+}
+
+unsigned int GlassMove::getSequenceSize() const {
+    return heuristic->getSequence().size();
 }

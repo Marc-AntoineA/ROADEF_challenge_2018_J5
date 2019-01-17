@@ -5,6 +5,7 @@
 #include "../GlassData/glassConstants.h"
 #include "../GlassKernel/GlassMoves/swap.h"
 #include "../GlassKernel/GlassMoves/kConsecutivePermutation.h"
+#include "../GlassKernel/GlassMoves/kPermutation.h"
 
 #include <cstdlib>
 #include <sstream>
@@ -39,7 +40,8 @@ void Heuristic::start() {
 }
 
 void Heuristic::initSearch() {
-    localSearch(2, 10);
+    localSearch(1, 10);
+    cutter.reset();
 }
 
 unsigned int Heuristic::getCurrentDurationOnSeconds() const {
@@ -58,6 +60,8 @@ void Heuristic::buildMoves() {
     poolMoves.push_back(new Swap(this));
     for (unsigned int k = 2; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KConsecutivePermutation(this, k));
+    for (unsigned int k = 3; k < std::min((std::size_t)10, sequence.size()); k++) 
+        poolMoves.push_back(new KPermutation(this, k));
 }
 
 void Heuristic::initRandomlySequence() {
@@ -108,6 +112,14 @@ unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSeque
     cutter.setSequence(sequence); // TODO a priori inutile
     cutter.revertPlatesUntilSequenceIndex(beginSequenceIndex);
     cutter.cut(depth);
+    /*if (depth == 0) return cutter.getCurrentScore();
+    
+    unsigned int badScore = computeScore(depth - 1, beginSequenceIndex);
+    if (cutter.getCurrentScore() > badScore){
+        std::cout << "-d " << depth << " " << cutter.getCurrentScore() << " < " << badScore << std::endl;
+    }
+    assert(cutter.getCurrentScore() <= badScore);*/
+    //cutter.displayLocations();
     return cutter.getCurrentScore();
 }
 

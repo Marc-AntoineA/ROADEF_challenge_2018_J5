@@ -3,12 +3,13 @@
 #include "../../GlassKernel/heuristic.h"
 
 #include <cassert>
+#include <string>
 
 #define NB_SWAP 5
 
 KConsecutivePermutation::KConsecutivePermutation(Heuristic* heuristic, unsigned int k)
     : GlassMove(heuristic), k(k) {
-    this->name = k + "-consecutivePermutation";
+    this->name = std::to_string(k) + "_consecutivePermutation";
     initPermutation();
 } 
 
@@ -44,7 +45,7 @@ bool KConsecutivePermutation::doNothing() {
     unsigned int firstStack = sequence[firstIndex];
     for (unsigned int index = 1; index < k; index++) {
         assert(firstIndex + index < sequence.size());
-        if (sequence[firstIndex + index] != firstStack)
+        if (sequence[firstIndex + permutation[index]] != firstStack)
             return false;
     }
     return true;
