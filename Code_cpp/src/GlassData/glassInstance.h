@@ -8,6 +8,8 @@
 #include <iostream>
 #include <cassert>
 
+using SequenceIt = std::vector<unsigned int>::iterator&;
+
 class GlassInstance {
     public:
     GlassInstance (std::string instancePath);
@@ -17,6 +19,7 @@ class GlassInstance {
     unsigned int getItemsArea() { return itemsArea; }
     GlassPlate& getPlate(unsigned int plateIndex) { return plates[plateIndex]; }
     std::vector<GlassItem>& getItems() { return items; }
+    unsigned int getItemsArea(const SequenceIt first, const SequenceIt last) const;
 
     private:
     void computeItemsArea();

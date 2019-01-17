@@ -31,10 +31,3 @@ class GlassDefect {
 
 std::ostream& operator<<(std::ostream& os, const GlassDefect defect);
 bool operator<(const GlassDefect &defect1, const GlassDefect &defect2);
-
-struct {
-    bool operator()(const GlassDefect &defect1, const GlassDefect &defect2) const
-    {   
-        return defect1.getY() < defect2.getY();
-    }   
-} sortY;

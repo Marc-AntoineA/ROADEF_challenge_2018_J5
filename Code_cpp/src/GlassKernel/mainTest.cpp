@@ -72,9 +72,10 @@ int main(int argc, char* argv[])
     unsigned int bestThreadIndex = 0;
 
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        if (heuristics[threadIndex]->getBestScore() < bestScore) {
+        if (heuristics[threadIndex]->getBestScore() <= bestScore) {
             bestScore = heuristics[threadIndex]->getBestScore();
             bestThreadIndex = threadIndex;
+            std::cout << bestScore << std::endl;
         }
     }
     std::cout << "Meilleur score obtenu: " << bestScore << std::endl;

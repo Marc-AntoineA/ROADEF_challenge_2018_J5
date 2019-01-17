@@ -25,7 +25,7 @@ class Heuristic {
     void saveBest(std::string name);
 
     private:
-    int getCurrentDurationOnSeconds() const;
+    unsigned int getCurrentDurationOnSeconds() const;
     void displayLog() const;
     void initRandomlySequence();
     void buildMoves(); 

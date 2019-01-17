@@ -17,7 +17,8 @@ class RedMonster {
     const std::vector<RedPoint>& getPoints() const { return points; }
     void incrRedMonster(const GlassLocation& location);
     void revert();
-    unsigned int getXMax();
+    unsigned int getXMax() const;
+    unsigned int computeArea() const;
     std::vector<GlassLocation> getLocationsForItemIndex(unsigned int itemIndex);
 
     private:

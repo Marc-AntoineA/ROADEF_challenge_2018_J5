@@ -25,15 +25,17 @@ Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned i
 }
 
 void Heuristic::start() {
+    bestScore = WIDTH_PLATES*HEIGHT_PLATES*NB_PLATES;
     begin = systemClock.now().time_since_epoch();
     initRandomlySequence();
+    displaySequence();
     buildMoves();
     localSearch(depthLimit);
-    //displayMoveStatistics();
+    displayMoveStatistics();
     computeScore(depthLimit);
 }
 
-int Heuristic::getCurrentDurationOnSeconds() const {
+unsigned int Heuristic::getCurrentDurationOnSeconds() const {
     sec duration = systemClock.now().time_since_epoch() - begin;
     return (unsigned int)(round(duration.count()));
 }
@@ -47,7 +49,7 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 void Heuristic::buildMoves() {
     poolMoves.clear();
     poolMoves.push_back(new Swap(this));
-    for (unsigned int k = 2; k < std::min((std::size_t)4, sequence.size()); k++) 
+    for (unsigned int k = 2; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KConsecutivePermutation(this, k));
 }
 

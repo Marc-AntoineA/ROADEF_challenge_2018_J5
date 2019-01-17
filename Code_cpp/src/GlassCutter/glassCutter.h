@@ -33,8 +33,10 @@ class GlassCutter {
     void buildMonsters();
     void buildNodes();
     void buildLocations();
+    bool attempt(const GlassLocation& location, bool fast);
     bool attempt(const GlassLocation& location);
-    double deepScore(unsigned int sequenceIndex, unsigned int depth);
+    double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
+    unsigned int computeMaxScorePossible();
     void revert();
     bool checkTreeFeasibilityAndBuildCurrentNode();
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);

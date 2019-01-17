@@ -189,7 +189,7 @@ void GlassNode::buildRealCuts() {
 
         if (cut.isBegin()) {
             openedCuts++;
-            maxItemSeen = std::max(maxItemSeen, (int) cut.getItemSequencePosition());
+            maxItemSeen = std::max(maxItemSeen, (int)cut.getItemSequencePosition());
             nbItemsSeen++;
             // TODO warning ici...
         }

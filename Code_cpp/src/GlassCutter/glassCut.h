@@ -16,6 +16,6 @@ class GlassCut {
     private:
     unsigned int abscissa;
     unsigned int itemSequencePosition;
-    bool beginItem;
     bool verticalCut;
+    bool beginItem;
 };

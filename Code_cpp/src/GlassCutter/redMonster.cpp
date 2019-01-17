@@ -253,10 +253,30 @@ void RedMonster::revert() {
     }
 }
 
-unsigned int RedMonster::getXMax() {
+unsigned int RedMonster::getXMax() const {
     if (points.empty()) 
         return 0;
     return points.back().getX();
+}
+
+// TODO internaliser ? 
+unsigned int RedMonster::computeArea() const {
+    if (points.empty()) return 0;
+
+    unsigned int xMax = getXMax();
+    unsigned int area = 0;
+    unsigned int x = xMax > MAX_XX ? xMax - MAX_XX : 0;
+    area += x*HEIGHT_PLATES;
+
+    unsigned int pointIndex = 0;    
+    while (pointIndex < points.size()){
+        if (points[pointIndex].getX() < x) {pointIndex++; continue;}
+        area += (points[pointIndex].getX() - x)*points[pointIndex].getY();
+        x = points[pointIndex].getX();
+        pointIndex++;
+    }
+    
+    return area;
 }
 
 std::ostream& operator<<(std::ostream& os, const RedMonster& monster){

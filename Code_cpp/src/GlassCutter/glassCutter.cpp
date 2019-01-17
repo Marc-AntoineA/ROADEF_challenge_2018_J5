@@ -62,6 +62,8 @@ void GlassCutter::revertPlatesUntilSequenceIndex(unsigned int sequenceIndex) {
 
 void GlassCutter::cut(unsigned int depth){
     //displayStacks();
+    unsigned int nbScore = 0;
+    unsigned int nbNot = 0;
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     while (currentSequenceIndex < sequence.size()) {
         unsigned int stackId = sequence[currentSequenceIndex];
@@ -74,7 +76,7 @@ void GlassCutter::cut(unsigned int depth){
         for (const GlassLocation& location: locations) {
             if (currentBinId * WIDTH_PLATES + location.getXW() > xLimit) continue;
             if (!attempt(location)) continue;
-            double currentScore = deepScore(currentSequenceIndex, depth);
+            double currentScore = deepScore(currentSequenceIndex, depth, false);
             revert();
             if (currentScore >= bestScore) {
                 bestScore = currentScore;
@@ -83,7 +85,7 @@ void GlassCutter::cut(unsigned int depth){
         }
         if (bestScore > 0) {
             //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
-            if(!attempt(bestLocation)) assert(false);
+            if(!attempt(bestLocation)) {throw std::runtime_error("???");}
             currentSequenceIndex++;
         } else {
             incrBinId();
@@ -99,8 +101,7 @@ void GlassCutter::cut(unsigned int depth){
     std::cout << "nbInfeasible : " << nbInfeasible << std::endl;*/
 }
 
-double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth) {
-
+double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast) {
     if (currentBinId * WIDTH_PLATES + currentMonster()->getXMax() > xLimit)
         return -1000;
 
@@ -113,11 +114,18 @@ double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth) {
     if (locations.empty()) { //std::cout << "locations empty for sequenceIndex#" << sequenceIndex << std::endl;
         return 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;}
 
-    for (const GlassLocation& locationBis: locations) {
-        if (!attempt(locationBis)) { continue; }
+    double maxScore = fast ? sequence.size() : deepScore(sequenceIndex, depth, true);
+    //if (maxScore < 0) return maxScore;
 
-        score = std::max(score, 1. + deepScore(sequenceIndex + 1, depth - 1));
+    for (const GlassLocation& locationBis: locations) {
+        if (!attempt(locationBis, fast)) { continue; }
+
+        score = std::max(score, 1. + deepScore(sequenceIndex + 1, depth - 1, fast));
         revert();
+        /*if (!fast && depth != 1 && score < maxScore) { 
+            //std::cout <<  score << " < " << maxScore << std::endl;
+        }*/
+        if (score >= maxScore) { return score;}
     }
     return score;
 }
@@ -208,14 +216,19 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
     }
 }
 
-// TODO build pour guillotine cut?
 bool GlassCutter::attempt(const GlassLocation& location) {
-    if (VERBOSE) std::cout << "attempt location: " << location << std::endl;
+    return attempt(location, false);
+}
+
+// TODO build pour guillotine cut?
+bool GlassCutter::attempt(const GlassLocation& location, bool fast) {
+    //if (VERBOSE) std::cout << "attempt location: " << location << std::endl;
     setBinId(location.getBinId());
     nbAttempts++;
     stacks[location.getStackId()].pop();
     currentMonster()->incrRedMonster(location);
     currentLocations()->push_back(location);
+    if (fast) return true;
     if (!checkTreeFeasibilityAndBuildCurrentNode()) {
         revert();
         //std::cout << (*currentMonster()) << std::endl;
@@ -299,4 +312,14 @@ void GlassCutter::displayErrorStatistics() const {
     std::cout << "Tree too depth: " << nbTreeTooDepth << std::endl;
     std::cout << "NbTrimmingFailed: " << nbTrimmingFailed << std::endl;
     std::cout << "NbTrimmingPreChecked: " << nbTrimmingPreChecked << std::endl;
+}
+
+unsigned int GlassCutter::computeMaxScorePossible() {
+    int availableArea = WIDTH_PLATES*HEIGHT_PLATES - currentMonster()->computeArea();
+    unsigned int maxIndex = currentSequenceIndex + 1;
+    while (maxIndex < sequence.size() && availableArea > 0) {
+        availableArea -= instance->getItem(sequence[maxIndex]).getArea();
+        maxIndex++;
+    }
+    return maxIndex - currentSequenceIndex;
 }

@@ -34,6 +34,13 @@ void GlassInstance::computeItemsArea() {
         itemsArea += item.getArea();
 }
 
+unsigned int GlassInstance::getItemsArea(const SequenceIt first, const SequenceIt last) const {
+    unsigned int itemsArea = 0;
+    for (SequenceIt it = first; it != last; it++)
+        itemsArea += items[(*it)].getArea();
+    return itemsArea;
+}
+
 void GlassInstance::initPlates() {
     plates.resize(NB_PLATES);
     for (unsigned int plateId = 0; plateId < plates.size(); plateId++) 
