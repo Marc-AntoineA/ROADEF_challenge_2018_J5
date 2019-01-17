@@ -9,8 +9,8 @@
 #include <vector>
 
 class GlassCutter {
-    public:
 
+    public:
     GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence);
     void setSequence(std::vector<unsigned int>& sequence) { this->sequence = sequence; }
     void cut(unsigned int depth);
@@ -24,6 +24,18 @@ class GlassCutter {
     void saveBest(std::string name);
 
     private:
+    struct ScoredLocation {
+        double score;
+        unsigned int locationIndex;
+
+        ScoredLocation(double score, unsigned int locationIndex)
+            :score(score), locationIndex(locationIndex) {}
+
+        bool operator<(const ScoredLocation& otherLocation) const {
+            return score < otherLocation.score;
+        }
+    };
+
     void addErrorStatistic(std::string errorMessage); 
     void resetErrorsStatistics();
     void incrBinId();
@@ -33,9 +45,13 @@ class GlassCutter {
     void buildMonsters();
     void buildNodes();
     void buildLocations();
+    bool lazyAttempt(const GlassLocation& location);
     bool attempt(const GlassLocation& location, bool fast);
-    bool attempt(const GlassLocation& location);
+    bool fullAttempt(const GlassLocation& location);
+    double lazyDeepScore(unsigned int sequenceIndex, unsigned int depth); 
+    double fullDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
+    bool isLessGood();  
     unsigned int computeMaxScorePossible();
     void revert();
     bool checkTreeFeasibilityAndBuildCurrentNode();

@@ -129,7 +129,7 @@ void Heuristic::localSearch(unsigned int depth) {
             beginSequenceIndex = std::min(beginSequenceIndex, startingFrom);
         }
 
-        if (getCurrentDurationOnSeconds() > previousDuration) {
+        if (getCurrentDurationOnSeconds() > 1 + previousDuration) {
             previousDuration = getCurrentDurationOnSeconds();
             displayLog();
         } 

@@ -4,6 +4,7 @@
 #include <limits>
 #include <cassert>
 #include <fstream>
+#include <algorithm>
 #include <sstream>
 
 GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence)
@@ -75,8 +76,8 @@ void GlassCutter::cut(unsigned int depth){
         double bestScore = 0;
         for (const GlassLocation& location: locations) {
             if (currentBinId * WIDTH_PLATES + location.getXW() > xLimit) continue;
-            if (!attempt(location)) continue;
-            double currentScore = deepScore(currentSequenceIndex, depth, false);
+            if (!fullAttempt(location)) continue;
+            double currentScore = fullDeepScore(currentSequenceIndex, depth);
             revert();
             if (currentScore >= bestScore) {
                 bestScore = currentScore;
@@ -85,7 +86,7 @@ void GlassCutter::cut(unsigned int depth){
         }
         if (bestScore > 0) {
             //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
-            if(!attempt(bestLocation)) {throw std::runtime_error("???");}
+            if(!lazyAttempt(bestLocation)) {throw std::runtime_error("???");} // full attemp is useless
             currentSequenceIndex++;
         } else {
             incrBinId();
@@ -101,33 +102,59 @@ void GlassCutter::cut(unsigned int depth){
     std::cout << "nbInfeasible : " << nbInfeasible << std::endl;*/
 }
 
-double GlassCutter::deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast) {
-    if (currentBinId * WIDTH_PLATES + currentMonster()->getXMax() > xLimit)
-        return -1000;
+bool GlassCutter::isLessGood() {
+    return currentBinId * WIDTH_PLATES + currentMonster()->getXMax() > xLimit; 
+}
+
+double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth) {
+    if (isLessGood()) return -1000;
+
+    double currentScore = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) 
-        return  1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
-   
-    double score = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
+        return currentScore;
+
     unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
-    const std::vector<GlassLocation>& locations = currentMonster()->getLocationsForItemIndex(itemIndex);
-    if (locations.empty()) { //std::cout << "locations empty for sequenceIndex#" << sequenceIndex << std::endl;
-        return 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;}
+    const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
 
-    double maxScore = fast ? sequence.size() : deepScore(sequenceIndex, depth, true);
-    //if (maxScore < 0) return maxScore;
-
-    for (const GlassLocation& locationBis: locations) {
-        if (!attempt(locationBis, fast)) { continue; }
-
-        score = std::max(score, 1. + deepScore(sequenceIndex + 1, depth - 1, fast));
+    for (const GlassLocation& location: currentLocations) {
+        if (!lazyAttempt(location));
+        currentScore = std::max(currentScore, 1. + lazyDeepScore(sequenceIndex + 1, depth - 1));
         revert();
-        /*if (!fast && depth != 1 && score < maxScore) { 
-            //std::cout <<  score << " < " << maxScore << std::endl;
-        }*/
-        if (score >= maxScore) { return score;}
     }
-    return score;
+    return currentScore;
+}
+
+double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth) {
+    if (isLessGood()) return -1000;
+
+    double currentScore = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
+
+    if (depth == 0 || sequenceIndex + 1 == sequence.size()) 
+        return currentScore;
+   
+    unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
+    const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
+
+    // First: evaluate lazy deep score for each location
+    std::vector<ScoredLocation> scoredLocations;
+    for (unsigned int locationIndex = 0; locationIndex < currentLocations.size(); locationIndex++) {
+        const GlassLocation& locationBis = currentLocations[locationIndex];
+        double lazyScore = lazyDeepScore(sequenceIndex + 1, depth - 1);
+        scoredLocations.push_back(ScoredLocation(lazyScore, locationIndex));
+    }
+    std::sort(scoredLocations.begin(), scoredLocations.end());
+
+    // Second: We know the best scores possible for each location
+    // If a scored location is possible, we have our best score
+    for (const ScoredLocation& scoredLocation: scoredLocations) {
+        if (!fullAttempt(currentLocations[scoredLocation.locationIndex])) { continue; }
+        currentScore = std::max(currentScore, 1. + fullDeepScore(sequenceIndex + 1, depth - 1));
+        revert();
+        if (currentScore >= scoredLocation.score)
+            return currentScore;
+    }    
+    return currentScore;
 }
 
 unsigned int GlassCutter::getCurrentScore() {
@@ -216,7 +243,11 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
     }
 }
 
-bool GlassCutter::attempt(const GlassLocation& location) {
+bool GlassCutter::lazyAttempt(const GlassLocation& location) {
+    return attempt(location, true); 
+}
+
+bool GlassCutter::fullAttempt(const GlassLocation& location) {
     return attempt(location, false);
 }
 
