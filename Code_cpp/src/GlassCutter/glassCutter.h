@@ -32,7 +32,7 @@ class GlassCutter {
             :score(score), locationIndex(locationIndex) {}
 
         bool operator<(const ScoredLocation& otherLocation) const {
-            return score < otherLocation.score;
+            return score > otherLocation.score;
         }
     };
 

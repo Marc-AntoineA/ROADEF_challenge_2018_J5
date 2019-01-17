@@ -143,6 +143,7 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     for (unsigned int locationIndex = 0; locationIndex < currentLocations.size(); locationIndex++) {
         const GlassLocation& locationBis = currentLocations[locationIndex];
         double lazyScore = lazyDeepScore(sequenceIndex + 1, depth - 1);
+        if (lazyScore < 0) continue;
         scoredLocations.push_back(ScoredLocation(lazyScore, locationIndex));
     }
     std::sort(scoredLocations.begin(), scoredLocations.end());
@@ -153,7 +154,8 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
         if (!fullAttempt(currentLocations[scoredLocation.locationIndex])) { continue; }
         currentScore = std::max(currentScore, 1. + fullDeepScore(sequenceIndex + 1, depth - 1));
         revert();
-        if (currentScore >= scoredLocation.score)
+        //std::cout << currentScore << " vs " << scoredLocation.score << std::endl;
+        if (currentScore >= 1 + scoredLocation.score)
             return currentScore;
     }    
     return currentScore;
