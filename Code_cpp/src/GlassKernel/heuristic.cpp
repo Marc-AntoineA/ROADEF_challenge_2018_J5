@@ -19,6 +19,8 @@
 using namespace boost::chrono;
 typedef duration<double> sec;
 
+boost::mutex ioMutex;
+
 Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit, unsigned int seed)
     :instance(instance), cutter(instance, sequence), 
     timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit), nbIterations(0), gen(seed) {
@@ -30,9 +32,14 @@ void Heuristic::start() {
     initRandomlySequence();
     displaySequence();
     buildMoves();
-    localSearch(depthLimit);
+    initSearch();
+    localSearch(depthLimit, timeLimit);
     displayMoveStatistics();
     computeScore(depthLimit);
+}
+
+void Heuristic::initSearch() {
+    localSearch(2, 10);
 }
 
 unsigned int Heuristic::getCurrentDurationOnSeconds() const {
@@ -104,13 +111,13 @@ unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSeque
     return cutter.getCurrentScore();
 }
 
-void Heuristic::localSearch(unsigned int depth) {
+void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
     bestScore = computeScore(depth);
     nbIterations = 0;
     int beginSequenceIndex = 0;
 
     unsigned int previousDuration = 0;
-    while (getCurrentDurationOnSeconds() < timeLimit) {
+    while (getCurrentDurationOnSeconds() < currentTimeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
         int startingFrom = move->attempt();
@@ -143,6 +150,7 @@ void Heuristic::localSearch(unsigned int depth) {
 }
 
 void Heuristic::displayLog() const {
+    boost::mutex::scoped_lock scopedLock(ioMutex);
     std::cout << boost::this_thread::get_id() << "\t" << getCurrentDurationOnSeconds() << "s\t" << bestScore << "\t" << nbIterations << std::endl;
 }
 

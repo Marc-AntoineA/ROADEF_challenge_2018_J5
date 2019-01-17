@@ -19,12 +19,13 @@ class Heuristic {
     std::vector<unsigned int>& getSequence() { return sequence; }
     void displaySequence();
     unsigned int glassRandint(unsigned int first, unsigned int last);
-    void localSearch(unsigned int depth);
     void displayMoveStatistics();
     unsigned int getBestScore() const { return bestScore; }
     void saveBest(std::string name);
 
     private:
+    void initSearch();
+    void localSearch(unsigned int depth, unsigned int currentTimeLimit);
     unsigned int getCurrentDurationOnSeconds() const;
     void displayLog() const;
     void initRandomlySequence();
