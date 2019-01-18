@@ -46,13 +46,13 @@ void GlassNode::checkTooDepth() const {
         throw std::runtime_error("Tree too depth");
 }
 
-void GlassNode::preCheckTrimming() const {
+void GlassNode::preCheckTrimming(const GlassLocationIt& first, const GlassLocationIt& last) const {
     if (depth < 3) return;
-        if (getNbItems() > 1) throw std::runtime_error("Trimming failed (prechecked)");
+        if (std::distance(first, last) > 1) throw std::runtime_error("Trimming failed (prechecked)");
 }
 
-void GlassNode::checkDimensions() const {
-    if (getNbItems() == 0) return;
+void GlassNode::checkDimensions(const GlassLocationIt& first, const GlassLocationIt& last) const {
+    if (std::distance(first, last) == 0) return;
 
     if (depth == 1) {
         if (width > MAX_XX) 
@@ -66,7 +66,7 @@ void GlassNode::checkDimensions() const {
             throw std::runtime_error("1-cut failed");
     }
     if (depth == 3) {
-        for (GlassLocationIt locationIt = firstItem; locationIt != lastItem; locationIt++) {
+        for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
             if (locationIt->getX() != x || locationIt->getWidth() != width)
                 throw std::runtime_error("Other mistake");
             if (locationIt->getY() != y && locationIt->getYH() != y + height)
@@ -76,7 +76,7 @@ void GlassNode::checkDimensions() const {
     } 
 
     if (depth == 2) {
-        for (GlassLocationIt locationIt = firstItem; locationIt != lastItem; locationIt++) {
+        for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
             if (locationIt->getY() != y && locationIt->getYH() != y + height)
                 throw std::runtime_error("Other mistake");
         }
@@ -89,10 +89,10 @@ bool GlassNode::isNodeFitLocation(const GlassLocation& location) const {
         && width == location.getWidth() && height == location.getHeight();
 }
 
-void GlassNode::buildCutsAvailable() {
+void GlassNode::buildCutsAvailable(const GlassLocationIt& first, const GlassLocationIt& last) {
     cutsAvailable.clear();
-    unsigned int index = getNbItems() - 1;
-    for (GlassLocationIt locationIt = firstItem; locationIt != lastItem; locationIt++) {
+    unsigned int index = std::distance(first, last) - 1;
+    for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
         if (isVerticalCut()) {
             cutsAvailable.push_back(GlassCut(locationIt->getX(), index, !BEGIN_ITEM, VERTICAL_CUT));
             cutsAvailable.push_back(GlassCut(locationIt->getXW(), index, BEGIN_ITEM, VERTICAL_CUT));
@@ -199,11 +199,10 @@ void GlassNode::buildRealCuts() {
     displayRealCuts();*/
 }
 
-unsigned int GlassNode::cutRealCuts() {
+unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts) {
     unsigned int nbItemsCuts = 0;
     unsigned int prevAbscissa = isVerticalCut() ? x + width : y + height;
     unsigned int nbPrevItems = 0;
-    unsigned int nbItemsToCuts = getNbItems();
     
     for (const RealCut& cut: realCuts) {
         if (cut.x != prevAbscissa) {
@@ -212,7 +211,7 @@ unsigned int GlassNode::cutRealCuts() {
             else
                 sons.push_back(GlassNode(instance, plateIndex, x, cut.x, width, prevAbscissa - cut.x, depth + 1, BRANCH));
             //std::cout << cut.nbItems << " " << nbItemsToCuts - nbPrevItems << std::endl;
-            nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(firstItem + nbItemsToCuts - cut.nbItems, firstItem + nbItemsToCuts - nbPrevItems);
+            nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(first + nbItemsToCuts - cut.nbItems, first + nbItemsToCuts - nbPrevItems);
             prevAbscissa = cut.x;
             nbPrevItems = cut.nbItems;
         }
@@ -225,15 +224,14 @@ unsigned int GlassNode::cutRealCuts() {
             sons.push_back(GlassNode(instance, plateIndex, endNodeAbscissa, y, prevAbscissa, height, depth + 1, BRANCH));
         else
             sons.push_back(GlassNode(instance, plateIndex, x, endNodeAbscissa, width, prevAbscissa, depth + 1, BRANCH));
-        nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(firstItem, firstItem + nbPrevItems);
+        nbItemsCuts += sons.back().buildNodeAndReturnNbItemsCuts(first, first + nbPrevItems);
     }
     return nbItemsCuts;
 }
 
-unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(GlassLocationIt first, GlassLocationIt last) {
+unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last) {
     this->firstItem = first;
     this->lastItem = last;
-    std::cout << (*this) << std::endl;
     sons.clear();
     checkTooSmall();
     
@@ -242,19 +240,19 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(GlassLocationIt first, Gla
         return 0;
     }
 
-    if (getNbItems() == 0 && isNodeFitLocation(*firstItem)) {
+    if (first + 1 == last && isNodeFitLocation(*first)) {
         setType(first->getItemIndex());
         return 1;
     }
     checkTooDepth();
-    preCheckTrimming();
-    checkDimensions();
-    buildCutsAvailable();
+    preCheckTrimming(first, last);
+    checkDimensions(first, last);
+    buildCutsAvailable(first, last);
     //displayCutsAvailable();
     buildRealCuts();
     //displayRealCuts();
-    unsigned int nbItemsCuts = cutRealCuts();
-    if (getNbItems() != nbItemsCuts){
+    unsigned int nbItemsCuts = cutRealCuts(first, std::distance(first, last));
+    if (std::distance(first, last) != nbItemsCuts){
         throw std::runtime_error("Infeasible cut (not enough items cut)");
     }
     return nbItemsCuts;
@@ -281,6 +279,7 @@ void GlassNode::displayNode(std::string prefix) const {
 }
 
 unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last) {
+    std::cout << (*this) << " SCORE " << getSurfaceOccupation() << std::endl;
     outputFile << plateIndex << ";" << nodeId << ";";
     outputFile << x << ";" << y << ";" << width << ";" << height << ";";
     outputFile << type << ";" << depth << ";";
@@ -305,4 +304,13 @@ std::ostream& operator<<(std::ostream& os, const GlassNode& node) {
     os << node.getPlateIndex() << " " <<  node.getDepth() << " " << node.getX() << " " << node.getY() << " ";
     os << node.getX() + node.getWidth() << " " << node.getY() + node.getHeight();
     return os;
+}
+
+double GlassNode::getSurfaceOccupation() const {
+    if (type == RESIDUAL) return 1;
+    double itemsArea = 0.;
+    for (GlassLocationIt it = firstItem; it < lastItem; it++) {
+        itemsArea += instance->getItem(it->getItemIndex()).getArea();
+    }
+    return itemsArea/(width*height);
 }

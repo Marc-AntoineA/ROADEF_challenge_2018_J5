@@ -53,6 +53,7 @@ class GlassCutter {
     double fullDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
     bool isLessGood();  
+    double getCurrentBigNodeSurfaceOccupation();
     unsigned int computeMaxScorePossible();
     void revert();
     bool checkTreeFeasibilityAndBuildCurrentNode();

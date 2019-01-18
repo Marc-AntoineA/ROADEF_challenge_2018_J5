@@ -62,7 +62,17 @@ void GlassCutter::revertPlatesUntilSequenceIndex(unsigned int sequenceIndex) {
     }
 }
 
+double GlassCutter::getCurrentBigNodeSurfaceOccupation() {
+    if (currentNode()->getNbItems() == 0) return 0;
+    std::vector<GlassNode>& sons = currentNode()->getSons();
+    if (sons.back().getNbItems() == 0) {
+        return sons[sons.size() - 2].getSurfaceOccupation();
+    }
+    return sons.back().getSurfaceOccupation();
+}
+
 void GlassCutter::cut(unsigned int depth){
+    std::cout << "cut " << std::endl;
     //displayStacks();
     unsigned int nbScore = 0;
     unsigned int nbNot = 0;
@@ -131,7 +141,7 @@ double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth
 double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth) {
     if (isLessGood()) return -10000000000;
 
-    double currentScore = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
+    double currentScore = getCurrentBigNodeSurfaceOccupation();
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
         return currentScore;
@@ -160,7 +170,7 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     // If a scored location is possible, we have our best score
     for (unsigned int locationIndex = 0; locationIndex < scoredLocations.size(); locationIndex++) {
         const ScoredLocation& scoredLocation = scoredLocations[locationIndex];
-        if (currentScore >= scoredLocation.score) break;
+        //if (currentScore >= scoredLocation.score) break;
         if (!fullAttempt(currentLocations[scoredLocation.locationIndex])) { continue; }
         double deepScore = fullDeepScore(sequenceIndex + 1, depth - 1);
         revert();
@@ -169,7 +179,7 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
         //std::cout << currentScore << " vs " << scoredLocation.score << std::endl;
     }    
 
-    /*if (tmpScores.size() < 4) return currentScore;
+    if (tmpScores.size() < 4) return currentScore;
     std::cout << "===============" << std::endl;
     for (double score: tmpScores) {
         std::cout << score << " ";
@@ -179,7 +189,7 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     for (const ScoredLocation& location: scoredLocations) {
         std::cout << location.score << " ";
     }
-    std::cout << " >>>> " << currentScore << std::endl;*/
+    std::cout << " >>>> " << currentScore << std::endl;
     return currentScore;
 }
 
