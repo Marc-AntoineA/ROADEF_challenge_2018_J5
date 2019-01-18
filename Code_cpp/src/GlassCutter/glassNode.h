@@ -45,14 +45,13 @@ class GlassNode {
 
     void reset();
     void displayNode(std::string prefix) const;
-    unsigned int buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last);    
-    void checkNode(const GlassLocationIt& first, const GlassLocationIt& last);
+    unsigned int buildNodeAndReturnNbItemsCuts(GlassLocationIt first, GlassLocationIt last);
     unsigned int saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last);
 
     private:
-    void buildCutsAvailable(const GlassLocationIt& first, const GlassLocationIt& last);
+    void buildCutsAvailable();
     void buildRealCuts();
-    unsigned int cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts);
+    unsigned int cutRealCuts();
     
     void displayCutsAvailable() const;
     void displayRealCuts() const;
@@ -63,10 +62,11 @@ class GlassNode {
     bool isVerticalCut() const { return depth%2 == 0; }
     void checkTooSmall() const;
     void checkTooDepth() const;
-    void checkDimensions(const GlassLocationIt& first, const GlassLocationIt& last) const;
-    void preCheckTrimming(const GlassLocationIt& first, const GlassLocationIt& last) const;
+    void checkDimensions() const;
+    void preCheckTrimming() const;
     bool isNodeFitLocation(const GlassLocation& location) const;
-    
+    unsigned int getNbItems() const { return std::distance(firstItem, lastItem); }
+
     GlassPlate& getPlate() const { return instance->getPlate(plateIndex); }
 
     GlassInstance* instance;
@@ -80,6 +80,8 @@ class GlassNode {
     std::vector<GlassNode> sons;
     std::vector<GlassCut> cutsAvailable;
     std::vector<RealCut> realCuts;
+    GlassLocationIt firstItem;
+    GlassLocationIt lastItem;
 };
 
 std::ostream& operator<<(std::ostream& os, const GlassNode& node);

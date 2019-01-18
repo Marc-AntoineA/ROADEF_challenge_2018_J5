@@ -204,12 +204,12 @@ void GlassCutter::buildStacks() {
     if (VERBOSE) displayStacks();
 }
 
-void GlassCutter::displayStacks(){
+void GlassCutter::displayStacks() const {
     for (const GlassStack& stack: stacks) 
         std::cout << stack;
 }
 
-void GlassCutter::displayLocations() {
+void GlassCutter::displayLocations() const {
     std::cout << "==================" << std::endl;
     for (const std::vector<GlassLocation> locationsIt: locations) {
         for (const GlassLocation& location: locationsIt) 

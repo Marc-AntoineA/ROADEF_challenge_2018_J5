@@ -22,6 +22,7 @@ class Heuristic {
     void displayMoveStatistics();
     unsigned int getBestScore() const { return bestScore; }
     void saveBest(std::string name);
+    void displayLocations() const;
 
     private:
     void initSearch();

@@ -79,8 +79,8 @@ int main(int argc, char* argv[])
         }
     }
     std::cout << "Meilleur score obtenu: " << bestScore << std::endl;
-    heuristics[bestThreadIndex]->saveBest(outputName);
-    
+    //heuristics[bestThreadIndex]->saveBest(outputName);
+    heuristics[bestThreadIndex]->displayLocations();
     // TODO delete heuristics and threads
     
     return 0;

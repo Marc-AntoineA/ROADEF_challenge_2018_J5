@@ -34,7 +34,7 @@ void Heuristic::start() {
     displaySequence();
     buildMoves();
     //initSeainitSearch();
-    localSearch(depthLimit, timeLimit);
+    //localSearch(depthLimit, timeLimit);
     displayMoveStatistics();
     computeScore(depthLimit);
     cutter.displayStatistics();
@@ -168,4 +168,8 @@ void Heuristic::displayMoveStatistics() {
 
 void Heuristic::saveBest(std::string name) {
     cutter.saveBest(name);
+}
+
+void Heuristic::displayLocations() const {
+    cutter.displayLocations();
 }

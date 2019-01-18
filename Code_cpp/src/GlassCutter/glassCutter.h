@@ -17,8 +17,8 @@ class GlassCutter {
     unsigned int getCurrentScore();
     
     void displayErrorStatistics() const;
-    void displayStacks();
-    void displayLocations();
+    void displayStacks() const;
+    void displayLocations() const;
     void reset();
     void revertPlatesUntilSequenceIndex(unsigned int sequenceIndex);
     void saveBest(std::string name);
