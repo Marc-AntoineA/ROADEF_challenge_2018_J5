@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#define LAZY true
+
 class GlassCutter {
 
     public:
@@ -51,8 +53,10 @@ class GlassCutter {
     bool attempt(const GlassLocation& location, bool fast);
     bool fullAttempt(const GlassLocation& location);
     double lazyDeepScore(unsigned int sequenceIndex, unsigned int depth); 
+    double doubleLazyDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double fullDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
+    double quickEvaluateLocation(double lazy);
     bool isLessGood();  
     double getCurrentBigNodeSurfaceOccupation();
     unsigned int computeMaxScorePossible();

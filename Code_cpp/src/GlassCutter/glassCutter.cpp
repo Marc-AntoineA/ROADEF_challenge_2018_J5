@@ -108,16 +108,40 @@ void GlassCutter::cut(unsigned int depth){
     }
     unsigned int xMax = currentBinId * WIDTH_PLATES + getXMax();
     xLimit = std::min(xMax, xLimit);
-
-    //displayLocations();
-    /*std::cout << "SCORE : " << getCurrentScore() << std::endl;
-    std::cout << "nbRollbacks : " << nbRollbacks << std::endl;
-    std::cout << "nbAttempts : " << nbAttempts << std::endl;
-    std::cout << "nbInfeasible : " << nbInfeasible << std::endl;*/
 }
 
 bool GlassCutter::isLessGood() {
     return currentBinId * WIDTH_PLATES + getLazyXMax() > xLimit; 
+}
+
+double GlassCutter::quickEvaluateLocation(double lazy) {
+    double xMax = lazy ? getLazyXMax() : getXMax();
+    //double monsterArea = currentMonster()->computeArea();
+
+    return 1 - xMax/WIDTH_PLATES;
+}
+
+
+double GlassCutter::doubleLazyDeepScore(unsigned int sequenceIndex, unsigned int depth) {
+    if (isLessGood()) return -1000000000;
+
+    double currentScore = 0;
+
+    unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
+    const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
+    if (currentLocations.size() == 0) return 0;
+
+    if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
+        return 1 - getLazyXMax()/(double)WIDTH_PLATES;
+    }
+
+    for (const GlassLocation& location: currentLocations) {
+        if (!lazyAttempt(location));
+        currentScore = std::max(currentScore, 1. + lazyDeepScore(sequenceIndex + 1, depth - 1));
+        revert();
+    }
+    
+    return currentScore;
 }
 
 double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth) {
@@ -126,7 +150,7 @@ double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth
     double currentScore = 0;
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
-        return 1 - getLazyXMax()/(double)WIDTH_PLATES;
+        return quickEvaluateLocation(LAZY);
     }
 
     unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
@@ -146,7 +170,7 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     if (isLessGood()) return -10000000000;
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
-        return 1 - getXMax()/(double)WIDTH_PLATES;
+        return quickEvaluateLocation(!LAZY);
     }
    
     unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
@@ -168,6 +192,13 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     }
 
     std::sort(scoredLocations.begin(), scoredLocations.end());
+    
+    /*if (scoredLocations.size() > 1)
+        std::cout << (scoredLocations[0].score - scoredLocations[scoredLocations.size() - 1].score) << std::endl;
+    for (const ScoredLocation& location: scoredLocations) {
+        std::cout << location.score << " ";
+    }
+    std::cout << std::endl;*/
 
     double currentScore = 1;
     std::vector<double> tmpScores;
