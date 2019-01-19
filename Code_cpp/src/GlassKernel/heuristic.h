@@ -25,6 +25,7 @@ class Heuristic {
     void displayLocations() const;
 
     private:
+    void initPlatesOccupation();
     void initSearch();
     void localSearch(unsigned int depth, unsigned int currentTimeLimit);
     unsigned int getCurrentDurationOnSeconds() const;
@@ -32,8 +33,11 @@ class Heuristic {
     void initRandomlySequence();
     void buildMoves(); 
     void resetStacks();
-    unsigned int computeScore(unsigned int depth);
+    unsigned int computeScore(unsigned int depth);  
+    MOVE_STATISTIC evaluateCurrentSolution(unsigned int depth, unsigned int beginSequenceIndex);
     unsigned int computeScore(unsigned int depth, unsigned int beginSequenceIndex);
+    void updateBestScore();
+    
     GlassInstance* instance;
     GlassCutter cutter;
 
@@ -41,6 +45,7 @@ class Heuristic {
 
     std::vector<unsigned int> sequence;
     unsigned int bestScore;
+    std::vector<double> platesOccupation;
     unsigned int timeLimit;
     boost::chrono::nanoseconds begin;
     boost::chrono::system_clock systemClock;

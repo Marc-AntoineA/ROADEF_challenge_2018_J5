@@ -279,7 +279,6 @@ void GlassNode::displayNode(std::string prefix) const {
 }
 
 unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last) {
-    std::cout << (*this) << " SCORE " << getSurfaceOccupation() << std::endl;
     outputFile << plateIndex << ";" << nodeId << ";";
     outputFile << x << ";" << y << ";" << width << ";" << height << ";";
     outputFile << type << ";" << depth << ";";

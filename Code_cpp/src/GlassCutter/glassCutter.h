@@ -23,6 +23,7 @@ class GlassCutter {
     void revertPlatesUntilSequenceIndex(unsigned int sequenceIndex);
     void saveBest(std::string name);
     void displayStatistics() const;
+    double getSurfacePlateOccupation(unsigned int plateIndex) const;
 
     private:
     struct ScoredLocation {

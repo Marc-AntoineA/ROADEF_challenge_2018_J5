@@ -24,7 +24,10 @@ boost::mutex ioMutex;
 
 Heuristic::Heuristic(GlassInstance* instance, unsigned int timeLimit, unsigned int depthLimit, unsigned int seed)
     :instance(instance), cutter(instance, sequence), 
-    timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit), nbIterations(0), gen(seed) {
+    timeLimit(timeLimit), begin(clock()), depthLimit(depthLimit), 
+    nbIterations(0), gen(seed), platesOccupation(std::vector<double>()){
+
+    initPlatesOccupation();
 }
 
 void Heuristic::start() {
@@ -34,7 +37,7 @@ void Heuristic::start() {
     displaySequence();
     buildMoves();
     //initSeainitSearch();
-    //localSearch(depthLimit, timeLimit);
+    localSearch(depthLimit, timeLimit);
     displayMoveStatistics();
     computeScore(depthLimit);
     cutter.displayStatistics();
@@ -106,6 +109,36 @@ void Heuristic::displaySequence() {
     std::cout << sequence[sequence.size() - 1] << "]" << std::endl;
 }
 
+
+MOVE_STATISTIC Heuristic::evaluateCurrentSolution(unsigned int depth, unsigned int beginSequenceIndex) {
+    computeScore(depth, beginSequenceIndex);
+    unsigned int currentScore = cutter.getCurrentScore();
+    if (currentScore > bestScore)
+        return REFUSED;
+
+    if (currentScore < bestScore) 
+        return IMPROVE;
+
+    if (currentScore == bestScore) {
+        //return ACCEPTED;
+        for (unsigned int plateIndex = 0; plateIndex < NB_PLATES; plateIndex++) {
+            double currentSurfaceOccupation = cutter.getSurfacePlateOccupation(plateIndex);
+            if (currentSurfaceOccupation < platesOccupation[plateIndex])
+                return REFUSED;
+            if (currentSurfaceOccupation > platesOccupation[plateIndex])
+                return IMPROVE;
+        }
+    }
+    return ACCEPTED;
+}
+
+void Heuristic::updateBestScore() {
+    bestScore = cutter.getCurrentScore();
+    for (unsigned int plateIndex = 0; plateIndex < NB_PLATES; plateIndex++) {
+        platesOccupation[plateIndex] = cutter.getSurfacePlateOccupation(plateIndex);
+    }
+}
+
 unsigned int Heuristic::computeScore(unsigned int depth) {
     return computeScore(depth, 0);
 }
@@ -129,12 +162,13 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
         int startingFrom = move->attempt();
         if (startingFrom == NOTHING) continue;
         nbIterations++;
-        unsigned int score = computeScore(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
-        if (score <= bestScore) {
+        MOVE_STATISTIC result = evaluateCurrentSolution(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
+        move->addStat(result);
+        if (result == IMPROVE)
+            updateBestScore();
+
+        if (result == ACCEPTED || result == IMPROVE) {
             move->commit();
-            move->addStat(score < bestScore ? IMPROVE : ACCEPTED);
-            //std::cout << " Nouveau score " << score << " vs " << bestScore << std::endl;
-            bestScore = score;
             beginSequenceIndex = sequence.size();
         } else {
             move->revert();
@@ -158,6 +192,12 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
 void Heuristic::displayLog() const {
     boost::mutex::scoped_lock scopedLock(ioMutex);
     std::cout << boost::this_thread::get_id() << "\t" << getCurrentDurationOnSeconds() << "s\t" << bestScore << "\t" << nbIterations << std::endl;
+    
+    for (double occupation: platesOccupation) {
+        if (occupation == 0) break;
+        std::cout << "\t" << occupation;
+    }
+    std::cout << std::endl;
 }
 
 void Heuristic::displayMoveStatistics() {
@@ -172,4 +212,9 @@ void Heuristic::saveBest(std::string name) {
 
 void Heuristic::displayLocations() const {
     cutter.displayLocations();
+}
+
+void Heuristic::initPlatesOccupation() {
+    for (unsigned int plateIndex = 0; plateIndex < NB_PLATES; plateIndex++)
+        platesOccupation.push_back(0);
 }
