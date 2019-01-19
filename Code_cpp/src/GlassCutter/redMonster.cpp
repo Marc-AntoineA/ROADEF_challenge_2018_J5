@@ -127,6 +127,12 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
             addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated, NOT_ROTATED, instance, time + 1), locations);
         if (x <= xMaxRotated && yRotated <= yMaxRotated)
             addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yRotated, ROTATED, instance, time + 1), locations);
+        /*if (x <= xMax && yNotRotated <= yMax)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, yNotRotated, NOT_ROTATED, instance, time + 1), locations);
+        if (x <= xMaxRotated && yRotated <= yMaxRotated)
+            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, yRotated, ROTATED, instance, time + 1), locations);
+        */
+
         pointIndex++;
     }
 
@@ -136,7 +142,13 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time + 1), locations);
     if (x <= xMaxRotated && y <= yMaxRotated)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time + 1), locations);
-    
+
+    /*if (x <= xMax && y <= yMax)   
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, y, NOT_ROTATED, instance, time + 1), locations);
+    if (x <= xMaxRotated && y <= yMaxRotated)
+        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, y, ROTATED, instance, time + 1), locations);
+    */
+
     return locations;
 }
 

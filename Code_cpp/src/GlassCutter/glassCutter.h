@@ -10,6 +10,7 @@
 
 #define LAZY true
 
+
 class GlassCutter {
 
     public:
@@ -32,11 +33,22 @@ class GlassCutter {
         double score;
         unsigned int locationIndex;
 
+        ScoredLocation() {};
         ScoredLocation(double score, unsigned int locationIndex)
             :score(score), locationIndex(locationIndex) {}
 
         bool operator<(const ScoredLocation& otherLocation) const {
             return score > otherLocation.score;
+        }
+    };
+
+    struct ScoredLocationTree {
+
+        ScoredLocation scoredLocation;
+        std::vector<ScoredLocationTree> sons;
+
+        bool operator<(const ScoredLocationTree& otherTree) const {
+            return scoredLocation < otherTree.scoredLocation;
         }
     };
 
@@ -52,7 +64,7 @@ class GlassCutter {
     bool lazyAttempt(const GlassLocation& location);
     bool attempt(const GlassLocation& location, bool fast);
     bool fullAttempt(const GlassLocation& location);
-    double lazyDeepScore(unsigned int sequenceIndex, unsigned int depth); 
+    double lazyDeepScore(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree); 
     double doubleLazyDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double fullDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);

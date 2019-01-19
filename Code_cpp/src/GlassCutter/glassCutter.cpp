@@ -121,30 +121,7 @@ double GlassCutter::quickEvaluateLocation(double lazy) {
     return 1 - xMax/WIDTH_PLATES;
 }
 
-
-double GlassCutter::doubleLazyDeepScore(unsigned int sequenceIndex, unsigned int depth) {
-    if (isLessGood()) return -1000000000;
-
-    double currentScore = 0;
-
-    unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
-    const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
-    if (currentLocations.size() == 0) return 0;
-
-    if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
-        return 1 - getLazyXMax()/(double)WIDTH_PLATES;
-    }
-
-    for (const GlassLocation& location: currentLocations) {
-        if (!lazyAttempt(location));
-        currentScore = std::max(currentScore, 1. + lazyDeepScore(sequenceIndex + 1, depth - 1));
-        revert();
-    }
-    
-    return currentScore;
-}
-
-double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth) {
+double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree) {
     if (isLessGood()) return -1000000000;
 
     double currentScore = 0;
@@ -159,12 +136,13 @@ double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth
 
     for (const GlassLocation& location: currentLocations) {
         if (!lazyAttempt(location));
-        currentScore = std::max(currentScore, 1. + lazyDeepScore(sequenceIndex + 1, depth - 1));
+        currentScore = std::max(currentScore, 1. + lazyDeepScore(sequenceIndex + 1, depth - 1, tree));
         revert();
     }
     
     return currentScore;
 }
+
 
 double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth) {
     if (isLessGood()) return -10000000000;
@@ -178,20 +156,21 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     if (currentLocations.size() == 0)
         return 1;
 
+    ScoredLocationTree tree;
+
     // First: evaluate lazy deep score for each location
-    std::vector<ScoredLocation> scoredLocations;
     for (unsigned int locationIndex = 0; locationIndex < currentLocations.size(); locationIndex++) {
         const GlassLocation& locationBis = currentLocations[locationIndex];
         if (!lazyAttempt(locationBis)) { continue; }
-        double lazyScore = 1 + lazyDeepScore(sequenceIndex + 1, depth - 1);
+        tree.sons.push_back(ScoredLocationTree());
+        ScoredLocationTree& son = tree.sons.back();
+        double lazyScore = 1 + lazyDeepScore(sequenceIndex + 1, depth - 1, son);
         revert();
-        //currentScore = std::max(currentScore, 1. + lazyScore);
-        if (lazyScore < 0) continue;
-        scoredLocations.push_back(ScoredLocation(lazyScore, locationIndex));
-        //std::cout << lazyScore << std::endl;
+        son.scoredLocation.locationIndex = locationIndex;
+        son.scoredLocation.score = lazyScore;
     }
 
-    std::sort(scoredLocations.begin(), scoredLocations.end());
+    std::sort(tree.sons.begin(), tree.sons.end());
     
     /*if (scoredLocations.size() > 1)
         std::cout << (scoredLocations[0].score - scoredLocations[scoredLocations.size() - 1].score) << std::endl;
@@ -204,8 +183,8 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
     std::vector<double> tmpScores;
     // Second: We know the best scores possible for each location
     // If a scored location is possible, we have our best score
-    for (unsigned int locationIndex = 0; locationIndex < scoredLocations.size(); locationIndex++) {
-        const ScoredLocation& scoredLocation = scoredLocations[locationIndex];
+    for (unsigned int locationIndex = 0; locationIndex < tree.sons.size(); locationIndex++) {
+        const ScoredLocation& scoredLocation = tree.sons[locationIndex].scoredLocation;
         if (currentScore >= scoredLocation.score) break;
         if (!fullAttempt(currentLocations[scoredLocation.locationIndex])) { continue; }
         double deepScore = fullDeepScore(sequenceIndex + 1, depth - 1);
