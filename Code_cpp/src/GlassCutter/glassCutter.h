@@ -58,6 +58,8 @@ class GlassCutter {
     unsigned int computeMaxScorePossible();
     void revert();
     bool checkTreeFeasibilityAndBuildCurrentNode();
+    unsigned int getXMax();
+    unsigned int getLazyXMax();
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     RedMonster* currentMonster() { return &monsters[currentBinId]; }
     GlassNode* currentNode() { return &nodes[currentBinId]; }

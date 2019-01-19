@@ -96,15 +96,17 @@ void GlassCutter::cut(unsigned int depth){
         }
         if (bestScore > 0) {
             assert(currentBinId*WIDTH_PLATES + bestLocation.getXW() <= xLimit);
-            //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl;        
-            if(!lazyAttempt(bestLocation)) {throw std::runtime_error("???");} // full attemp is useless
+            //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl; 
+            // fullAttempt is necessary due to the new way of counting the score
+            // (tree is necessary)       
+            if(!fullAttempt(bestLocation)) {throw std::runtime_error("???");}
             currentSequenceIndex++;
         } else {
             incrBinId();
             if (currentBinId * WIDTH_PLATES > xLimit) return;
         }
     }
-    unsigned int xMax = currentBinId * WIDTH_PLATES + currentMonster()->getXMax();
+    unsigned int xMax = currentBinId * WIDTH_PLATES + getXMax();
     xLimit = std::min(xMax, xLimit);
 
     //displayLocations();
@@ -115,13 +117,13 @@ void GlassCutter::cut(unsigned int depth){
 }
 
 bool GlassCutter::isLessGood() {
-    return currentBinId * WIDTH_PLATES + currentMonster()->getXMax() > xLimit; 
+    return currentBinId * WIDTH_PLATES + getLazyXMax() > xLimit; 
 }
 
 double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth) {
     if (isLessGood()) return -1000000000;
 
-    double currentScore = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;
+    double currentScore = 1 - getLazyXMax()/(double)WIDTH_PLATES;
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
         return currentScore;
@@ -141,7 +143,7 @@ double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth
 double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth) {
     if (isLessGood()) return -10000000000;
 
-    double currentScore = 1 - currentMonster()->getXMax()/(double)WIDTH_PLATES;//;getCurrentBigNodeSurfaceOccupation();
+    double currentScore = 1 - getXMax()/(double)WIDTH_PLATES;//;getCurrentBigNodeSurfaceOccupation();
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
         return currentScore;
@@ -195,10 +197,10 @@ double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth
 
 unsigned int GlassCutter::getCurrentScore() {
     /*std::cout << currentBinId << std::endl;
-    std::cout << currentMonster()->getXMax() << std::endl;
+    std::cout << getXMax() << std::endl;
     std::cout << instance->getItemsArea() << std::endl;
-    std::cout << (currentBinId*WIDTH_PLATES + currentMonster()->getXMax())*HEIGHT_PLATES - instance->getItemsArea() << std::endl;*/
-    return (currentBinId*WIDTH_PLATES + currentMonster()->getXMax())*HEIGHT_PLATES - instance->getItemsArea();
+    std::cout << (currentBinId*WIDTH_PLATES + getXMax())*HEIGHT_PLATES - instance->getItemsArea() << std::endl;*/
+    return (currentBinId*WIDTH_PLATES + getXMax())*HEIGHT_PLATES - instance->getItemsArea();
 }
 
 void GlassCutter::buildStacks() {
@@ -404,4 +406,13 @@ void GlassCutter::displayStatistics() const {
 
 double GlassCutter::getSurfacePlateOccupation(unsigned int plateIndex) const {
     return nodes[plateIndex].getSurfaceOccupation();
+}
+
+unsigned int GlassCutter::getXMax() {
+    assert(currentMonster()->getXMax() <= currentNode()->getXMax());
+    return currentNode()->getXMax();
+}
+
+unsigned int GlassCutter::getLazyXMax() {
+    return currentMonster()->getXMax();
 }

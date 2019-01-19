@@ -271,6 +271,10 @@ void GlassNode::displayRealCuts() const {
     }
 }
 
+void GlassNode::displayNode() const {
+    displayNode(" ");
+}
+
 void GlassNode::displayNode(std::string prefix) const {
     std::cout << prefix << plateIndex << " " << x << " " << y << " " << x + width << " " << y + height << std::endl;
     for (const GlassNode& son: sons) {
@@ -312,4 +316,13 @@ double GlassNode::getSurfaceOccupation() const {
         itemsArea += instance->getItem(it->getItemIndex()).getArea();
     }
     return itemsArea/(width*height);
+}
+
+// WARNING: nodes are in reversed order
+unsigned int GlassNode::getXMax() const {
+    for (unsigned int index = 0; index < sons.size(); index++) {
+        const GlassNode& son = sons[index]; 
+        if (son.getNbItems() > 0) return son.getX() + son.getWidth();
+    }
+    return 0;
 }

@@ -45,11 +45,13 @@ class GlassNode {
     std::vector<GlassNode>& getSons() { return sons; }
 
     void reset();
+    void displayNode() const;
     void displayNode(std::string prefix) const;
     unsigned int buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last);
     unsigned int saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last);
     double getSurfaceOccupation() const;
     unsigned int getNbItems() const { return std::distance(firstItem, lastItem); }
+    unsigned int getXMax() const;
 
     private:
     void buildCutsAvailable(const GlassLocationIt& first, const GlassLocationIt& last);
