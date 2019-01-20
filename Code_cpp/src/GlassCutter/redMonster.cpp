@@ -95,8 +95,9 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     }
 
     unsigned int stepWidth = points.size() > 1 ? 0 : points[1].getX();
-    unsigned int stepHeight = points.size() > 1 ? MIN_WASTE_AREA + 1 : points[0].getY() - points[1].getY();
-
+    unsigned int stepHeight = points.size() > 1 ? points[0].getY() - points[1].getY() : MIN_WASTE_AREA + 1;
+    
+    assert(stepHeight > 0);
     x = 0;
     y = points[0].getY();
     assert(y != 0);
@@ -118,6 +119,7 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
         y = points[pointIndex + 1].getY();
         stepWidth = points[pointIndex + 1].getX() - x;
         stepHeight = points[pointIndex].getY(); - y;
+        assert(stepHeight > 0);
         yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
         yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
 
@@ -127,12 +129,6 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
             addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated, NOT_ROTATED, instance, time + 1), locations);
         if (x <= xMaxRotated && yRotated <= yMaxRotated)
             addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yRotated, ROTATED, instance, time + 1), locations);
-        /*if (x <= xMax && yNotRotated <= yMax)
-            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, yNotRotated, NOT_ROTATED, instance, time + 1), locations);
-        if (x <= xMaxRotated && yRotated <= yMaxRotated)
-            addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, yRotated, ROTATED, instance, time + 1), locations);
-        */
-
         pointIndex++;
     }
 
@@ -142,12 +138,6 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, NOT_ROTATED, instance, time + 1), locations);
     if (x <= xMaxRotated && y <= yMaxRotated)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, y, ROTATED, instance, time + 1), locations);
-
-    /*if (x <= xMax && y <= yMax)   
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, y, NOT_ROTATED, instance, time + 1), locations);
-    if (x <= xMaxRotated && y <= yMaxRotated)
-        addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x + MIN_WASTE_AREA, y, ROTATED, instance, time + 1), locations);
-    */
 
     return locations;
 }

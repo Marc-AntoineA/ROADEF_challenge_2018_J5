@@ -146,8 +146,9 @@ unsigned int Heuristic::computeScore(unsigned int depth) {
 unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSequenceIndex) {
     cutter.setSequence(sequence); // TODO a priori inutile
     cutter.revertPlatesUntilSequenceIndex(beginSequenceIndex);
-    cutter.cut(depth);
-    return cutter.getCurrentScore();
+    if (cutter.cut(depth))
+        return cutter.getCurrentScore();
+    return NB_PLATES*WIDTH_PLATES*HEIGHT_PLATES;
 }
 
 void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
