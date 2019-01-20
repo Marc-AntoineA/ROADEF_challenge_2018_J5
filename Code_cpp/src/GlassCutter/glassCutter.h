@@ -15,6 +15,7 @@ class GlassCutter {
 
     public:
     GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence);
+    ~GlassCutter();
     void setSequence(std::vector<unsigned int>& sequence) { this->sequence = sequence; }
     bool cut(unsigned int depth);
     unsigned int getCurrentScore();
@@ -51,8 +52,10 @@ class GlassCutter {
         ScoredLocation scoredLocation;
         std::vector<ScoredLocationTree*> sons;
 
-        ScoredLocationTree() {}
-        ScoredLocationTree(GlassLocation location) : scoredLocation(location, -1) {}
+        ScoredLocationTree() { }
+        ScoredLocationTree(GlassLocation location) : scoredLocation(location, -1) { }
+        ~ScoredLocationTree();
+
         void sort();
         void reset();
         void display() const;

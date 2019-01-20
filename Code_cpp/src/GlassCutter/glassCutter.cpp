@@ -196,6 +196,7 @@ bool GlassCutter::computeBestLocationAndApplyIfNecessary() {
         if (currentLocation == best.location) { 
             //std::cout << "? " << std::endl;
             ScoredLocationTree* newScoredTree = scoredTree->sons[sonIndex];
+            scoredTree->sons.erase(scoredTree->sons.begin() + sonIndex);
             delete scoredTree;
             scoredTree = newScoredTree;
             //std::cout << "line 201" << std::endl;
@@ -462,4 +463,15 @@ void GlassCutter::ScoredLocationTree::reset() {
 
 void GlassCutter::setBinId(unsigned int binId) {
     currentBinId = binId;
+}
+
+GlassCutter::ScoredLocationTree::~ScoredLocationTree() {
+
+    for (ScoredLocationTree* son: sons) {
+        delete son; 
+    }
+}
+
+GlassCutter::~GlassCutter() {
+    delete scoredTree;
 }

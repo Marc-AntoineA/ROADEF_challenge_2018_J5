@@ -10,7 +10,8 @@ class RedPoint {
         :x(x), y(y), sequencePosition(time), birthTime(time), deathTime(0) {}
     RedPoint(unsigned int birth)
         : x(0), y(0), sequencePosition(0), birthTime(birth), deathTime(0) {}
-
+    RedPoint() : x(0), y(0), sequencePosition(0), birthTime(0), deathTime(0) {}
+    
     bool isAfter(const RedPoint& other) const;
     void eat(const RedPoint& casualty);
     void kill(unsigned int time);
