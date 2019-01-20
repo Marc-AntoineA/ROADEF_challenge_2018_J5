@@ -27,7 +27,14 @@ class GlassCutter {
     void revertPlatesUntilSequenceIndex(unsigned int sequenceIndex);
     void saveBest(std::string name);
     void displayStatistics() const;
-    double getSurfacePlateOccupation(unsigned int plateIndex) const;
+    double getSurfacePlateOccupation(unsigned int plateIndex);
+    std::vector<GlassLocation>::iterator getLocationIterator(unsigned int plateIndex, unsigned int index) {
+        assert(plateIndex < locations.size());
+        //std::cout << index << " " << plateIndex << " " << locations[plateIndex].size() << std::endl;
+        //assert(index <= locations[plateIndex].size());// TODO warning
+        if (index == locations[plateIndex].size()) return locations[plateIndex].end();
+        return locations[plateIndex].begin() + index;
+    }
 
     private:
     enum Feasible {

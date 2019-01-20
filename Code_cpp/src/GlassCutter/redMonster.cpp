@@ -74,6 +74,7 @@ void RedMonster::cleanLocation(const GlassLocation& location) {
 }
 
 std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int index) {
+    assert(index < instance->getNbItems());
     const GlassItem& item = instance->getItem(index);
     unsigned int w = item.getWidth();
     unsigned int h = item.getHeight();
@@ -96,7 +97,7 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
 
     unsigned int stepWidth = points.size() > 1 ? 0 : points[1].getX();
     unsigned int stepHeight = points.size() > 1 ? points[0].getY() - points[1].getY() : MIN_WASTE_AREA + 1;
-    
+
     assert(stepHeight > 0);
     x = 0;
     y = points[0].getY();

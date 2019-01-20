@@ -111,8 +111,7 @@ void Heuristic::displaySequence() {
 
 
 MOVE_STATISTIC Heuristic::evaluateCurrentSolution(unsigned int depth, unsigned int beginSequenceIndex) {
-    computeScore(depth, beginSequenceIndex);
-    unsigned int currentScore = cutter.getCurrentScore();
+    unsigned int currentScore = computeScore(depth, beginSequenceIndex);
     if (currentScore > bestScore)
         return REFUSED;
 
@@ -146,7 +145,7 @@ unsigned int Heuristic::computeScore(unsigned int depth) {
 unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSequenceIndex) {
     cutter.setSequence(sequence); // TODO a priori inutile
     cutter.revertPlatesUntilSequenceIndex(beginSequenceIndex);
-    if (cutter.cut(depth))
+    if (cutter.cut(depth)) 
         return cutter.getCurrentScore();
     return NB_PLATES*WIDTH_PLATES*HEIGHT_PLATES;
 }

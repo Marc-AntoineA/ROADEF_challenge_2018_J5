@@ -30,7 +30,7 @@ class GlassLocation {
     GlassInstance* getInstance() const { return instance; }
 
     private:
-    const GlassItem& getItem() const { return instance->getItem(itemIndex); }
+    const GlassItem& getItem() const { assert(itemIndex < instance->getNbItems()); return instance->getItem(itemIndex); }
 
     unsigned int itemIndex;
     unsigned int binId;

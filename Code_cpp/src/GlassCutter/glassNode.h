@@ -18,17 +18,21 @@ struct RealCut {
 
 using GlassLocationIt = std::vector<GlassLocation>::iterator;
 
+class GlassCutter;
+
 class GlassNode {
 
     public:
 
     GlassNode();
-    GlassNode(GlassInstance* instance, unsigned int plateIndex, 
+    GlassNode(GlassInstance* instance, GlassCutter* cutter, unsigned int plateIndex, 
         unsigned int x, unsigned int y, unsigned int width, unsigned int height,
         unsigned int depth, int type);
+
     void setPlateIndex(unsigned int plateIndex) { this->plateIndex = plateIndex; }
     unsigned int getPlateIndex() const { return plateIndex; }
     void setInstance(GlassInstance* instance) { this->instance = instance; }
+    void setCutter(GlassCutter* cutter) { this->cutter = cutter; }
     void setX(unsigned int x) { this->x = x; }
     unsigned int getX() const { return x; }
     void setY(unsigned int y) { this->y = y; }
@@ -47,10 +51,10 @@ class GlassNode {
     void reset();
     void displayNode() const;
     void displayNode(std::string prefix) const;
-    unsigned int buildNodeAndReturnNbItemsCuts(const GlassLocationIt& first, const GlassLocationIt& last);
+    unsigned int buildNodeAndReturnNbItemsCuts(unsigned int begin, unsigned int end);
     unsigned int saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last);
-    double getSurfaceOccupation() const;
-    unsigned int getNbItems() const { return std::distance(firstItem, lastItem); }
+    double getSurfaceOccupation();
+    unsigned int getNbItems() const { return endSequencePosition - beginSequencePosition; }
     unsigned int getXMax() const;
 
     private:
@@ -71,9 +75,13 @@ class GlassNode {
     void preCheckTrimming(const GlassLocationIt& first, const GlassLocationIt& last) const;
     bool isNodeFitLocation(const GlassLocation& location) const;
 
+    GlassLocationIt getFirst();
+    GlassLocationIt getLast();
+
     GlassPlate& getPlate() const { return instance->getPlate(plateIndex); }
 
     GlassInstance* instance;
+    GlassCutter* cutter;
     unsigned int plateIndex;
     unsigned int x;
     unsigned int y;
@@ -84,8 +92,8 @@ class GlassNode {
     std::vector<GlassNode> sons;
     std::vector<GlassCut> cutsAvailable;
     std::vector<RealCut> realCuts;
-    GlassLocationIt firstItem;
-    GlassLocationIt lastItem;
+    unsigned int beginSequencePosition;
+    unsigned int endSequencePosition; // exclu
 };
 
 std::ostream& operator<<(std::ostream& os, const GlassNode& node);
