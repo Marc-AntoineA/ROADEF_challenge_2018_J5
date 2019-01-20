@@ -62,9 +62,9 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 void Heuristic::buildMoves() {
     poolMoves.clear();
     poolMoves.push_back(new Swap(this));
-    for (unsigned int k = 2; k < std::min((std::size_t)6, sequence.size()); k++) 
+    for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KConsecutivePermutation(this, k));
-    for (unsigned int k = 3; k < std::min((std::size_t)4, sequence.size()); k++) 
+    for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KPermutation(this, k));
 }
 

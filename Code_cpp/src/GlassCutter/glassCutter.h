@@ -31,11 +31,7 @@ class GlassCutter {
     private:
     struct ScoredLocation {
         double score;
-        unsigned int locationIndex;
-
-        ScoredLocation() {};
-        ScoredLocation(double score, unsigned int locationIndex)
-            :score(score), locationIndex(locationIndex) {}
+        GlassLocation location;
 
         bool operator<(const ScoredLocation& otherLocation) const {
             return score > otherLocation.score;
@@ -46,6 +42,10 @@ class GlassCutter {
 
         ScoredLocation scoredLocation;
         std::vector<ScoredLocationTree> sons;
+
+        void sort();
+        void display() const;
+        void display(std::string prefix) const;
 
         bool operator<(const ScoredLocationTree& otherTree) const {
             return scoredLocation < otherTree.scoredLocation;
@@ -64,10 +64,12 @@ class GlassCutter {
     bool lazyAttempt(const GlassLocation& location);
     bool attempt(const GlassLocation& location, bool fast);
     bool fullAttempt(const GlassLocation& location);
+    double buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree);
     double lazyDeepScore(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree); 
-    double doubleLazyDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double fullDeepScore(unsigned int sequenceIndex, unsigned int depth);
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
+    double treeScore(ScoredLocationTree& tree);
+    double evaluateLocation(unsigned int sequenceIndex, unsigned int depth);
     double quickEvaluateLocation(double lazy);
     bool isLessGood();  
     double getCurrentBigNodeSurfaceOccupation();
@@ -86,6 +88,7 @@ class GlassCutter {
     unsigned int currentBinId;
     unsigned int currentSequenceIndex;
 
+    ScoredLocationTree scoredTree;
     std::vector<std::vector<GlassLocation> > locations;
     std::vector<RedMonster> monsters;
     std::vector<GlassNode> nodes;

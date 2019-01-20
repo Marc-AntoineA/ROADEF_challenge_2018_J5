@@ -94,6 +94,7 @@ void GlassCutter::cut(unsigned int depth){
                 bestLocation = location;
             }
         }
+        //std::cout << bestScore << std::endl;
         if (bestScore > 0) {
             assert(currentBinId*WIDTH_PLATES + bestLocation.getXW() <= xLimit);
             //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl; 
@@ -121,13 +122,21 @@ double GlassCutter::quickEvaluateLocation(double lazy) {
     return 1 - xMax/WIDTH_PLATES;
 }
 
-double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree) {
-    if (isLessGood()) return -1000000000;
+double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree) {
+    tree.sons.clear();
+
+    tree.scoredLocation.location = currentLocations()->back();
+
+    if (isLessGood()) {
+        tree.scoredLocation.score = -1000000;
+        return tree.scoredLocation.score;
+    }
 
     double currentScore = 0;
 
     if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
-        return quickEvaluateLocation(LAZY);
+        tree.scoredLocation.score = quickEvaluateLocation(LAZY);
+        return tree.scoredLocation.score;
     }
 
     unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
@@ -136,71 +145,61 @@ double GlassCutter::lazyDeepScore(unsigned int sequenceIndex, unsigned int depth
 
     for (const GlassLocation& location: currentLocations) {
         if (!lazyAttempt(location));
-        currentScore = std::max(currentScore, 1. + lazyDeepScore(sequenceIndex + 1, depth - 1, tree));
+        tree.sons.push_back(ScoredLocationTree());
+        ScoredLocationTree &son = tree.sons.back();
+        currentScore = std::max(currentScore, 1. + buildLazyDeepScoreTree(sequenceIndex + 1, depth - 1, son));
         revert();
     }
     
-    return currentScore;
+    tree.scoredLocation.score = currentScore;
+    return tree.scoredLocation.score;
 }
 
+void GlassCutter::ScoredLocationTree::sort() {
+    std::sort(sons.begin(), sons.end());
+}
+
+void GlassCutter::ScoredLocationTree::display() const {
+    display(" ");
+}
+
+void GlassCutter::ScoredLocationTree::display(std::string prefix) const {
+    std::cout << prefix << scoredLocation.location << " | " << scoredLocation.score << std::endl;
+    for (const ScoredLocationTree& son: sons) {
+        son.display(prefix + " ");
+    }
+}
+
+double GlassCutter::treeScore(ScoredLocationTree& tree) {
+    tree.sort();
+    double bestScore = quickEvaluateLocation(!LAZY);
+    
+    if (tree.sons.empty()) {
+        return bestScore;
+    }
+    
+    tree.sort();
+    for (ScoredLocationTree& son: tree.sons) {
+        //std::cout << bestScore << " >= " << son.scoredLocation.score << std::endl;
+        if (bestScore >= son.scoredLocation.score) break;
+        const GlassLocation& location = son.scoredLocation.location;
+        if (!fullAttempt(location)) continue;
+        bestScore = std::max(bestScore, 1 + treeScore(son));
+        revert();
+    } 
+    return bestScore;
+}
 
 double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth) {
-    if (isLessGood()) return -10000000000;
-
-    if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
-        return quickEvaluateLocation(!LAZY);
-    }
-   
-    unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
-    const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
-    if (currentLocations.size() == 0)
-        return 1;
-
-    ScoredLocationTree tree;
-
-    // First: evaluate lazy deep score for each location
-    for (unsigned int locationIndex = 0; locationIndex < currentLocations.size(); locationIndex++) {
-        const GlassLocation& locationBis = currentLocations[locationIndex];
-        if (!lazyAttempt(locationBis)) { continue; }
-        tree.sons.push_back(ScoredLocationTree());
-        ScoredLocationTree& son = tree.sons.back();
-        double lazyScore = 1 + lazyDeepScore(sequenceIndex + 1, depth - 1, son);
-        revert();
-        son.scoredLocation.locationIndex = locationIndex;
-        son.scoredLocation.score = lazyScore;
-    }
-
-    std::sort(tree.sons.begin(), tree.sons.end());
-    
-    /*if (scoredLocations.size() > 1)
-        std::cout << (scoredLocations[0].score - scoredLocations[scoredLocations.size() - 1].score) << std::endl;
-    for (const ScoredLocation& location: scoredLocations) {
-        std::cout << location.score << " ";
-    }
-    std::cout << std::endl;*/
-
-    double currentScore = 1;
-    std::vector<double> tmpScores;
-    // Second: We know the best scores possible for each location
-    // If a scored location is possible, we have our best score
-    for (unsigned int locationIndex = 0; locationIndex < tree.sons.size(); locationIndex++) {
-        const ScoredLocation& scoredLocation = tree.sons[locationIndex].scoredLocation;
-        if (currentScore >= scoredLocation.score) break;
-        if (!fullAttempt(currentLocations[scoredLocation.locationIndex])) { continue; }
-        double deepScore = fullDeepScore(sequenceIndex + 1, depth - 1);
-        revert();
-        tmpScores.push_back(1. + deepScore);
-        currentScore = std::max(currentScore, 1. + deepScore);
-        //std::cout << currentScore << " vs " << scoredLocation.score << std::endl;
-    }    
-    return currentScore;
+    //std::cout << currentLocations()->back() << std::endl;
+    scoredTree.sons.clear();
+    buildLazyDeepScoreTree(sequenceIndex, depth, scoredTree);
+    //tree.display();
+    //std::cout << "\t" << treeScore(scoredTree) << std::endl;
+    return treeScore(scoredTree);
 }
 
 unsigned int GlassCutter::getCurrentScore() {
-    /*std::cout << currentBinId << std::endl;
-    std::cout << getXMax() << std::endl;
-    std::cout << instance->getItemsArea() << std::endl;
-    std::cout << (currentBinId*WIDTH_PLATES + getXMax())*HEIGHT_PLATES - instance->getItemsArea() << std::endl;*/
     return (currentBinId*WIDTH_PLATES + getXMax())*HEIGHT_PLATES - instance->getItemsArea();
 }
 
