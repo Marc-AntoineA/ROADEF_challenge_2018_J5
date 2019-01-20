@@ -29,10 +29,18 @@ class GlassCutter {
     double getSurfacePlateOccupation(unsigned int plateIndex) const;
 
     private:
+    enum Feasible {
+        FEASIBLE,
+        NOT_FEASIBLE,
+        NOT_TESTED
+    };    
+    
     struct ScoredLocation {
         double score;
         GlassLocation location;
-
+        Feasible feasible;
+        ScoredLocation() : feasible(NOT_TESTED) {}
+        ScoredLocation(GlassLocation location, double score) : location(location), score(score), feasible(NOT_TESTED) {}
         bool operator<(const ScoredLocation& otherLocation) const {
             return score > otherLocation.score;
         }
@@ -43,6 +51,8 @@ class GlassCutter {
         ScoredLocation scoredLocation;
         std::vector<ScoredLocationTree> sons;
 
+        ScoredLocationTree() {}
+        ScoredLocationTree(GlassLocation location) : scoredLocation(location, -1) {}
         void sort();
         void display() const;
         void display(std::string prefix) const;
@@ -65,16 +75,19 @@ class GlassCutter {
     bool attempt(const GlassLocation& location, bool fast);
     bool fullAttempt(const GlassLocation& location);
     double buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree);
+    void buildLazyDeepScoreTreeAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     double lazyDeepScore(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree); 
-    double fullDeepScore(unsigned int sequenceIndex, unsigned int depth);
+    bool computeBestLocationAndApplyIfNecessary();
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
-    double treeScore(ScoredLocationTree& tree);
+    ScoredLocation treeScore(ScoredLocationTree& tree);
     double evaluateLocation(unsigned int sequenceIndex, unsigned int depth);
     double quickEvaluateLocation(double lazy);
     bool isLessGood();  
+    
     double getCurrentBigNodeSurfaceOccupation();
     unsigned int computeMaxScorePossible();
     void revert();
+    void revertSameBin();
     bool checkTreeFeasibilityAndBuildCurrentNode();
     unsigned int getXMax();
     unsigned int getLazyXMax();

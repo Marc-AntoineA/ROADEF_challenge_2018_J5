@@ -52,8 +52,14 @@ int main(int argc, char* argv[])
     std::cout << " - depthLimit: " << depthLimit << std::endl;
     std::cout << " - seed: " << seed << std::endl;
 
+    /*seed = 0;
+    instanceName = "A1";
+    outputName = "A1.csv";
+    timeLimit = 1;
+    nbThreads = 1;S
+    depthLimit = 4;*/
     srand(seed);
-    
+
     std::vector<Heuristic*> heuristics;
 
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {

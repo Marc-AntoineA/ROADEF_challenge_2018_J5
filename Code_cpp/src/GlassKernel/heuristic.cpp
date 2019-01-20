@@ -36,7 +36,7 @@ void Heuristic::start() {
     initRandomlySequence();
     displaySequence();
     buildMoves();
-    //initSeainitSearch();
+    //initSearch();
     localSearch(depthLimit, timeLimit);
     displayMoveStatistics();
     computeScore(depthLimit);

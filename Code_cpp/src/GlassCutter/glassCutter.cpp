@@ -73,46 +73,29 @@ double GlassCutter::getCurrentBigNodeSurfaceOccupation() {
 
 void GlassCutter::cut(unsigned int depth){
     //displayStacks();
+    scoredTree = ScoredLocationTree();
     unsigned int nbScore = 0;
     unsigned int nbNot = 0;
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     while (currentSequenceIndex < sequence.size()) {
         unsigned int stackId = sequence[currentSequenceIndex];
-        if (VERBOSE) std::cout << "StackId#" << stackId;
         unsigned int itemIndex = stacks[stackId].top();
-        if (VERBOSE) std::cout << " & item#" << itemIndex << std::endl;
-        const std::vector<GlassLocation>& locations = getLocationsForItemIndexAndIncreaseBinIdIfNecessary(itemIndex);
-        GlassLocation bestLocation;
-        double bestScore = 0;
-        for (const GlassLocation& location: locations) {
-            if (currentBinId * WIDTH_PLATES + location.getXW() > xLimit) continue;
-            if (!fullAttempt(location)) continue;
-            double currentScore = fullDeepScore(currentSequenceIndex, depth);
-            revert();
-            if (currentScore >= bestScore) {
-                bestScore = currentScore;
-                bestLocation = location;
-            }
-        }
-        //std::cout << bestScore << std::endl;
-        if (bestScore > 0) {
-            assert(currentBinId*WIDTH_PLATES + bestLocation.getXW() <= xLimit);
-            //std::cout << "Location choisie (score " << bestScore << ") " << bestLocation << std::endl; 
-            // fullAttempt is necessary due to the new way of counting the score
-            // (tree is necessary)       
-            if(!fullAttempt(bestLocation)) {throw std::runtime_error("???");}
+        std::cout << "Placement de l'item# " << itemIndex << std::endl;
+        //std::cout << "currentbin id " << currentBinId << std::endl;
+        buildLazyDeepScoreTree(currentSequenceIndex, depth, scoredTree);
+        //std::cout << "Current bin id (after build) " << currentBinId << std::endl;
+        scoredTree.display();
+        if(computeBestLocationAndApplyIfNecessary()) {
             currentSequenceIndex++;
+            //std::cout << currentSequenceIndex << std::endl;
         } else {
             incrBinId();
+            //std::cout << " binId: " << currentBinId << std::endl;
             if (currentBinId * WIDTH_PLATES > xLimit) return;
         }
     }
     unsigned int xMax = currentBinId * WIDTH_PLATES + getXMax();
     xLimit = std::min(xMax, xLimit);
-}
-
-bool GlassCutter::isLessGood() {
-    return currentBinId * WIDTH_PLATES + getLazyXMax() > xLimit; 
 }
 
 double GlassCutter::quickEvaluateLocation(double lazy) {
@@ -125,8 +108,6 @@ double GlassCutter::quickEvaluateLocation(double lazy) {
 double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree& tree) {
     tree.sons.clear();
 
-    tree.scoredLocation.location = currentLocations()->back();
-
     if (isLessGood()) {
         tree.scoredLocation.score = -1000000;
         return tree.scoredLocation.score;
@@ -134,69 +115,95 @@ double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned 
 
     double currentScore = 0;
 
-    if (depth == 0 || sequenceIndex + 1 == sequence.size()) {
+    if (depth == 0 || sequenceIndex == sequence.size()) {
         tree.scoredLocation.score = quickEvaluateLocation(LAZY);
         return tree.scoredLocation.score;
     }
-
-    unsigned int itemIndex = stacks[sequence[sequenceIndex + 1]].top();
+    unsigned int itemIndex = stacks[sequence[sequenceIndex]].top();
     const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
     if (currentLocations.size() == 0) return 0;
 
     for (const GlassLocation& location: currentLocations) {
         if (!lazyAttempt(location));
-        tree.sons.push_back(ScoredLocationTree());
+        tree.sons.push_back(ScoredLocationTree(location));
         ScoredLocationTree &son = tree.sons.back();
         currentScore = std::max(currentScore, 1. + buildLazyDeepScoreTree(sequenceIndex + 1, depth - 1, son));
-        revert();
+        revertSameBin();
     }
     
     tree.scoredLocation.score = currentScore;
     return tree.scoredLocation.score;
 }
 
-void GlassCutter::ScoredLocationTree::sort() {
-    std::sort(sons.begin(), sons.end());
-}
-
-void GlassCutter::ScoredLocationTree::display() const {
-    display(" ");
-}
-
-void GlassCutter::ScoredLocationTree::display(std::string prefix) const {
-    std::cout << prefix << scoredLocation.location << " | " << scoredLocation.score << std::endl;
-    for (const ScoredLocationTree& son: sons) {
-        son.display(prefix + " ");
-    }
-}
-
-double GlassCutter::treeScore(ScoredLocationTree& tree) {
+GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree& tree) {
     tree.sort();
-    double bestScore = quickEvaluateLocation(!LAZY);
+    double bestScore = quickEvaluateLocation(LAZY) - 1; // TODO potentiel bug ici avec les attempt
     
-    if (tree.sons.empty()) {
-        return bestScore;
-    }
-    
+    unsigned int bestLocationIndex = tree.sons.size();
     tree.sort();
-    for (ScoredLocationTree& son: tree.sons) {
-        //std::cout << bestScore << " >= " << son.scoredLocation.score << std::endl;
-        if (bestScore >= son.scoredLocation.score) break;
-        const GlassLocation& location = son.scoredLocation.location;
-        if (!fullAttempt(location)) continue;
-        bestScore = std::max(bestScore, 1 + treeScore(son));
-        revert();
+    for (unsigned int index = 0; index < tree.sons.size(); index++) {
+        ScoredLocationTree& son = tree.sons[index];
+        ScoredLocation& scoredLocation = son.scoredLocation;
+        if (bestScore >= scoredLocation.score) break;
+        const GlassLocation& location = scoredLocation.location;
+        switch (scoredLocation.feasible) {
+        case NOT_FEASIBLE:
+            continue;
+
+        case NOT_TESTED:
+            if (!fullAttempt(location)) {
+                scoredLocation.feasible = NOT_FEASIBLE;
+                continue;
+            }
+            break;
+
+        case FEASIBLE:
+            if (!lazyAttempt(location)) {
+                scoredLocation.feasible = NOT_FEASIBLE;
+                continue;
+            }
+            break;
+        }
+        scoredLocation.feasible = FEASIBLE;
+        double currentScore = 1. + treeScore(son).score;
+        //std::cout << scoredLocation.location << " : " << currentScore << std::endl;
+        if (currentScore >= bestScore) {
+            bestLocationIndex = index;
+            bestScore = currentScore;
+        }
+        revertSameBin();
     } 
-    return bestScore;
+    //std::cout << bestScore << std::endl;
+    //std::cout << bestLocationIndex << std::endl;
+    if (bestLocationIndex < tree.sons.size() && bestScore > 0) {
+        //std::cout << bestScore << " vs " << bestLocationIndex << " < " << tree.sons.size() << std::endl;
+        return ScoredLocation(tree.sons[bestLocationIndex].scoredLocation.location, bestScore);
+    }
+
+    return ScoredLocation(GlassLocation(), bestScore);
 }
 
-double GlassCutter::fullDeepScore(unsigned int sequenceIndex, unsigned int depth) {
-    //std::cout << currentLocations()->back() << std::endl;
-    scoredTree.sons.clear();
-    buildLazyDeepScoreTree(sequenceIndex, depth, scoredTree);
-    //tree.display();
-    //std::cout << "\t" << treeScore(scoredTree) << std::endl;
-    return treeScore(scoredTree);
+bool GlassCutter::computeBestLocationAndApplyIfNecessary() {
+    //std::cout << "computing best location " << std::endl;
+    //scoredTree.display();
+    ScoredLocation best = treeScore(scoredTree);
+
+    if (best.location.getInstance() == NULL) return false;
+    if (best.score <= 0) return false;
+    
+    std::cout << best.score << std::endl;
+    lazyAttempt(best.location);
+    for (unsigned int sonIndex = 0; sonIndex < scoredTree.sons.size(); sonIndex++) {
+        const GlassLocation& currentLocation = scoredTree.sons[sonIndex].scoredLocation.location;
+        if (currentLocation == best.location) {
+            std::cout << "? " << std::endl;
+            scoredTree = scoredTree.sons[sonIndex];
+            std::cout << "line 201" << std::endl;
+            std::cout << "Applied " << scoredTree.scoredLocation.location << std::endl;
+            return true;
+        }
+    }
+    assert(false);
 }
 
 unsigned int GlassCutter::getCurrentScore() {
@@ -214,20 +221,6 @@ void GlassCutter::buildStacks() {
         stacks[stackId].insert(item);
     }
     if (VERBOSE) displayStacks();
-}
-
-void GlassCutter::displayStacks() const {
-    for (const GlassStack& stack: stacks) 
-        std::cout << stack;
-}
-
-void GlassCutter::displayLocations() const {
-    std::cout << "==================" << std::endl;
-    for (const std::vector<GlassLocation> locationsIt: locations) {
-        for (const GlassLocation& location: locationsIt) 
-            std::cout << location << std::endl;
-    }
-    std::cout << "==================" << std::endl;
 }
 
 void GlassCutter::buildNodes() {
@@ -255,6 +248,7 @@ void GlassCutter::buildLocations() {
 
 void GlassCutter::incrBinId() {
     currentBinId++;
+    scoredTree = ScoredLocationTree();
     if(VERBOSE) std::cout << "Incr bin id to " << currentBinId << std::endl;
 }
 
@@ -264,10 +258,6 @@ void GlassCutter::decrBinId() {
     currentLocations()->clear();
     currentBinId--;
     //std::cout << "decrBinId" << std::endl;
-}
-
-void GlassCutter::setBinId(unsigned int binId) {
-    currentBinId = binId;
 }
 
 bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
@@ -310,19 +300,24 @@ bool GlassCutter::attempt(const GlassLocation& location, bool fast) {
     return true;
 }
 
+void GlassCutter::revertSameBin() {
+    unsigned int stackId = currentLocations()->back().getStackId();
+    if (VERBOSE) std::cout << "revert for location " << currentLocations()->back() << std::endl;
+    stacks[stackId].push();
+    currentLocations()->pop_back();
+    currentMonster()->revert();
+}
+
 void GlassCutter::revert() {
     nbRollbacks++;
     while (currentLocations()->empty()) {
         if (currentBinId == 0) throw std::runtime_error("Rollback impossible (not enough items).");
         decrBinId();
     }
-    unsigned int stackId = currentLocations()->back().getStackId();
-    if (VERBOSE) std::cout << "revert for location " << currentLocations()->back() << std::endl;
-    stacks[stackId].push();
-    currentLocations()->pop_back();
-    currentMonster()->revert();
-    if (currentLocations()->empty()) 
+    revertSameBin();
+    if (currentLocations()->empty()) {
         decrBinId();    
+    }
 }
 
 void GlassCutter::saveBest(std::string name) {
@@ -380,13 +375,6 @@ void GlassCutter::resetErrorsStatistics() {
     nbTrimmingPreChecked = 0;
 }
 
-void GlassCutter::displayErrorStatistics() const {
-    std::cout << "Waste too small: " << nbWasteTooSmall << std::endl;
-    std::cout << "Tree too depth: " << nbTreeTooDepth << std::endl;
-    std::cout << "NbTrimmingFailed: " << nbTrimmingFailed << std::endl;
-    std::cout << "NbTrimmingPreChecked: " << nbTrimmingPreChecked << std::endl;
-}
-
 unsigned int GlassCutter::computeMaxScorePossible() {
     int availableArea = WIDTH_PLATES*HEIGHT_PLATES - currentMonster()->computeArea();
     unsigned int maxIndex = currentSequenceIndex + 1;
@@ -415,4 +403,55 @@ unsigned int GlassCutter::getXMax() {
 
 unsigned int GlassCutter::getLazyXMax() {
     return currentMonster()->getXMax();
+}
+
+void GlassCutter::displayStacks() const {
+    for (const GlassStack& stack: stacks) 
+        std::cout << stack;
+}
+
+void GlassCutter::displayLocations() const {
+    std::cout << "==================" << std::endl;
+    for (const std::vector<GlassLocation> locationsIt: locations) {
+        for (const GlassLocation& location: locationsIt) 
+            std::cout << location << std::endl;
+    }
+    std::cout << "==================" << std::endl;
+}
+
+void GlassCutter::displayErrorStatistics() const {
+    std::cout << "Waste too small: " << nbWasteTooSmall << std::endl;
+    std::cout << "Tree too depth: " << nbTreeTooDepth << std::endl;
+    std::cout << "NbTrimmingFailed: " << nbTrimmingFailed << std::endl;
+    std::cout << "NbTrimmingPreChecked: " << nbTrimmingPreChecked << std::endl;
+}
+
+bool GlassCutter::isLessGood() {
+    return currentBinId * WIDTH_PLATES + getLazyXMax() > xLimit; 
+}
+
+void GlassCutter::ScoredLocationTree::sort() {
+    std::sort(sons.begin(), sons.end());
+}
+
+void GlassCutter::ScoredLocationTree::display() const {
+    display(" ");
+}
+
+void GlassCutter::ScoredLocationTree::display(std::string prefix) const {
+    std::cout << prefix;
+    if (scoredLocation.location.getInstance() == NULL)
+        std::cout << "(null)";
+    else 
+        std::cout << scoredLocation.location;
+
+    std::cout << " | " << scoredLocation.score << " " << scoredLocation.feasible<< std::endl;
+
+    for (const ScoredLocationTree& son: sons) {
+        son.display(prefix + " ");
+    }
+}
+
+void GlassCutter::setBinId(unsigned int binId) {
+    currentBinId = binId;
 }
