@@ -60,6 +60,7 @@ class GlassCutter {
 
         ScoredLocation scoredLocation;
         std::vector<ScoredLocationTree*> sons;
+        unsigned int depth;
 
         ScoredLocationTree() { }
         ScoredLocationTree(GlassLocation location) : scoredLocation(location, -1) { }

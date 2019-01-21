@@ -98,7 +98,7 @@ double GlassCutter::quickEvaluateLocation(double lazy) {
 
 double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned int depth, ScoredLocationTree* tree) {
     //tree->reset();// TODO remove ça...
-
+    tree->depth = depth;
     double currentScore = 0;
 
     if (depth == 0 || sequenceIndex == sequence.size()) {
@@ -118,12 +118,9 @@ double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned 
             currentScore = std::max(currentScore, 1. + buildLazyDeepScoreTree(sequenceIndex + 1, depth - 1, son));
             revertSameBin();
         }
-        
         tree->scoredLocation.score = currentScore;
         return tree->scoredLocation.score;
     }
-
-    
 
     unsigned int itemIndex = stacks[sequence[sequenceIndex]].top();
     const std::vector<GlassLocation>& currentLocations = currentMonster()->getLocationsForItemIndex(itemIndex);
@@ -142,14 +139,13 @@ double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned 
 }
 
 unsigned int GlassCutter::compute1CutFeasibleForMinWaste(unsigned int x) const {
-    
     unsigned int cutX = x;
     for (const GlassLocation& location: locations[currentBinId]) {
+        if (location.getXW() == x) continue;
         if (location.getXW() + MIN_WASTE_AREA < x) continue;
-        if (location.getXW() + MIN_WASTE_AREA >= x && location.getXW() != x) {
-            cutX = std::max(cutX, location.getXW() + MIN_WASTE_AREA);
-        }
-        if (location.getX() >= x) return x; // Le 1-cut serait entre deux items normalement impossible
+        if (x < location.getXW()) continue;
+        cutX = std::max(cutX, location.getXW() + MIN_WASTE_AREA);
+        if (location.getX() >= x) break; // Le 1-cut serait entre deux items normalement impossible
     }
     return cutX;
 }
@@ -163,7 +159,7 @@ GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree* tree) {
         ScoredLocationTree* son = tree->sons[index];
         ScoredLocation& scoredLocation = son->scoredLocation;
         if(bestScore >= 1 + scoredLocation.score) break;
-        const GlassLocation& location = scoredLocation.location;
+        GlassLocation& location = scoredLocation.location;
         switch (scoredLocation.feasible) {
         case NOT_FEASIBLE:
             continue;
@@ -172,12 +168,15 @@ GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree* tree) {
             if (!fullAttempt(location)) {
                 revertSameBin();
                 scoredLocation.feasible = NOT_FEASIBLE;
-                /*unsigned int cutX = compute1CutFeasibleForMinWaste(location.getX());
-                if (cutX != location.getX()) std::cout << cutX << " > " << location.getX() << std::endl;
+                unsigned int cutX = compute1CutFeasibleForMinWaste(location.getX());
+                if (cutX == location.getX()) continue;
                 assert(cutX >= location.getX());
-                assert(location.getX() + MIN_WASTE_AREA >= cutX);*/
-                
-                continue;
+                assert(location.getX() + MIN_WASTE_AREA >= cutX);  
+                // TODO update x pour ne pas cut à travers un défaut ?
+                location.setX(cutX);
+                son->reset();
+                buildLazyDeepScoreTree(location.getLocationSequence() + 1, son->depth, son); // depth??
+                return treeScore(tree);
             }
             break;
 

@@ -17,6 +17,7 @@ class GlassLocation {
 
     bool operator==(const GlassLocation& otherLocation) const; 
     unsigned int getX() const { return x; }
+    void setX(unsigned int x) { this->x = x; }
     unsigned int getY() const { return y; }
     unsigned int getXW() const { return x + getItem().getWidth(rotated); }
     unsigned int getYH() const { return y + getItem().getHeight(rotated); }
