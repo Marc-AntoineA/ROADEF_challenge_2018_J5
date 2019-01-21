@@ -47,8 +47,10 @@ class GlassCutter {
         double score;
         GlassLocation location;
         Feasible feasible;
+        unsigned int previous1Cut;
         ScoredLocation() : feasible(NOT_TESTED) {}
-        ScoredLocation(GlassLocation location, double score) : location(location), score(score), feasible(NOT_TESTED) {}
+        ScoredLocation(GlassLocation location, double score) 
+            :location(location), score(score), feasible(NOT_TESTED), previous1Cut(0) {}
         bool operator<(const ScoredLocation& otherLocation) const {
             return score > otherLocation.score;
         }
@@ -103,6 +105,7 @@ class GlassCutter {
     bool checkTreeFeasibilityAndBuildCurrentNode();
     unsigned int getXMax();
     unsigned int getLazyXMax();
+    unsigned int compute1CutFeasibleForMinWaste(unsigned int x) const;
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     RedMonster* currentMonster() { return &monsters[currentBinId]; }
     GlassNode* currentNode() { return &nodes[currentBinId]; }

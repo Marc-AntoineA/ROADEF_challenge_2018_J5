@@ -114,7 +114,7 @@ double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned 
     if (!tree->sons.empty()) {
         for (unsigned int index = 0; index < tree->sons.size(); index++) {
             ScoredLocationTree* son = tree->sons[index];
-            if (!lazyAttempt(son->scoredLocation.location)) continue;
+            if (!lazyAttempt(son->scoredLocation.location)) { revertSameBin(); continue; }
             currentScore = std::max(currentScore, 1. + buildLazyDeepScoreTree(sequenceIndex + 1, depth - 1, son));
             revertSameBin();
         }
@@ -141,6 +141,19 @@ double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned 
     return tree->scoredLocation.score;
 }
 
+unsigned int GlassCutter::compute1CutFeasibleForMinWaste(unsigned int x) const {
+    
+    unsigned int cutX = x;
+    for (const GlassLocation& location: locations[currentBinId]) {
+        if (location.getXW() + MIN_WASTE_AREA < x) continue;
+        if (location.getXW() + MIN_WASTE_AREA >= x && location.getXW() != x) {
+            cutX = std::max(cutX, location.getXW() + MIN_WASTE_AREA);
+        }
+        if (location.getX() >= x) return x; // Le 1-cut serait entre deux items normalement impossible
+    }
+    return cutX;
+}
+
 GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree* tree) {
     tree->sort();
     double bestScore = quickEvaluateLocation(LAZY); // TODO potentiel bug ici avec les attempt
@@ -157,13 +170,21 @@ GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree* tree) {
 
         case NOT_TESTED:
             if (!fullAttempt(location)) {
+                revertSameBin();
                 scoredLocation.feasible = NOT_FEASIBLE;
+                /*unsigned int cutX = compute1CutFeasibleForMinWaste(location.getX());
+                if (cutX != location.getX()) std::cout << cutX << " > " << location.getX() << std::endl;
+                assert(cutX >= location.getX());
+                assert(location.getX() + MIN_WASTE_AREA >= cutX);*/
+                
                 continue;
             }
             break;
 
         case FEASIBLE:
             if (!lazyAttempt(location)) {
+                assert(false);
+                revertSameBin();
                 scoredLocation.feasible = NOT_FEASIBLE;
                 continue;
             }
@@ -196,7 +217,7 @@ bool GlassCutter::computeBestLocationAndApplyIfNecessary() {
     if (best.location.getInstance() == NULL) return false;
     if (best.score <= 0) return false;
 
-    fullAttempt(best.location);
+    if (!fullAttempt(best.location)) assert(false);
     for (unsigned int sonIndex = 0; sonIndex < scoredTree->sons.size(); sonIndex++) {
         const GlassLocation& currentLocation = scoredTree->sons[sonIndex]->scoredLocation.location;
         if (currentLocation == best.location) { 
@@ -285,7 +306,7 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
 }
 
 bool GlassCutter::lazyAttempt(const GlassLocation& location) {
-    return attempt(location, true); 
+    return attempt(location, false); // TODO attempt(location, true);
 }
 
 bool GlassCutter::fullAttempt(const GlassLocation& location) {
@@ -294,7 +315,7 @@ bool GlassCutter::fullAttempt(const GlassLocation& location) {
 
 // TODO build pour guillotine cut?
 bool GlassCutter::attempt(const GlassLocation& location, bool fast) {
-    //if (VERBOSE) std::cout << "attempt location: " << location << std::endl;
+    //  std::cout << "attempt location: " << location << std::endl;
     setBinId(location.getBinId());
     nbAttempts++;
     stacks[location.getStackId()].pop();
@@ -302,7 +323,6 @@ bool GlassCutter::attempt(const GlassLocation& location, bool fast) {
     currentLocations()->push_back(location);
     if (fast) return true;
     if (!checkTreeFeasibilityAndBuildCurrentNode()) {
-        revert();
         //std::cout << (*currentMonster()) << std::endl;
         return false;
     }
