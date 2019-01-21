@@ -95,6 +95,7 @@ class GlassCutter {
     bool computeBestLocationAndApplyIfNecessary();
     double deepScore(unsigned int sequenceIndex, unsigned int depth, bool fast);
     ScoredLocation treeScore(ScoredLocationTree* tree);
+    unsigned int convertBinSequenceToMainSequence(unsigned int currentBinSequence) const;
     double evaluateLocation(unsigned int sequenceIndex, unsigned int depth);
     double quickEvaluateLocation(double lazy);
     bool isLessGood();     

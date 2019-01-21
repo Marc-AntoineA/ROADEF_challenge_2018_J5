@@ -53,17 +53,17 @@ int main(int argc, char* argv[])
     std::cout << " - seed: " << seed << std::endl;
 
     /*seed = 0;
-    instanceName = "A1";
-    outputName = "A1.csv";
+    instanceName = "A17";
+    outputName = "A17.csv";
     timeLimit = 1;
-    nbThreads = 1;S
-    depthLimit = 4;*/
+    nbThreads = 1;
+    depthLimit = 10;*/
     srand(seed);
 
     std::vector<Heuristic*> heuristics;
 
     for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        GlassInstance* instance = new GlassInstance("instances_checker/" + instanceName);
+        GlassInstance* instance = new GlassInstance("/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code_cpp/src/build/bin/instances_checker/" + instanceName);
         heuristics.push_back(new Heuristic(instance, timeLimit, depthLimit, rand()));
     }   
 

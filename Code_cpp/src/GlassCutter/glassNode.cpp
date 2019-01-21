@@ -16,7 +16,7 @@ GlassNode::GlassNode(GlassInstance* instance, GlassCutter* cutter, unsigned int 
     : instance(instance), cutter(cutter), 
     plateIndex(plateIndex), x(x), y(y), width(width), height(height), depth(depth), type(type), 
     sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()) {
-        //std::cout << (*this) << std::endl;
+    //std::cout << (*this) << std::endl;
 }
 
 GlassNode::GlassNode()
@@ -154,39 +154,74 @@ void GlassNode::buildRealCuts() {
     unsigned int lastAbscissa = isVerticalCut() ? x + width : y + height;
     unsigned int prevAbscissa = lastAbscissa;
     unsigned int nbPrevItems = 0;
-    
+
     realCuts.push_back(RealCut(prevAbscissa, nbItemsSeen));
+    
     for (const GlassCut& cut: cutsAvailable) {
         //std::cout << prevAbscissa << " new cut " << cut.getAbscissa() << std::endl;
 
         if (!cut.isBegin()) { assert(openedCuts > 0); openedCuts--; }
 
-        if (cut.getAbscissa() != firstAbscissa && cut.getAbscissa() != lastAbscissa
-            && prevAbscissa - cut.getAbscissa() >= MIN_WASTE_AREA && openedCuts == 0
-            && maxItemSeen + 1 == nbItemsSeen && isCutPossibleForMinWaste(cut.getAbscissa()) && isFreeOfDefects(cut)) {
-            bool isNotWasteCut = nbItemsSeen > nbPrevItems;
+        if (maxItemSeen + 1 == nbItemsSeen && openedCuts == 0) {
+            if (cut.getAbscissa() != firstAbscissa && cut.getAbscissa() != lastAbscissa
+                && prevAbscissa - cut.getAbscissa() >= MIN_WASTE_AREA 
+                && isCutPossibleForMinWaste(cut.getAbscissa()) && isFreeOfDefects(cut)) {
 
-            if (depth < 3) {
-                if (isNotWasteCut) {
-                    if (isCutPossibleForMinXY(prevAbscissa, cut.getAbscissa())) {
+                bool isNotWasteCut = nbItemsSeen > nbPrevItems;
+
+                if (depth < 3) {
+                    if (isNotWasteCut) {
+                        if (isCutPossibleForMinXY(prevAbscissa, cut.getAbscissa())) {
+                            realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
+                            prevAbscissa = cut.getAbscissa();
+                            nbPrevItems = nbItemsSeen;
+                        }
+                    } else {
                         realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                         prevAbscissa = cut.getAbscissa();
-                        nbPrevItems = nbItemsSeen;
                     }
                 } else {
+                    if (nbItemsSeen - nbPrevItems > 1) 
+                        throw std::runtime_error("Trimming failed (more than 1 item)");
+                    if (realCuts.size() >= 2) {
+                        throw std::runtime_error("Trimming failed (more than 1 cut)");
+                    }
                     realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                     prevAbscissa = cut.getAbscissa();
-                }
-            } else {
-                if (nbItemsSeen - nbPrevItems > 1) 
-                    throw std::runtime_error("Trimming failed (more than 1 item)");
-                if (realCuts.size() >= 2) {
-                    throw std::runtime_error("Trimming failed (more than 1 cut)");
-                }
-                realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
-                prevAbscissa = cut.getAbscissa();
-                nbPrevItems = nbItemsSeen;
-            }            
+                    nbPrevItems = nbItemsSeen;
+                }            
+            } else if (depth == 0 && realCuts.size() == 1 && cut.getAbscissa() < lastAbscissa) {
+                unsigned int cutAbscissa = cut.getAbscissa() + MIN_WASTE_AREA;
+
+                if (cutAbscissa != firstAbscissa && cutAbscissa != lastAbscissa
+                && prevAbscissa - cutAbscissa >= MIN_WASTE_AREA 
+                && isCutPossibleForMinWaste(cutAbscissa) && isFreeOfDefects(cut)) {
+
+                bool isNotWasteCut = nbItemsSeen > nbPrevItems;
+
+                    if (depth < 3) {
+                        if (isNotWasteCut) {
+                            if (isCutPossibleForMinXY(prevAbscissa, cutAbscissa)) {
+                                realCuts.push_back(RealCut(cutAbscissa, nbItemsSeen));
+                                prevAbscissa = cutAbscissa;
+                                nbPrevItems = nbItemsSeen;
+                            }
+                        } else {
+                            realCuts.push_back(RealCut(cutAbscissa, nbItemsSeen));
+                            prevAbscissa = cutAbscissa;
+                        }
+                    } else {
+                        if (nbItemsSeen - nbPrevItems > 1) 
+                            throw std::runtime_error("Trimming failed (more than 1 item)");
+                        if (realCuts.size() >= 2) {
+                            throw std::runtime_error("Trimming failed (more than 1 cut)");
+                        }
+                        realCuts.push_back(RealCut(cutAbscissa, nbItemsSeen));
+                        prevAbscissa = cutAbscissa;
+                        nbPrevItems = nbItemsSeen;
+                    }
+                }         
+            }
         }
 
         if (cut.isBegin()) {
@@ -234,7 +269,7 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int n
 unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(unsigned int begin, unsigned int end) {
     beginSequencePosition = begin;
     endSequencePosition = end;
-
+    
     sons.clear();
     checkTooSmall();
 
@@ -245,6 +280,12 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(unsigned int begin, unsign
 
     GlassLocationIt first = getFirst();
     GlassLocationIt last = getLast();
+
+    const GlassLocation& location = *(first + end - begin - 1);
+    /*if (location.getX() == 1828 && location.getY() == 2256 && location.getXW() == 4126 && location.getYH() == 2684)
+        std::cout << "Okue" << std::endl;*/
+    /*if (location.getX() == 1848 && location.getY() == 2256 && location.getXW() == 4146 && location.getYH() == 2684)
+        std::cout << "OUI" << std::endl;*/
 
     if (first + 1 == last && isNodeFitLocation(*first)) {
         setType(first->getItemIndex());
@@ -258,6 +299,7 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(unsigned int begin, unsign
     //displayCutsAvailable();
     buildRealCuts();
     //displayRealCuts();
+    //std::cout << "===========" << std::endl;
     unsigned int nbItemsCuts = cutRealCuts(first, endSequencePosition - beginSequencePosition);
     if (endSequencePosition - beginSequencePosition != nbItemsCuts){
         throw std::runtime_error("Infeasible cut (not enough items cut)");

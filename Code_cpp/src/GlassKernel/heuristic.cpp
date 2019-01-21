@@ -37,7 +37,7 @@ void Heuristic::start() {
     displaySequence();
     buildMoves();
     //initSearch();
-    //localSearch(depthLimit, timeLimit);
+    localSearch(depthLimit, timeLimit);
     displayMoveStatistics();
     computeScore(depthLimit);
     cutter.displayStatistics();
@@ -75,13 +75,13 @@ void Heuristic::initRandomlySequence() {
     // A20
     //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4,5,11,6,12,7};
     // A17
-    std::vector<unsigned int> sequenceItems = {0, 19, 1, 2};//,3, 4, 5, 20, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+    /*std::vector<unsigned int> sequenceItems = {0, 19, 1, 2, 3, 4, 5, 20, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
     for (unsigned int itemIndex: sequenceItems){
         unsigned int stackId = instance->getItem(itemIndex).getStackId();
         sequence.push_back(stackId);
     }
     //sequence = { 39, 69, 9, 24, 64, 1, 31, 12, 49, 35, 68, 45, 21, 22, 33, 44, 52, 16, 37, 55, 26, 70, 62, 15, 19, 60, 66, 5, 46, 11, 48, 34, 7, 63, 32, 40, 14, 67, 36, 29, 43, 20, 54, 4, 56, 17, 51, 65, 18, 41, 38, 2, 71, 57, 23, 0, 28, 53, 30, 61, 13, 42, 50, 8, 47, 10, 59, 6, 27, 58, 3, 25};
-    return;
+    return;*/
 
     unsigned int nbItems = instance->getNbItems();
     std::vector<bool> itemsSelected;

@@ -96,14 +96,20 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
     }
 
     unsigned int stepWidth = points.size() > 1 ? 0 : points[1].getX();
-    unsigned int stepHeight = points.size() > 1 ? points[0].getY() - points[1].getY() : MIN_WASTE_AREA + 1;
+    unsigned int stepHeight = points.size() > 1 ? points[0].getY() - points[1].getY() : MIN_WASTE_AREA;
 
     assert(stepHeight > 0);
     x = 0;
     y = points[0].getY();
     assert(y != 0);
+
     int yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
     int yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
+
+    /*if (stepWidth < h && stepHeight < MIN_WASTE_AREA)
+        std::cout << y << " < " <<  yRotated << std::endl;
+    if (stepWidth < w && stepHeight < MIN_WASTE_AREA)
+        std::cout << y << " < " << yNotRotated <<  std::endl;*/
 
     if (x >= xMin && x <= xMax && yNotRotated <= yMax)
         addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated,
@@ -119,13 +125,21 @@ std::vector<GlassLocation> RedMonster::getLocationsForItemIndex(unsigned int ind
         if (x < xMin) { pointIndex++; continue; }
         y = points[pointIndex + 1].getY();
         stepWidth = points[pointIndex + 1].getX() - x;
-        stepHeight = points[pointIndex].getY(); - y;
+        stepHeight = y - (pointIndex + 2 < points.size() ? points[pointIndex + 2].getY() : 0);
         assert(stepHeight > 0);
         yNotRotated = y + (stepWidth >= w || stepHeight >= MIN_WASTE_AREA ? 0 : MIN_WASTE_AREA);
         yRotated = y + (stepWidth >= h || stepHeight >= MIN_WASTE_AREA ? 0: MIN_WASTE_AREA);
-
+        /*if (stepWidth < h && stepHeight < MIN_WASTE_AREA)
+            std::cout << y << " < " <<  yRotated << std::endl;
+        if (stepWidth < w && stepHeight < MIN_WASTE_AREA)
+            std::cout << y << " < " << yNotRotated <<  std::endl;*/
         assert(x != 0);
         assert(y != 0);
+        /*if (x == 1828 && (yRotated == 2256 || yNotRotated == 2256)) {
+            std::cout << time << " <> ";
+            std::cout << x << " " << yRotated << " " << yNotRotated << std::endl;
+            std::cout << ">> " << xMax << " " << xMaxRotated << " " << yMax << " " << yMaxRotated << std::endl;
+        }*/
         if (x <= xMax && yNotRotated <= yMax)
             addLocationsFreeOfDefectsForLocation(GlassLocation(index, plateIndex, x, yNotRotated, NOT_ROTATED, instance, time + 1), locations);
         if (x <= xMaxRotated && yRotated <= yMaxRotated)
