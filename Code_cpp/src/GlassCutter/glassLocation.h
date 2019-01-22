@@ -16,6 +16,7 @@ class GlassLocation {
     GlassLocation(unsigned int x, unsigned int y, const GlassLocation& location);
 
     bool operator==(const GlassLocation& otherLocation) const; 
+    bool operator<(const GlassLocation& otherLocation) const;
     unsigned int getX() const { return x; }
     void setX(unsigned int x) { this->x = x; }
     unsigned int getY() const { return y; }

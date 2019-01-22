@@ -4,6 +4,8 @@
 #include "../GlassCutter/glassLocation.h"
 #include "../GlassCutter/glassCut.h"
 
+#include <set>
+
 #define BRANCH -2
 #define WASTE -1
 #define RESIDUAL -3
@@ -51,16 +53,30 @@ class GlassNode {
     void reset();
     void displayNode() const;
     void displayNode(std::string prefix) const;
-    unsigned int buildNodeAndReturnNbItemsCuts(unsigned int begin, unsigned int end);
+    unsigned int buildNodeAndReturnNbItemsCuts(unsigned int begin, unsigned int end, bool lazy);
+    unsigned int checkNodeAndReturnNbItemsCuts(unsigned int begin, unsigned int end);
+    unsigned int addSonAndBuildNode(unsigned int beginAbscissa, unsigned int endAbscissa,
+         unsigned int beginItem, unsigned int endItem, bool lazy);
+    
     unsigned int saveNode(std::ofstream& outputFile, unsigned int nodeId, int parentId, bool last);
     double getSurfaceOccupation();
     unsigned int getNbItems() const { return endSequencePosition - beginSequencePosition; }
     unsigned int getXMax() const;
 
+    struct BuiltNode {
+        unsigned int beginAbscissa;
+        unsigned int size;
+        std::vector<GlassLocation> items;
+
+        BuiltNode();
+        BuiltNode(unsigned int prevAbsissa, unsigned int size, std::vector<GlassLocation> items);
+        bool operator<(const BuiltNode& other) const;
+    };
+
     private:
     void buildCutsAvailable(const GlassLocationIt& first, const GlassLocationIt& last);
     void buildRealCuts();
-    unsigned int cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts);
+    unsigned int cutRealCuts(const GlassLocationIt& first, unsigned int nbItemsToCuts, bool lazy);
     
     void displayCutsAvailable() const;
     void displayRealCuts() const;
@@ -94,6 +110,10 @@ class GlassNode {
     std::vector<RealCut> realCuts;
     unsigned int beginSequencePosition;
     unsigned int endSequencePosition; // exclu
+    unsigned int xMax;
+
+    std::set<BuiltNode> builtNodes;
 };
 
 std::ostream& operator<<(std::ostream& os, const GlassNode& node);
+std::ostream& operator<<(std::ostream& os, const GlassNode::BuiltNode& node);

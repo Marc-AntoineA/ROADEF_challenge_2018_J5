@@ -11,9 +11,28 @@ GlassLocation::GlassLocation(unsigned int x, unsigned int y, const GlassLocation
 }
 
 bool GlassLocation::operator==(const GlassLocation& otherLocation) const {
-    return itemIndex == otherLocation.getItemIndex() && rotated == otherLocation.rotated 
+    return itemIndex == otherLocation.getItemIndex() && rotated == otherLocation.getRotated() 
         && x == otherLocation.getX() && y == otherLocation.getY() 
         && binId == otherLocation.getBinId() && locationSequence == otherLocation.getLocationSequence();       
+}
+
+bool GlassLocation::operator<(const GlassLocation& otherLocation) const {
+    if (itemIndex == otherLocation.getItemIndex()) {
+        if (rotated == otherLocation.getRotated()) {
+            if (x == otherLocation.getX()) {
+                if (y == otherLocation.getY()) {
+                    if (binId == otherLocation.getBinId()) {
+                        return locationSequence < otherLocation.getLocationSequence();
+                    }
+                    return binId < otherLocation.getBinId();
+                }
+                return y < otherLocation.getY();
+            }
+            return x < otherLocation.getX();
+        }
+        return rotated < otherLocation.getRotated();
+    }
+    return itemIndex < otherLocation.getItemIndex();
 }
 
 std::ostream& operator<<(std::ostream& os, const GlassLocation& location) {

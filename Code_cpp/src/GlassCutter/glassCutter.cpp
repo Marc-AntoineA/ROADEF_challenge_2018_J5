@@ -68,16 +68,17 @@ bool GlassCutter::cut(unsigned int depth){
     unsigned int nbScore = 0;
     unsigned int nbNot = 0;
     /*fullAttempt(GlassLocation(0, 0, 0, 0, false, instance, 0));
-    fullAttempt(GlassLocation(19, 0, 0, 234, false, instance, 1));
-    fullAttempt(GlassLocation(1, 0, 0, 1103, true, instance, 2));
-    fullAttempt(GlassLocation(2, 0, 914, 1103, true, instance, 3));
-    fullAttempt(GlassLocation(3, 0, 1848, 0, false, instance, 4));
-    fullAttempt(GlassLocation(4, 0, 1848, 733, false, instance, 5));
-    fullAttempt(GlassLocation(5, 0, 1848, 1406, true, instance, 6));
-    std::cout << " ok " << std::endl;
-    fullAttempt(GlassLocation(20, 0, 2348, 1406, false, instance, 7));
-    currentSequenceIndex = 8;*/
-    
+    fullAttempt(GlassLocation(10, 0, 0, 1084, true, instance, 1));
+    fullAttempt(GlassLocation(1, 0, 430, 0, true, instance, 2));
+    fullAttempt(GlassLocation(2, 0, 430, 1604, true, instance, 3));
+    fullAttempt(GlassLocation(13, 0, 1048, 0, false, instance, 4));
+    fullAttempt(GlassLocation(3, 0, 1048, 522, false, instance, 5));
+    fullAttempt(GlassLocation(9, 0, 1048, 1020, true, instance, 6));
+    fullAttempt(GlassLocation(16, 0, 1530, 1020, true, instance, 7));*/
+    //fullAttempt(GlassLocation(8, 0, 2012, 1020, true, instance, 8));
+    //fullAttempt(GlassLocation(14, 0, 1048, 2720, true, instance, 9));
+    //fullAttempt(GlassLocation(15, 0, 2433, 0, true, instance, 10));
+
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     while (currentSequenceIndex < sequence.size()) {
         unsigned int stackId = sequence[currentSequenceIndex];
@@ -158,13 +159,19 @@ double GlassCutter::buildLazyDeepScoreTree(unsigned int sequenceIndex, unsigned 
 
 unsigned int GlassCutter::compute1CutFeasibleForMinWaste(unsigned int x) const {
     unsigned int cutX = x;
+    const GlassLocation& mainLocation = locations[currentBinId].back();
+    /*if (mainLocation.getX() == 2413 && mainLocation.getY() == 0 && mainLocation.getItemIndex() == 15) 
+        std::cout << "  " << locations[currentBinId].back() << std::endl;*/
     for (const GlassLocation& location: locations[currentBinId]) {
+        //std::cout << location << std::endl;
         if (location.getXW() == x) continue;
         if (location.getXW() + MIN_WASTE_AREA < x) continue;
         if (x < location.getXW()) continue;
+        //std::cout << location << std::endl;
         cutX = std::max(cutX, 1 + location.getXW() + MIN_WASTE_AREA);
-        if (location.getX() >= x) break; // Le 1-cut serait entre deux items normalement impossible
+        if (location.getX() >= x) return x;
     }
+    if (cutX > x) cutX = std::max(cutX, x + MIN_WASTE_AREA);
     return cutX;
 }
 
@@ -198,10 +205,9 @@ GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree* tree) {
                 //std::cout << "failed" << location << std::endl;
                 scoredLocation.feasible = NOT_FEASIBLE;
                 unsigned int cutX = compute1CutFeasibleForMinWaste(location.getX());
-                //std::cout << cutX << " >= " << location.getX() << std::endl;
                 if (cutX == location.getX()) continue;
                 assert(cutX >= location.getX());
-                assert(location.getX() + MIN_WASTE_AREA >= cutX);  
+                assert(cutX >= location.getX() + MIN_WASTE_AREA);  
                 location.setX(cutX);
                 son->reset();
                 if (!fullAttempt(location)) {
@@ -253,16 +259,15 @@ bool GlassCutter::computeBestLocationAndApplyIfNecessary() {
     if (best.score <= 0) return false;
 
     if (!fullAttempt(best.location)) assert(false);
+    /*std::cout << "fullAttempt(GlassLocation(" <<  best.location.getItemIndex()<< ", " << currentBinId << ", ";
+    std::cout << best.location.getX() << ", " << best.location.getY() << ", " << (best.location.getRotated() ? "true, this))" : "false, this));") << std::endl;*/
     for (unsigned int sonIndex = 0; sonIndex < scoredTree->sons.size(); sonIndex++) {
         const GlassLocation& currentLocation = scoredTree->sons[sonIndex]->scoredLocation.location;
         if (currentLocation == best.location) { 
-            //std::cout << "? " << std::endl;
             ScoredLocationTree* newScoredTree = scoredTree->sons[sonIndex];
             scoredTree->sons.erase(scoredTree->sons.begin() + sonIndex);
             delete scoredTree;
             scoredTree = newScoredTree;
-            //std::cout << "line 201" << std::endl;
-            //std::cout << "Applied " << scoredTree->scoredLocation.location << std::endl;
             return true;
         }
     }
@@ -330,7 +335,7 @@ bool GlassCutter::checkTreeFeasibilityAndBuildCurrentNode() {
     /*if (location.getX() == 1828 && location.getY() == 2256 && location.getXW() == 4126 && location.getYH() == 2684)
             displayLocations();*/
     try {
-        currentNode()->buildNodeAndReturnNbItemsCuts(0, currentLocations()->size());
+        currentNode()->checkNodeAndReturnNbItemsCuts(0, currentLocations()->size());
         return true;
     } catch (const std::runtime_error& e) {
         addErrorStatistic(e.what());
@@ -398,9 +403,10 @@ void GlassCutter::saveBest(std::string name) {
         lastBinId++;
     }
     int maxSonId = -1;
+    bool notLazy = false;
     for (unsigned int binId=0; binId < lastBinId; binId++){
         nodes[binId].reset();
-        nodes[binId].buildNodeAndReturnNbItemsCuts(0, locations[binId].size());
+        nodes[binId].buildNodeAndReturnNbItemsCuts(0, locations[binId].size(), notLazy);
         maxSonId = nodes[binId].saveNode(outputFile, maxSonId + 1, -1, binId == lastBinId - 1);
     }
 
@@ -453,7 +459,7 @@ double GlassCutter::getSurfacePlateOccupation(unsigned int plateIndex) {
 }
 
 unsigned int GlassCutter::getXMax() {
-    if (currentMonster()->getXMax() > currentNode()->getXMax()) {
+    if (currentMonster()->getXMax() > currentNode()->getXMax()) { // TODO warning, c'est bien là pour une raison
         std::cout << (*currentMonster()) << std::endl;
         currentNode()->displayNode();
          for (const GlassLocation& location: locations[7]) 

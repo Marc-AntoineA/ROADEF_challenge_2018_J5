@@ -73,10 +73,10 @@ void Heuristic::initRandomlySequence() {
     // A2
     //std::vector<unsigned int> sequenceItems = {23, 22,24,38, 18, 19, 3, 1, 12, 67, 68, 69, 48};//, 21, 32, 66,20,60,37,31,61,55,57,70,29,10,5, 13, 30, 43, 64, 59, 53, 51, 33, 35};
     // A20
-    //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4,5,11,6,12,7};
+    //std::vector<unsigned int> sequenceItems = {0,10,1,2,13,3,9,16,8,14,15,4, 5,11,6,12,7};
     // A17
-    /*std::vector<unsigned int> sequenceItems = {0, 19, 1, 2, 3, 4, 5, 20, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
-    for (unsigned int itemIndex: sequenceItems){
+    //std::vector<unsigned int> sequenceItems = {0, 19, 1, 2, 3, 4, 5, 20, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+    /*for (unsigned int itemIndex: sequenceItems){
         unsigned int stackId = instance->getItem(itemIndex).getStackId();
         sequence.push_back(stackId);
     }
@@ -163,7 +163,6 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
     while (getCurrentDurationOnSeconds() < currentTimeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
-        std::cout << "trying move " << move->getName() << std::endl;
         int startingFrom = move->attempt();
         if (startingFrom == NOTHING) continue;
         nbIterations++;
@@ -185,7 +184,6 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
             previousDuration = getCurrentDurationOnSeconds();
             displayLog();
         } 
-        std::cout << "done " << std::endl;
     }
     /*displaySequence();
     cutter.displayLocations();
