@@ -62,7 +62,7 @@ unsigned int Heuristic::glassRandint(unsigned int begin, unsigned int last) {
 void Heuristic::buildMoves() {
     poolMoves.clear();
     poolMoves.push_back(new Swap(this));
-    for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
+    for (unsigned int k = 3; k < std::min((std::size_t)8, sequence.size()); k++) 
         poolMoves.push_back(new KConsecutivePermutation(this, k));
     for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KPermutation(this, k));
@@ -163,6 +163,7 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
     while (getCurrentDurationOnSeconds() < currentTimeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
+        std::cout << "trying move " << move->getName() << std::endl;
         int startingFrom = move->attempt();
         if (startingFrom == NOTHING) continue;
         nbIterations++;
@@ -184,6 +185,7 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
             previousDuration = getCurrentDurationOnSeconds();
             displayLog();
         } 
+        std::cout << "done " << std::endl;
     }
     /*displaySequence();
     cutter.displayLocations();

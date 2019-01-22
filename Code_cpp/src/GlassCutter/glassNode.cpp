@@ -15,13 +15,15 @@ GlassNode::GlassNode(GlassInstance* instance, GlassCutter* cutter, unsigned int 
     unsigned int depth, int type)
     : instance(instance), cutter(cutter), 
     plateIndex(plateIndex), x(x), y(y), width(width), height(height), depth(depth), type(type), 
-    sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()) {
+    sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()),
+    beginSequencePosition(0), endSequencePosition(0) {
     //std::cout << (*this) << std::endl;
 }
 
 GlassNode::GlassNode()
     : instance(NULL), cutter(NULL), x(0), y(0), width(WIDTH_PLATES), height(HEIGHT_PLATES), depth(0), type(BRANCH),
-    sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()) {
+    sons(std::vector<GlassNode>()), cutsAvailable(std::vector<GlassCut>()), realCuts(std::vector<RealCut>()),
+    beginSequencePosition(0), endSequencePosition(0) {
 }
 
 void GlassNode::reset() {
@@ -359,13 +361,14 @@ std::ostream& operator<<(std::ostream& os, const GlassNode& node) {
 }
 
 double GlassNode::getSurfaceOccupation() {
+    assert(instance != NULL);
     if (type == RESIDUAL) return 1;
     double itemsArea = 0.;
     for (GlassLocationIt it = getFirst() ; it < getLast() ; it++) {
         assert(it->getItemIndex() < instance->getNbItems());
         itemsArea += instance->getItem(it->getItemIndex()).getArea();
     }
-    return itemsArea/(width*height);
+    return itemsArea / (width * height);
 }
 
 // WARNING: nodes are in reversed order
