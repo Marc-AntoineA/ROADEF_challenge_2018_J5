@@ -175,7 +175,7 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
         move->attempt(startingFrom, endingTo);
         if (startingFrom == endingTo);
         beginModifiedSequenceIndex = std::min(beginModifiedSequenceIndex, startingFrom);
-        endModifiedSequenceIndex = std::max(endModifiedSequenceIndex, endingTo) + 15;// todo + 1
+        endModifiedSequenceIndex = std::max(endModifiedSequenceIndex, endingTo) + 1;// todo + 1
         nbIterations++;
         MOVE_STATISTIC result = evaluateCurrentSolution(depth, beginModifiedSequenceIndex, endModifiedSequenceIndex);
         move->addStat(result);

@@ -52,12 +52,12 @@ int main(int argc, char* argv[])
     std::cout << " - depthLimit: " << depthLimit << std::endl;
     std::cout << " - seed: " << seed << std::endl;
 
-    seed = 541;
+    /*seed = 541;
     instanceName = "B13";
     outputName = "B13.csv";
     timeLimit = 20;
     nbThreads = 4;
-    depthLimit = 3;
+    depthLimit = 3;*/
     srand(seed);
 
     std::vector<Heuristic*> heuristics;

@@ -81,7 +81,7 @@ bool GlassCutter::cut(unsigned int depth, unsigned int endSequenceIndex){
             incrBinId();
             if (currentSequenceIndex > endSequenceIndex && isCurrentBinUnmodified(currentSequenceIndex)) {
                 currentMaxX = xLimit;
-                std::cout << currentMaxX << std::endl;
+                //std::cout << currentMaxX << std::endl;
                 return true;
             }
             if (currentBinId * WIDTH_PLATES > xLimit) { currentMaxX = currentBinId*WIDTH_PLATES + getXMax(); return false;}
@@ -89,10 +89,10 @@ bool GlassCutter::cut(unsigned int depth, unsigned int endSequenceIndex){
     }
     assert(currentSequenceIndex == sequence.size());
     currentMaxX = currentBinId * WIDTH_PLATES + getXMax();
-    if (xLimit > 218207 && currentMaxX == 218207) {
-        /*displayLocations();
-        assert(false);*/
-    }
+    /*if (xLimit > 218207 && currentMaxX == 218207) {
+        displayLocations();
+        assert(false);
+    }*/
     xLimit = std::min(currentMaxX, xLimit);
     return true;
 }
@@ -325,8 +325,8 @@ void GlassCutter::buildLocations() {
 bool GlassCutter::isCurrentBinUnmodified(unsigned int newBinItemIndex) const {
     int previousBinItemIndex = firstIndexInEachPlate[currentBinId];
     if (previousBinItemIndex < 0) return false;
-    if (((unsigned int)previousBinItemIndex) == newBinItemIndex)
-        std::cout << currentBinId << " -- " << newBinItemIndex << " < " << sequence.size() << std::endl;
+    /*if (((unsigned int)previousBinItemIndex) == newBinItemIndex)
+        std::cout << currentBinId << " -- " << newBinItemIndex << " < " << sequence.size() << std::endl;*/
     return ((unsigned int)previousBinItemIndex) == newBinItemIndex;
 }
 
