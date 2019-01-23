@@ -73,19 +73,23 @@ void KPermutation::revertPermutation() {
     sequence[permutation[0]] = tmp;
 }
 
-int KPermutation::attempt() {
+void KPermutation::attempt(unsigned int& beginIndex, unsigned int& endIndex) {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
-    if(k >= sequence.size()) std::cout << k << " & " << sequence.size() << std::endl;
     assert(k < sequence.size());
-    if (doNothing()) return NOTHING;
+    if (doNothing()) {
+        beginIndex = 0;
+        endIndex = 0;
+        return;
+    }
     mixPermutation();
     applyPermutation();
-    unsigned int minIndex = permutation[0];
+    beginIndex = permutation[0];
+    endIndex = permutation[0];
     for (unsigned int index = 0; index < k; index++) {
-        minIndex = std::min(minIndex, permutation[index]);
+        beginIndex = std::min(beginIndex, permutation[index]);
+        endIndex = std::max(endIndex, permutation[index]);
     }
-    return minIndex;
 }
 
 void KPermutation::commit() {

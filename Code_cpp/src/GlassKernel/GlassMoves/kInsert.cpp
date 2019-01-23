@@ -10,28 +10,24 @@ KInsert::KInsert(Heuristic* heuristic, unsigned int k)
     this->name = "_Insert";//
 }
 
-int KInsert::attempt() {
-    //std::cout << "ATTEMPT" << std::endl;
-    //heuristic->displaySequence();
+void KInsert::attempt(unsigned int& beginIndex, unsigned int& endIndex) {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
     fromIndex = heuristic->glassRandint(0, sequence.size() - 1 - k);
     toIndex = heuristic->glassRandint(0, sequence.size() - 1 - k);
-    if (doNothing()) return NOTHING;
+    if (doNothing()) {
+        beginIndex = 0;
+        endIndex = 0;
+        return;
+    }
 
-    //std::cout << "attempt k " << k << " " << fromIndex << " " << toIndex << std::endl;
     std::vector<unsigned int> movedBlock;
     movedBlock.clear();
     movedBlock.insert(movedBlock.end(), sequence.begin() + fromIndex, sequence.begin() + fromIndex + k);
-    //for (unsigned int item: movedBlock) 
-    //    std::cout << item << " ";
-    //std::cout << std::endl;
     sequence.erase(sequence.begin() + fromIndex, sequence.begin() + fromIndex + k);
-    //heuristic->displaySequence();
     sequence.insert(sequence.begin() + toIndex, movedBlock.begin(), movedBlock.end());
-    //std::cout << "end " << std::endl;
-    //heuristic->displaySequence();  
-    return std::min(fromIndex, toIndex);
+    beginIndex = std::min(fromIndex, toIndex);
+    endIndex = std::max(fromIndex, endIndex) + k;
 }
 
 void KInsert::commit() {

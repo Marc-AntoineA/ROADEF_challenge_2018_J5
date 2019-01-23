@@ -71,16 +71,20 @@ void KConsecutivePermutation::revertPermutation() {
     sequence[firstIndex + permutation[0]] = tmp;
 }
 
-int KConsecutivePermutation::attempt() {
+void KConsecutivePermutation::attempt(unsigned int& beginIndex, unsigned int& endIndex) {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
-    if(k >= sequence.size()) std::cout << k << " & " << sequence.size() << std::endl;
     assert(k < sequence.size());
     firstIndex = heuristic->glassRandint(0, sequence.size() - k);
-    if (doNothing()) return NOTHING;
+    if (doNothing()) { 
+        beginIndex = 0; 
+        endIndex = 0;
+        return; 
+    } 
     mixPermutation();
     applyPermutation();
-    return firstIndex;
+    beginIndex = firstIndex;
+    endIndex = beginIndex + k;
 }
 
 void KConsecutivePermutation::commit() {

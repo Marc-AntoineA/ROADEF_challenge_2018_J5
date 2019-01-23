@@ -7,14 +7,19 @@
 #include <iostream>
 #include <algorithm>
 
-int Swap::attempt() {
+void Swap::attempt(unsigned int& beginIndex, unsigned int& endIndex) {
     addTested();
     std::vector<unsigned int>& sequence = heuristic->getSequence();
     firstIndex = heuristic->glassRandint(0, sequence.size() - 1);
     lastIndex = heuristic->glassRandint(firstIndex + 1, sequence.size());
-    if (sequence[firstIndex] == sequence[lastIndex]) return NOTHING;
+    if (sequence[firstIndex] == sequence[lastIndex]) {
+        beginIndex = 0;
+        endIndex = 0;
+        return;
+    }
     std::swap(sequence[firstIndex], sequence[lastIndex]);
-    return firstIndex;
+    beginIndex = firstIndex;
+    endIndex = lastIndex;
 }
 
 void Swap::commit() {

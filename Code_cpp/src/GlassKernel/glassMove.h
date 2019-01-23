@@ -18,7 +18,7 @@ class GlassMove {
     
     virtual void commit() {}
     virtual void revert() {}
-    virtual int attempt() { return NOTHING; }
+    virtual void attempt(unsigned int& beginIndex, unsigned int& endIndex) = 0;
     void addStat(MOVE_STATISTIC statistic);
     void addTested();
     void displayStatistics();

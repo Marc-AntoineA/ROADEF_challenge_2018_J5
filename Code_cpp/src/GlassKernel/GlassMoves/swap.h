@@ -5,7 +5,7 @@
 class Swap: public GlassMove {
     public:
     Swap(Heuristic* heuristic) : GlassMove(heuristic) { this->name="Swap";}
-    int attempt();
+    void attempt(unsigned int& beginIndex, unsigned int& endIndex);
     void commit();
     void revert();
 

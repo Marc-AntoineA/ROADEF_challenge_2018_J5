@@ -7,7 +7,7 @@
 class KPermutation : public GlassMove {
     public:
     KPermutation(Heuristic* heuristic, unsigned int k);
-    int attempt();
+    void attempt(unsigned int& beginIndex, unsigned int& endIndex);
     void commit();
     void revert();
 

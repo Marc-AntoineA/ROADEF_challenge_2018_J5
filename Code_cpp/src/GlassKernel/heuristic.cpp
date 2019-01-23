@@ -160,14 +160,16 @@ unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSeque
 void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
     bestScore = computeScore(depth);
     nbIterations = 0;
-    int beginSequenceIndex = 0;
+    unsigned int beginSequenceIndex = 0;
 
     unsigned int previousDuration = 0;
     while (getCurrentDurationOnSeconds() < currentTimeLimit) {
         unsigned int moveIndex = glassRandint(0, poolMoves.size());
         GlassMove* move = poolMoves[moveIndex];
-        int startingFrom = move->attempt();
-        if (startingFrom == NOTHING) continue;
+        unsigned int startingFrom = 0;
+        unsigned int endingTo = 0;
+        move->attempt(startingFrom, endingTo);
+        if (startingFrom == endingTo);
         nbIterations++;
         MOVE_STATISTIC result = evaluateCurrentSolution(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
         move->addStat(result);
