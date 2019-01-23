@@ -23,7 +23,7 @@ void GlassInstance::buildItems() {
     std::string line;
     std::getline(batchFile, line); // skip header
     while (std::getline(batchFile, line))
-        items.push_back(GlassItem(line));
+        items.emplace_back(GlassItem(line));
     batchFile.close();
     if (VERBOSE) std::cout << "\t... Chargement des items effectué." << std::endl;
 }

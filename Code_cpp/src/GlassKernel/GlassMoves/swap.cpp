@@ -13,12 +13,9 @@ int Swap::attempt() {
     firstIndex = heuristic->glassRandint(0, sequence.size() - 1);
     lastIndex = heuristic->glassRandint(firstIndex + 1, sequence.size());
     if (sequence[firstIndex] == sequence[lastIndex]) return NOTHING;
-    unsigned int tmp = sequence[firstIndex];
-    sequence[firstIndex] = sequence[lastIndex];
-    sequence[lastIndex] = tmp;
+    std::swap(sequence[firstIndex], sequence[lastIndex]);
     return firstIndex;
 }
-
 
 void Swap::commit() {
     return;
@@ -26,7 +23,5 @@ void Swap::commit() {
 
 void Swap::revert() {
     std::vector<unsigned int>& sequence = heuristic->getSequence();
-    unsigned int tmp = sequence[firstIndex];
-    sequence[firstIndex] = sequence[lastIndex];
-    sequence[lastIndex] = tmp;
+    std::swap(sequence[firstIndex], sequence[lastIndex]);
 }

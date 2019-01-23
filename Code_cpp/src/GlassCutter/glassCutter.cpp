@@ -284,7 +284,7 @@ void GlassCutter::buildStacks() {
         unsigned int stackId = item.getStackId();
         if (stacks.size() <= stackId) {
             for (unsigned int k = stacks.size(); k < stackId + 1; k++)
-                stacks.push_back(GlassStack(instance, k));
+                stacks.emplace_back(GlassStack(instance, k));
         }
         stacks[stackId].insert(item);
     }

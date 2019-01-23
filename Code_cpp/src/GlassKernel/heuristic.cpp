@@ -6,6 +6,7 @@
 #include "../GlassKernel/GlassMoves/swap.h"
 #include "../GlassKernel/GlassMoves/kConsecutivePermutation.h"
 #include "../GlassKernel/GlassMoves/kPermutation.h"
+#include "../GlassKernel/GlassMoves/kInsert.h"
 
 #include <cstdlib>
 #include <sstream>
@@ -66,6 +67,8 @@ void Heuristic::buildMoves() {
         poolMoves.push_back(new KConsecutivePermutation(this, k));
     for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KPermutation(this, k));
+    /*for (unsigned int k = 2; k < std::min((std::size_t)7, sequence.size() - 1); k++)
+        poolMoves.push_back(new KInsert(this, k));*/
 }
 
 void Heuristic::initRandomlySequence() {

@@ -100,11 +100,11 @@ void GlassNode::buildCutsAvailable(const GlassLocationIt& first, const GlassLoca
     unsigned int index = std::distance(first, last) - 1;
     for (GlassLocationIt locationIt = first; locationIt != last; locationIt++) {
         if (isVerticalCut()) {
-            cutsAvailable.push_back(GlassCut(locationIt->getX(), index, !BEGIN_ITEM, VERTICAL_CUT));
-            cutsAvailable.push_back(GlassCut(locationIt->getXW(), index, BEGIN_ITEM, VERTICAL_CUT));
+            cutsAvailable.emplace_back(GlassCut(locationIt->getX(), index, !BEGIN_ITEM, VERTICAL_CUT));
+            cutsAvailable.emplace_back(GlassCut(locationIt->getXW(), index, BEGIN_ITEM, VERTICAL_CUT));
         } else {
-            cutsAvailable.push_back(GlassCut(locationIt->getY(), index, !BEGIN_ITEM, !VERTICAL_CUT));
-            cutsAvailable.push_back(GlassCut(locationIt->getYH(), index, BEGIN_ITEM, !VERTICAL_CUT));
+            cutsAvailable.emplace_back(GlassCut(locationIt->getY(), index, !BEGIN_ITEM, !VERTICAL_CUT));
+            cutsAvailable.emplace_back(GlassCut(locationIt->getYH(), index, BEGIN_ITEM, !VERTICAL_CUT));
         }
         index--;
     }
@@ -159,7 +159,7 @@ void GlassNode::buildRealCuts() {
     unsigned int prevAbscissa = lastAbscissa;
     unsigned int nbPrevItems = 0;
 
-    realCuts.push_back(RealCut(prevAbscissa, nbItemsSeen));
+    realCuts.emplace_back(RealCut(prevAbscissa, nbItemsSeen));
     
     for (const GlassCut& cut: cutsAvailable) {
         //std::cout << prevAbscissa << " new cut " << cut.getAbscissa() << std::endl;
@@ -176,12 +176,12 @@ void GlassNode::buildRealCuts() {
                 if (depth < 3) {
                     if (isNotWasteCut) {
                         if (isCutPossibleForMinXY(prevAbscissa, cut.getAbscissa())) {
-                            realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
+                            realCuts.emplace_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                             prevAbscissa = cut.getAbscissa();
                             nbPrevItems = nbItemsSeen;
                         }
                     } else {
-                        realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
+                        realCuts.emplace_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                         prevAbscissa = cut.getAbscissa();
                     }
                 } else {
@@ -190,40 +190,29 @@ void GlassNode::buildRealCuts() {
                     if (realCuts.size() >= 2) {
                         throw std::runtime_error("Trimming failed (more than 1 cut)");
                     }
-                    realCuts.push_back(RealCut(cut.getAbscissa(), nbItemsSeen));
+                    realCuts.emplace_back(RealCut(cut.getAbscissa(), nbItemsSeen));
                     prevAbscissa = cut.getAbscissa();
                     nbPrevItems = nbItemsSeen;
                 }            
             } else if (depth == 0 && realCuts.size() == 1 && cut.getAbscissa() < lastAbscissa) {
                 unsigned int cutAbscissa = cut.getAbscissa() + MIN_WASTE_AREA;
-
+                if (cutAbscissa > lastAbscissa) throw std::runtime_error("cut impossible");
                 if (cutAbscissa != firstAbscissa && cutAbscissa != lastAbscissa
-                && prevAbscissa - cutAbscissa >= MIN_WASTE_AREA 
-                && isCutPossibleForMinWaste(cutAbscissa) && isFreeOfDefects(cut)) {
+                    && prevAbscissa - cutAbscissa >= MIN_WASTE_AREA 
+                    && isCutPossibleForMinWaste(cutAbscissa) && isFreeOfDefects(cut)) {
 
-                bool isNotWasteCut = nbItemsSeen > nbPrevItems;
-
-                    if (depth < 3) {
-                        if (isNotWasteCut) {
-                            if (isCutPossibleForMinXY(prevAbscissa, cutAbscissa)) {
-                                realCuts.push_back(RealCut(cutAbscissa, nbItemsSeen));
-                                prevAbscissa = cutAbscissa;
-                                nbPrevItems = nbItemsSeen;
-                            }
-                        } else {
-                            realCuts.push_back(RealCut(cutAbscissa, nbItemsSeen));
+                    bool isNotWasteCut = nbItemsSeen > nbPrevItems;
+                    if (isNotWasteCut) {
+                        if (isCutPossibleForMinXY(prevAbscissa, cutAbscissa)) {
+                            realCuts.emplace_back(RealCut(cutAbscissa, nbItemsSeen));
                             prevAbscissa = cutAbscissa;
+                            nbPrevItems = nbItemsSeen;
                         }
                     } else {
-                        if (nbItemsSeen - nbPrevItems > 1) 
-                            throw std::runtime_error("Trimming failed (more than 1 item)");
-                        if (realCuts.size() >= 2) {
-                            throw std::runtime_error("Trimming failed (more than 1 cut)");
-                        }
-                        realCuts.push_back(RealCut(cutAbscissa, nbItemsSeen));
+                        realCuts.emplace_back(RealCut(cutAbscissa, nbItemsSeen));
                         prevAbscissa = cutAbscissa;
-                        nbPrevItems = nbItemsSeen;
                     }
+                    
                 }         
             }
         }
@@ -235,7 +224,7 @@ void GlassNode::buildRealCuts() {
             // TODO warning ici...
         }
     }
-    realCuts.push_back(RealCut(firstAbscissa, nbItemsSeen));
+    realCuts.emplace_back(RealCut(firstAbscissa, nbItemsSeen));
     /*std::cout << "====|===" << std::endl;
     displayRealCuts();*/
 }
@@ -286,9 +275,9 @@ unsigned int GlassNode::addSonAndBuildNode(unsigned int beginAbscissa, unsigned 
     }
 
     if (isVerticalCut())
-        sons.push_back(GlassNode(instance, cutter, plateIndex, beginAbscissa, y, size, height, depth + 1, BRANCH));
+        sons.emplace_back(GlassNode(instance, cutter, plateIndex, beginAbscissa, y, size, height, depth + 1, BRANCH));
     else
-        sons.push_back(GlassNode(instance, cutter, plateIndex, x, beginAbscissa, width, size, depth + 1, BRANCH));
+        sons.emplace_back(GlassNode(instance, cutter, plateIndex, x, beginAbscissa, width, size, depth + 1, BRANCH));
     
     unsigned nbItemsCuts = sons.back().buildNodeAndReturnNbItemsCuts(beginItem, endItem, lazy);
     if (nbItemsCuts == endItem - beginItem && lazy && depth == 0){
