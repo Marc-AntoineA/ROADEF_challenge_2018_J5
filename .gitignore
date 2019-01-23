@@ -1,25 +1,3 @@
-
-Documents/Remarques.aux
-Documents/Remarques.bbl
-Documents/Remarques.blg
-Documents/Remarques.fdb_latexmk
-Documents/Remarques.fls
-Documents/Remarques.log
-Documents/Remarques.out
-Documents/Remarques.toc
-Documents/Remarques.synctex.gz
-
-Code/CMakeFiles/
-Code/Makefile
-Code/CMakeCache.txt
-Code/cmake_install.cmake
-Code/*.user
-Code/*.cbp
-Code/*.exe
-Code/*.cpp.autosave
-Code/toukeute
-Code/tests
-
 checker_instances
 private/
 
@@ -31,4 +9,3 @@ checker/instances_checker/*
 Build/*
 /Code_cpp/build/
 Code_cpp_old/
-file.txt
