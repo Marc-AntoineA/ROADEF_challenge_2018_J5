@@ -13,6 +13,7 @@ A Jupyter Notebook explains step by step how the solutions are built considering
 4. `Code_cpp_old`: This is the programm used for the Qualification phase, the structure is very close to the `Proto_industriel_python`. It's a CMake project.
 5 `Code_cpp`: This is the programm used for the Final Phase, it takes the good ideas from the previous code but the entire structure changed.
 6. `Codes_auxiliaires_pythons`: Two small programms to draw and to check a solution. The solution drawn may not be cutting tree pattern, it's only rectangles with coordinates. 
-7. `Documents`: 
+7. `checker_instances`: Checker, visualizer and instances (made by organizers of the challenge)
+8. `Documents`: 
 >  * A short description (2 pages) of the algorithm used for the Qualification Phase
 >  * A description (5 pages) of the algorithm used for the Final Phase
