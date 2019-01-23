@@ -67,8 +67,8 @@ void Heuristic::buildMoves() {
         poolMoves.push_back(new KConsecutivePermutation(this, k));
     for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KPermutation(this, k));
-    /*for (unsigned int k = 2; k < std::min((std::size_t)7, sequence.size() - 1); k++)
-        poolMoves.push_back(new KInsert(this, k));*/
+    for (unsigned int k = 1; k < std::min((std::size_t)3, sequence.size() - 1); k++)
+        poolMoves.push_back(new KInsert(this, k));
 }
 
 void Heuristic::initRandomlySequence() {
