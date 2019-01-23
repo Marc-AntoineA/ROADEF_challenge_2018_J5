@@ -1,0 +1,7 @@
+CMakeCache.txt
+*.json
+bin
+build
+CMakeFiles
+nbproject
+cmake_install.cmake

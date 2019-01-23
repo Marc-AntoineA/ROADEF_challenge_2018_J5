@@ -33,19 +33,3 @@ def test_instance(instance, solution_filename):
 
 solution_filename = '../../Code_cpp/src/build/bin/' + instance + '.csv'    
 print(test_instance(instance, solution_filename))
-
-
-k = 1
-while (True):
-    i = 1
-    while i <= 21:
-        if k % i != 0:
-            i += 1
-            continue
-        i += 1
-    if i < 21:
-        break
-    k += 1
-    if k % 100000 == 0:
-        print(k)
-print(k)
