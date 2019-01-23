@@ -84,7 +84,7 @@ void KConsecutivePermutation::attempt(unsigned int& beginIndex, unsigned int& en
     mixPermutation();
     applyPermutation();
     beginIndex = firstIndex;
-    endIndex = beginIndex + k;
+    endIndex = sequence.size();//beginIndex + k;
 }
 
 void KConsecutivePermutation::commit() {

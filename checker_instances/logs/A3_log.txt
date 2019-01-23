@@ -20,13 +20,13 @@
 
 	--- Parsing Solution file ---
 	Solution file path: instances_checker/A3_solution.csv
-	Plates: 4
-	Node 194: is a WASTE that should be considered as a RESIDUAL
-	Nodes: 195
-	branches: 61
+	Plates: 3
+	Node 212: is a WASTE that should be considered as a RESIDUAL
+	Nodes: 213
+	branches: 71
 	Items: 68
 	Residuals: 1
-	Waste: 61
+	Waste: 70
 	Used Cut Stages: 4
 	Tree structure built
 	--- Solution file parsed successfully ---
@@ -34,7 +34,7 @@
 	--- Parsing Defects file ---
 	Defects file path: instances_checker/A3_defects.csv
 	Defects: 147
-	Defects on used plates: 2
+	Defects on used plates: 1
 	--- Defects file parsed successfully ---
 
 		----------- End of files parsing ----------
@@ -60,19 +60,21 @@
 	---------------------- Summary --------------------------
 	|  Plates               |  Used Area    |  Wasted Area  |
 	---------------------------------------------------------
-	|  Plate 0		|  67.1938%	|  32.8062%	|
-	|  Plate 1		|  67.3241%	|  32.6759%	|
-	|  Plate 2		|  52.4835%	|  47.5165%	|
-	|  Plate 3		|  60.4702%	|  39.5307%	|
+	|  Plate 0		|  84.3712%	|  15.6288%	|
+	|  Plate 1		|  89.3573%	|  10.6427%	|
+	|  Plate 2		|  87.1239%	|  12.8762%	|
 	---------------------------------------------------------
-	|  Total (4 plate)	|  62.0692%	|  37.9308%	|
+	|  Total (3 plate)	|  86.9159%	|  13.0841%	|
 	---------------------------------------------------------
 
 	------------------------ Residual -----------------------
 	|  Plate id             |  Width        |  Area %       |
 	---------------------------------------------------------
-	|  Plate 3		|  3022mm  	|  50%  	|
+	|  Plate 2		|  3019mm  	|  50%  	|
 	---------------------------------------------------------
+	--- End of Display Plates Area Usage ---
+	--------------------- Solution Value --------------------
+	--- OF = 6292020---
 	--- End of Display Plates Area Usage ---
 
 	------------------------------------------------------------

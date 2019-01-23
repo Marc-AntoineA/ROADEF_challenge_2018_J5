@@ -366,8 +366,8 @@ unsigned int GlassNode::saveNode(std::ofstream& outputFile, unsigned int nodeId,
     else
         outputFile << parentId << std::endl;
 
-    if (last && !sons.back().hasSons())
-        sons.back().setType(RESIDUAL);
+    if (last && !sons.front().hasSons())
+        sons.front().setType(RESIDUAL);
 
     unsigned int maxSonId = nodeId;
     std::reverse(sons.begin(), sons.end());

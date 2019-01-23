@@ -20,6 +20,7 @@ The checker is a CodeBlocks project, to recompile it you can download CodeBlocks
 or with a g++ compile command: g++ -O2 -Iinclude src/*.cpp -o checker
 
 To use it and check instance A0, you can call: ./checker A0
+To use it and check instance A0 and just getting a yes/or answer, you can call: ./checker A0 0
 
 The Checker visualization requires a browser that supports HTML5.
 
