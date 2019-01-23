@@ -117,8 +117,10 @@ void Heuristic::displaySequence() {
 }
 
 
-MOVE_STATISTIC Heuristic::evaluateCurrentSolution(unsigned int depth, unsigned int beginSequenceIndex) {
-    unsigned int currentScore = computeScore(depth, beginSequenceIndex);
+MOVE_STATISTIC Heuristic::evaluateCurrentSolution(unsigned int depth, 
+    unsigned int beginSequenceIndex, unsigned int endSequenceIndex) {
+
+    unsigned int currentScore = computeScore(depth, beginSequenceIndex, endSequenceIndex);
     if (currentScore > bestScore)
         return REFUSED;
 
@@ -146,13 +148,14 @@ void Heuristic::updateBestScore() {
 }
 
 unsigned int Heuristic::computeScore(unsigned int depth) {
-    return computeScore(depth, 0);
+    return computeScore(depth, 0, sequence.size());
 }
 
-unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSequenceIndex) {
+unsigned int Heuristic::computeScore(unsigned int depth, 
+    unsigned int beginSequenceIndex, unsigned int endSequenceIndex) {
     cutter.setSequence(sequence); // TODO a priori inutile
     cutter.revertPlatesUntilSequenceIndex(beginSequenceIndex);
-    if (cutter.cut(depth)) 
+    if (cutter.cut(depth, endSequenceIndex)) 
         return cutter.getCurrentScore();
     return NB_PLATES*WIDTH_PLATES*HEIGHT_PLATES;
 }
@@ -160,7 +163,8 @@ unsigned int Heuristic::computeScore(unsigned int depth, unsigned int beginSeque
 void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
     bestScore = computeScore(depth);
     nbIterations = 0;
-    unsigned int beginSequenceIndex = 0;
+    unsigned int beginModifiedSequenceIndex = 0;
+    unsigned int endModifiedSequenceIndex = sequence.size() - 1;
 
     unsigned int previousDuration = 0;
     while (getCurrentDurationOnSeconds() < currentTimeLimit) {
@@ -169,20 +173,24 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
         unsigned int startingFrom = 0;
         unsigned int endingTo = 0;
         move->attempt(startingFrom, endingTo);
+        beginModifiedSequenceIndex = std::min(beginModifiedSequenceIndex, startingFrom);
+        endModifiedSequenceIndex = std::max(endModifiedSequenceIndex, endingTo);
         if (startingFrom == endingTo);
         nbIterations++;
-        MOVE_STATISTIC result = evaluateCurrentSolution(depth, (unsigned int) std::min(beginSequenceIndex, startingFrom));
+        MOVE_STATISTIC result = evaluateCurrentSolution(depth, beginModifiedSequenceIndex, endModifiedSequenceIndex);
         move->addStat(result);
+
         if (result == IMPROVE)
             updateBestScore();
 
         if (result == ACCEPTED || result == IMPROVE) {
             move->commit();
-            beginSequenceIndex = sequence.size();
+            cutter.commitFirstIndexInEachPlate();
+            beginModifiedSequenceIndex = sequence.size();
+            endModifiedSequenceIndex = 0;
         } else {
             move->revert();
             move->addStat(REFUSED);
-            beginSequenceIndex = std::min(beginSequenceIndex, startingFrom);
         }
 
         if (getCurrentDurationOnSeconds() > 1 + previousDuration) {

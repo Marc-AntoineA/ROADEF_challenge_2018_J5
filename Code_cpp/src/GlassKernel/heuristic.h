@@ -34,8 +34,8 @@ class Heuristic {
     void buildMoves(); 
     void resetStacks();
     unsigned int computeScore(unsigned int depth);  
-    MOVE_STATISTIC evaluateCurrentSolution(unsigned int depth, unsigned int beginSequenceIndex);
-    unsigned int computeScore(unsigned int depth, unsigned int beginSequenceIndex);
+    MOVE_STATISTIC evaluateCurrentSolution(unsigned int depth, unsigned int beginSequenceIndex, unsigned int endSequenceIndex);
+    unsigned int computeScore(unsigned int depth, unsigned int beginSequenceIndex, unsigned int endSequenceIndex);
     void updateBestScore();
     
     GlassInstance* instance;

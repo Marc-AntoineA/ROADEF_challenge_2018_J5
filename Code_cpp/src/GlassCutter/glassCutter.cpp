@@ -19,6 +19,7 @@ GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& seq
     buildMonsters();
     buildNodes();
     buildLocations();
+    buildFirstIndexOnEachPlate();
     resetErrorsStatistics();
 }
 
@@ -62,36 +63,23 @@ double GlassCutter::getCurrentBigNodeSurfaceOccupation() {
     return sons.back().getSurfaceOccupation();
 }
 
-bool GlassCutter::cut(unsigned int depth){
+bool GlassCutter::cut(unsigned int depth, unsigned int endSequenceIndex){
     //displayStacks();
     scoredTree->reset();
     unsigned int nbScore = 0;
     unsigned int nbNot = 0;
-    /*fullAttempt(GlassLocation(0, 0, 0, 0, false, instance, 0));
-    fullAttempt(GlassLocation(10, 0, 0, 1084, true, instance, 1));
-    fullAttempt(GlassLocation(1, 0, 430, 0, true, instance, 2));
-    fullAttempt(GlassLocation(2, 0, 430, 1604, true, instance, 3));
-    fullAttempt(GlassLocation(13, 0, 1048, 0, false, instance, 4));
-    fullAttempt(GlassLocation(3, 0, 1048, 522, false, instance, 5));
-    fullAttempt(GlassLocation(9, 0, 1048, 1020, true, instance, 6));
-    fullAttempt(GlassLocation(16, 0, 1530, 1020, true, instance, 7));*/
-    //fullAttempt(GlassLocation(8, 0, 2012, 1020, true, instance, 8));
-    //fullAttempt(GlassLocation(14, 0, 1048, 2720, true, instance, 9));
-    //fullAttempt(GlassLocation(15, 0, 2433, 0, true, instance, 10));
 
     if (VERBOSE) std::cout << "InitWithSequence en cours..." << std::endl;
     while (currentSequenceIndex < sequence.size()) {
         unsigned int stackId = sequence[currentSequenceIndex];
         unsigned int itemIndex = stacks[stackId].top();
-        //std::cout << "Placement de l'item# " << itemIndex << std::endl;
-        //std::cout << "currentbin id " << currentBinId << std::endl;
         buildLazyDeepScoreTree(currentSequenceIndex, depth, scoredTree);
-        //std::cout << "Current bin id (after build) " << currentBinId << std::endl;
-        //scoredTree->display();
         if(computeBestLocationAndApplyIfNecessary()) {
             currentSequenceIndex++;
         } else {
             incrBinId();
+            if (currentSequenceIndex > endSequenceIndex && isCurrentBinUnmodified(currentSequenceIndex))
+                return true;
             if (currentBinId * WIDTH_PLATES > xLimit) { return false;}
         }
     }
@@ -278,6 +266,13 @@ unsigned int GlassCutter::getCurrentScore() {
     return (currentBinId*WIDTH_PLATES + getXMax())*HEIGHT_PLATES - instance->getItemsArea();
 }
 
+void GlassCutter::buildFirstIndexOnEachPlate() {
+    firstIndexInEachPlate.resize(NB_PLATES);
+    for (unsigned int index = 0; index < NB_PLATES; index++) {
+        firstIndexInEachPlate[index] = -1;
+    }
+}
+
 void GlassCutter::buildStacks() {
     stacks.clear();
     for (const GlassItem& item: instance->getItems()) {
@@ -313,6 +308,12 @@ void GlassCutter::buildMonsters() {
 void GlassCutter::buildLocations() {
     locations.clear();
     locations.resize(NB_PLATES);
+}
+
+bool GlassCutter::isCurrentBinUnmodified(unsigned int newBinItemIndex) const {
+    int previousBinItemIndex = firstIndexInEachPlate[currentBinId];
+    if (previousBinItemIndex < 0) return false;
+    return previousBinItemIndex == newBinItemIndex;
 }
 
 void GlassCutter::incrBinId() {
@@ -540,4 +541,16 @@ GlassCutter::ScoredLocationTree::~ScoredLocationTree() {
 
 GlassCutter::~GlassCutter() {
     delete scoredTree;
+}
+
+// TODO on peut ignorer les premières plaques dans la boucle
+void GlassCutter::commitFirstIndexInEachPlate() {
+    for (unsigned int index = 0; index <= currentBinId; index++) {
+        if (locations[index].empty()) {
+            firstIndexInEachPlate[index] = -1;
+            continue;
+        }
+        unsigned int binSequencePosition = locations[index].front().getLocationSequence(); 
+        firstIndexInEachPlate[index] = convertBinSequenceToMainSequence(binSequencePosition);
+    }
 }

@@ -17,7 +17,7 @@ class GlassCutter {
     GlassCutter(GlassInstance* instance, std::vector<unsigned int>& sequence);
     ~GlassCutter();
     void setSequence(std::vector<unsigned int>& sequence) { this->sequence = sequence; }
-    bool cut(unsigned int depth);
+    bool cut(unsigned int depth, unsigned int endSequenceIndex);
     unsigned int getCurrentScore();
     
     void displayErrorStatistics() const;
@@ -28,6 +28,7 @@ class GlassCutter {
     void saveBest(std::string name);
     void displayStatistics() const;
     double getSurfacePlateOccupation(unsigned int plateIndex);
+    void commitFirstIndexInEachPlate();
     std::vector<GlassLocation>::iterator getLocationIterator(unsigned int plateIndex, unsigned int index) {
         assert(plateIndex < locations.size());
         //std::cout << index << " " << plateIndex << " " << locations[plateIndex].size() << std::endl;
@@ -86,6 +87,7 @@ class GlassCutter {
     void buildMonsters();
     void buildNodes();
     void buildLocations();
+    void buildFirstIndexOnEachPlate();
     bool lazyAttempt(const GlassLocation& location);
     bool attempt(const GlassLocation& location, bool fast);
     bool fullAttempt(const GlassLocation& location);
@@ -99,7 +101,8 @@ class GlassCutter {
     double evaluateLocation(unsigned int sequenceIndex, unsigned int depth);
     double quickEvaluateLocation(double lazy);
     bool isLessGood();     
-    
+    bool isCurrentBinUnmodified(unsigned int endModificationIndex) const;
+
     double getCurrentBigNodeSurfaceOccupation();
     unsigned int computeMaxScorePossible();
     void revert();
@@ -135,4 +138,5 @@ class GlassCutter {
     unsigned int nbTrimmingPreChecked;
 
     unsigned int xLimit;
+    std::vector<int> firstIndexInEachPlate;
 };
