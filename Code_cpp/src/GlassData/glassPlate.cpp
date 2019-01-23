@@ -65,9 +65,10 @@ unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int w
         }
         //std::cout << nextY << " && " << height << " + " << defect.getYHeight() << std::endl;
         // Rq nextY = HEIGHT_PLATES s'il n'y a pas de défauts
-        if (nextY > height + defect.getYHeight()){
+        unsigned int defectHeight = std::max(defect.getYHeight(), y + MIN_WASTE_AREA);
+        if (nextY > height + defectHeight){
             // Il y a de la place de mettre un élément au milieu
-            yMin = std::min(yMin, defect.getYHeight());
+            yMin = std::min(yMin, defectHeight);
         }
     }
 
@@ -83,7 +84,7 @@ unsigned int GlassPlate::getBestY(unsigned int x, unsigned int y, unsigned int w
     if (nextY > height + y) {
         yMin = std::min(yMin, y);
     }
-
+    
     return yMin;
 }
 
