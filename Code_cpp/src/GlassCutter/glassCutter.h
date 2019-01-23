@@ -24,6 +24,7 @@ class GlassCutter {
     void displayStacks() const;
     void displayLocations() const;
     void reset();
+    void resetXLimit();
     void revertPlatesUntilSequenceIndex(unsigned int sequenceIndex);
     void saveBest(std::string name);
     void displayStatistics() const;

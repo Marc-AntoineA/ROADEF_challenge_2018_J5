@@ -16,6 +16,8 @@ struct RealCut {
     unsigned int nbItems;
     
     RealCut(unsigned int x, unsigned int nbItems) : x(x), nbItems(nbItems) {}
+
+    bool operator<(const RealCut& other) const;
 };
 
 using GlassLocationIt = std::vector<GlassLocation>::iterator;

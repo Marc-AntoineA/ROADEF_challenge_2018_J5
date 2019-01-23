@@ -87,6 +87,11 @@ bool GlassCutter::cut(unsigned int depth, unsigned int endSequenceIndex){
             if (currentBinId * WIDTH_PLATES > xLimit) { currentMaxX = currentBinId*WIDTH_PLATES + getXMax(); return false;}
         }
     }
+    if (currentSequenceIndex != sequence.size()) {
+        std::cout << currentSequenceIndex << " " << sequence.size() << std::endl;
+        displayLocations();
+        throw std::runtime_error("ERROR");
+    }
     assert(currentSequenceIndex == sequence.size());
     currentMaxX = currentBinId * WIDTH_PLATES + getXMax();
     /*if (xLimit > 218207 && currentMaxX == 218207) {

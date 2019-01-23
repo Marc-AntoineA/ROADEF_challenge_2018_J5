@@ -237,6 +237,12 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int n
     for (const RealCut& cut: realCuts) {
         if (cut.x != prevAbscissa) {
             assert(nbItemsToCuts >= cut.nbItems);
+            if (prevAbscissa <= cut.x) {
+                std::cout << (*this) << std::endl;
+                std::cout << prevAbscissa << " " << cut.x << std::endl;
+                displayRealCuts();
+            }
+            assert(prevAbscissa > cut.x);
             nbItemsCuts += addSonAndBuildNode(cut.x, prevAbscissa - cut.x, 
                 beginSequencePosition + nbItemsToCuts - cut.nbItems, beginSequencePosition + nbItemsToCuts - nbPrevItems, lazy);
             prevAbscissa = cut.x;
@@ -246,10 +252,6 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int n
     
     unsigned int endNodeAbscissa = isVerticalCut() ? x : y;
     assert(prevAbscissa == endNodeAbscissa);
-    if (prevAbscissa != endNodeAbscissa) {
-        nbItemsCuts += addSonAndBuildNode(endNodeAbscissa, prevAbscissa, 
-            beginSequencePosition, beginSequencePosition + nbPrevItems, lazy);
-    }
     return nbItemsCuts;
 }
 
@@ -271,6 +273,12 @@ unsigned int GlassNode::addSonAndBuildNode(unsigned int beginAbscissa, unsigned 
         assert(builtNodes.size() != 0);
         return builtNode.items.size();
     }
+
+    if (size > (isVerticalCut() ? width : height)) {
+        std::cout << *this << std::endl;
+        std::cout << size << " " << (isVerticalCut() ? width : height) << std::endl;
+    }
+    assert(size <= (isVerticalCut() ? width : height));
 
     if (isVerticalCut())
         sons.emplace_back(GlassNode(instance, cutter, plateIndex, beginAbscissa, y, size, height, depth + 1, BRANCH));
@@ -323,6 +331,7 @@ unsigned int GlassNode::buildNodeAndReturnNbItemsCuts(unsigned int begin, unsign
     buildCutsAvailable(first, last);
     //displayCutsAvailable();
     buildRealCuts();
+    std::sort(realCuts.begin(), realCuts.end());
     //displayRealCuts();
     //std::cout << "===========" << std::endl;
     unsigned int nbItemsCuts = cutRealCuts(first, endSequencePosition - beginSequencePosition, lazy);
@@ -440,9 +449,9 @@ std::ostream& operator<<(std::ostream& os, const GlassNode::BuiltNode& node) {
     os << "] ";
 }
 
-
-
-
+bool RealCut::operator<(const RealCut& other) const {
+    return x > other.x;
+}
 
 
 
