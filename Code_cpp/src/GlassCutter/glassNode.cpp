@@ -263,9 +263,7 @@ unsigned int GlassNode::addSonAndBuildNode(unsigned int beginAbscissa, unsigned 
     if (lazy && depth == 0) {
         const GlassLocationIt beginIt = cutter->getLocationIterator(plateIndex, beginItem);
         const GlassLocationIt endIt = cutter->getLocationIterator(plateIndex, endItem);
-        for (GlassLocationIt it = beginIt ; it != endIt; it++) {
-            items.push_back(*it);
-        }
+        items.insert(items.end(), beginIt, endIt);
     }
     BuiltNode builtNode(beginAbscissa, size, items);
     
@@ -287,7 +285,6 @@ unsigned int GlassNode::addSonAndBuildNode(unsigned int beginAbscissa, unsigned 
     return nbItemsCuts;
 }
 
-// TODO améliorer l'implémentation
 unsigned int GlassNode::checkNodeAndReturnNbItemsCuts(unsigned int begin, unsigned int end) {
     return buildNodeAndReturnNbItemsCuts(begin, end, BUILD_LAZY);
 }

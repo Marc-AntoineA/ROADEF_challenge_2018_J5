@@ -67,7 +67,7 @@ void Heuristic::buildMoves() {
         poolMoves.push_back(new KConsecutivePermutation(this, k));
     for (unsigned int k = 3; k < std::min((std::size_t)6, sequence.size()); k++) 
         poolMoves.push_back(new KPermutation(this, k));
-    for (unsigned int k = 1; k < std::min((std::size_t)3, sequence.size() - 1); k++)
+    for (unsigned int k = 1; k < std::min((std::size_t)4, sequence.size() - 1); k++)
         poolMoves.push_back(new KInsert(this, k));
 }
 
@@ -148,7 +148,7 @@ void Heuristic::updateBestScore() {
 }
 
 unsigned int Heuristic::computeScore(unsigned int depth) {
-    return computeScore(depth, 0, sequence.size());
+    return computeScore(depth, 0, sequence.size() + 1);
 }
 
 unsigned int Heuristic::computeScore(unsigned int depth, 
@@ -173,9 +173,9 @@ void Heuristic::localSearch(unsigned int depth, unsigned int currentTimeLimit) {
         unsigned int startingFrom = 0;
         unsigned int endingTo = 0;
         move->attempt(startingFrom, endingTo);
-        beginModifiedSequenceIndex = std::min(beginModifiedSequenceIndex, startingFrom);
-        endModifiedSequenceIndex = std::max(endModifiedSequenceIndex, endingTo);
         if (startingFrom == endingTo);
+        beginModifiedSequenceIndex = std::min(beginModifiedSequenceIndex, startingFrom);
+        endModifiedSequenceIndex = std::max(endModifiedSequenceIndex, endingTo) + 15;// todo + 1
         nbIterations++;
         MOVE_STATISTIC result = evaluateCurrentSolution(depth, beginModifiedSequenceIndex, endModifiedSequenceIndex);
         move->addStat(result);

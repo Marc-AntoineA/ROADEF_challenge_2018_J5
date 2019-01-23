@@ -15,6 +15,7 @@ GlassCutter::GlassCutter(GlassInstance* instance, std::vector<unsigned int>& seq
     nbInfeasible = 0;
     currentSequenceIndex = 0;
     xLimit = NB_PLATES * WIDTH_PLATES;
+    currentMaxX = xLimit;
     buildStacks();
     buildMonsters();
     buildNodes();
@@ -78,14 +79,21 @@ bool GlassCutter::cut(unsigned int depth, unsigned int endSequenceIndex){
             currentSequenceIndex++;
         } else {
             incrBinId();
-            if (currentSequenceIndex > endSequenceIndex && isCurrentBinUnmodified(currentSequenceIndex))
+            if (currentSequenceIndex > endSequenceIndex && isCurrentBinUnmodified(currentSequenceIndex)) {
+                currentMaxX = xLimit;
+                std::cout << currentMaxX << std::endl;
                 return true;
-            if (currentBinId * WIDTH_PLATES > xLimit) { return false;}
+            }
+            if (currentBinId * WIDTH_PLATES > xLimit) { currentMaxX = currentBinId*WIDTH_PLATES + getXMax(); return false;}
         }
     }
     assert(currentSequenceIndex == sequence.size());
-    unsigned int xMax = currentBinId * WIDTH_PLATES + getXMax();
-    xLimit = std::min(xMax, xLimit);
+    currentMaxX = currentBinId * WIDTH_PLATES + getXMax();
+    if (xLimit > 218207 && currentMaxX == 218207) {
+        /*displayLocations();
+        assert(false);*/
+    }
+    xLimit = std::min(currentMaxX, xLimit);
     return true;
 }
 
@@ -197,6 +205,10 @@ GlassCutter::ScoredLocation GlassCutter::treeScore(ScoredLocationTree* tree) {
                 assert(cutX >= location.getX());
                 assert(cutX >= location.getX() + MIN_WASTE_AREA);  
                 location.setX(cutX);
+                if (!currentPlate()->rectangleIsFreeOutOfDefects(location.getX(), location.getY(), location.getXW(), location.getYH())) {
+                    scoredLocation.feasible = NOT_FEASIBLE;
+                    continue;
+                }
                 son->reset();
                 if (!fullAttempt(location)) {
                     revertSameBin();
@@ -263,7 +275,7 @@ bool GlassCutter::computeBestLocationAndApplyIfNecessary() {
 }
 
 unsigned int GlassCutter::getCurrentScore() {
-    return (currentBinId*WIDTH_PLATES + getXMax())*HEIGHT_PLATES - instance->getItemsArea();
+    return currentMaxX*HEIGHT_PLATES - instance->getItemsArea();
 }
 
 void GlassCutter::buildFirstIndexOnEachPlate() {
@@ -313,7 +325,9 @@ void GlassCutter::buildLocations() {
 bool GlassCutter::isCurrentBinUnmodified(unsigned int newBinItemIndex) const {
     int previousBinItemIndex = firstIndexInEachPlate[currentBinId];
     if (previousBinItemIndex < 0) return false;
-    return previousBinItemIndex == newBinItemIndex;
+    if (((unsigned int)previousBinItemIndex) == newBinItemIndex)
+        std::cout << currentBinId << " -- " << newBinItemIndex << " < " << sequence.size() << std::endl;
+    return ((unsigned int)previousBinItemIndex) == newBinItemIndex;
 }
 
 void GlassCutter::incrBinId() {
@@ -545,12 +559,21 @@ GlassCutter::~GlassCutter() {
 
 // TODO on peut ignorer les premières plaques dans la boucle
 void GlassCutter::commitFirstIndexInEachPlate() {
-    for (unsigned int index = 0; index <= currentBinId; index++) {
-        if (locations[index].empty()) {
+    unsigned int nbItemsFromPlate0 = 0;
+    for (unsigned int index = 0; index < currentBinId; index++) {
+        //std::cout << nbItemsFromPlate0 << std::endl;
+        firstIndexInEachPlate[index] = nbItemsFromPlate0;
+        nbItemsFromPlate0 += locations[index].size();
+        //std::cout << nbItemsFromPlate0 <<  " VS " << firstIndexInEachPlate[index] << std::endl;
+    }
+
+    if (currentLocations()->empty()) { // On a zappé
+        assert(firstIndexInEachPlate[currentBinId] == nbItemsFromPlate0);
+    
+    } else { // On a pas zappé
+        firstIndexInEachPlate[currentBinId] = nbItemsFromPlate0;
+        for (unsigned int index = currentBinId + 1; index < NB_PLATES; index++) {
             firstIndexInEachPlate[index] = -1;
-            continue;
         }
-        unsigned int binSequencePosition = locations[index].front().getLocationSequence(); 
-        firstIndexInEachPlate[index] = convertBinSequenceToMainSequence(binSequencePosition);
     }
 }

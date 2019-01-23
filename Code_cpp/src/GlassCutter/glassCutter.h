@@ -114,6 +114,7 @@ class GlassCutter {
     std::vector<GlassLocation> getLocationsForItemIndexAndIncreaseBinIdIfNecessary(unsigned int itemIndex);
     RedMonster* currentMonster() { return &monsters[currentBinId]; }
     GlassNode* currentNode() { return &nodes[currentBinId]; }
+    GlassPlate* currentPlate() { return &instance->getPlate(currentBinId); }
     std::vector<GlassLocation>* currentLocations() { return &locations[currentBinId]; }
 
     GlassInstance* instance;
@@ -139,4 +140,5 @@ class GlassCutter {
 
     unsigned int xLimit;
     std::vector<int> firstIndexInEachPlate;
+    unsigned int currentMaxX;
 };

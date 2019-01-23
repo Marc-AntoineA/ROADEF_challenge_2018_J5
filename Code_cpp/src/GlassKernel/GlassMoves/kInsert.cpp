@@ -27,7 +27,7 @@ void KInsert::attempt(unsigned int& beginIndex, unsigned int& endIndex) {
     sequence.erase(sequence.begin() + fromIndex, sequence.begin() + fromIndex + k);
     sequence.insert(sequence.begin() + toIndex, movedBlock.begin(), movedBlock.end());
     beginIndex = std::min(fromIndex, toIndex);
-    endIndex = std::max(fromIndex, endIndex) + k;
+    endIndex = std::max(fromIndex, toIndex) + k;
 }
 
 void KInsert::commit() {
