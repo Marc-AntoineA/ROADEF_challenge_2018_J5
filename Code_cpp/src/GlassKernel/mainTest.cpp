@@ -7,12 +7,14 @@
 #include <cstdlib>
 #include <cmath>
 
+#define NB_THREADS_DEPTH_1 4
+#define NB_THREADS_DEPTH_2 4
+#define DEPTH_1 3
+#define DEPTH_2 4
+#define SAVING_TIME 8
+
 void solveThread(Heuristic* heuristic) {
     heuristic->start();
-}
-
-void test() {
-    std::cout << "On tente sans mettre d'argument, juste pour voir ce que cela donne" << std::endl;
 }
 
 using namespace std;
@@ -44,52 +46,56 @@ int main(int argc, char* argv[])
         }
     }
 
+    std::cout << std::endl;
+    std::cout << "Challenge ROADEF/EURO 2018: Cutting Optimization Problem" << std::endl;
+    std::cout << "Final Submission - Team J5 - Marc-Antoine Auge" << std::endl;
+    std::cout << "Usage: ./exec -t timeLimit (in seconds) -o outputName -p instancePathAndName -s seed" << std::endl;
+
+    std::cout << std::endl;
     std::cout << "Params: " << std::endl;
     std::cout << " - instanceName: " << instanceName << std::endl;
     std::cout << " - outputName: " << outputName << std::endl;
     std::cout << " - timeLimit: " << timeLimit << std::endl,
-    std::cout << " - NbThreads: " << nbThreads << std::endl;
-    std::cout << " - depthLimit: " << depthLimit << std::endl;
+    //std::cout << " - NbThreads: " << nbThreads << std::endl;
+    //std::cout << " - depthLimit: " << depthLimit << std::endl;
     std::cout << " - seed: " << seed << std::endl;
+    std::cout << std::endl;
 
-    /*seed = 541;
-    instanceName = "B13";
-    outputName = "B13.csv";
-    timeLimit = 20;
-    nbThreads = 4;
-    depthLimit = 3;*/
+    unsigned int realTimeLimit = timeLimit > SAVING_TIME ? timeLimit - 10 : 1;
     srand(seed);
 
     std::vector<Heuristic*> heuristics;
-
-    for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
-        GlassInstance* instance = new GlassInstance("/home/marc-antoinea/Documents/4-Projets_et_realisations/ROADEF/Code_cpp/src/build/bin/instances_checker/" + instanceName);
-        heuristics.push_back(new Heuristic(instance, timeLimit, depthLimit, rand()));
-    }   
-
     boost::thread_group group;
     std::vector<boost::thread*> threads;
-    for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
+    
+    for (unsigned int threadIndex = 0; threadIndex < NB_THREADS_DEPTH_1; threadIndex++) {
+        GlassInstance* instance = new GlassInstance(instanceName);
+        heuristics.push_back(new Heuristic(instance, realTimeLimit, DEPTH_1, rand()));
         group.add_thread(new boost::thread(solveThread, heuristics[threadIndex]));
+    }
+
+    for (unsigned int threadIndex = 0; threadIndex < NB_THREADS_DEPTH_2; threadIndex++) {
+        GlassInstance* instance = new GlassInstance(instanceName);
+        heuristics.push_back(new Heuristic(instance, realTimeLimit, DEPTH_2, rand()));
+        group.add_thread(new boost::thread(solveThread, heuristics[NB_THREADS_DEPTH_1 + threadIndex]));
     }
 
     group.join_all();
     unsigned int bestScore = std::numeric_limits<unsigned int>::max();
     unsigned int bestThreadIndex = 0;
 
-    for (unsigned int threadIndex = 0; threadIndex < nbThreads; threadIndex++) {
+    for (unsigned int threadIndex = 0; threadIndex < heuristics.size(); threadIndex++) {
         if (heuristics[threadIndex]->getBestScore() <= bestScore) {
             bestScore = heuristics[threadIndex]->getBestScore();
             bestThreadIndex = threadIndex;
             std::cout << bestScore << std::endl;
         }
     }
+
     std::cout << "Meilleur score obtenu: " << bestScore << std::endl;
     heuristics[bestThreadIndex]->saveAndComputeBest(outputName);
-    heuristics[bestThreadIndex]->displaySequence();
-    heuristics[bestThreadIndex]->displayLocations();
+    //heuristics[bestThreadIndex]->displaySequence();
     //heuristics[bestThreadIndex]->displayLocations();
-    // TODO delete heuristics and threads
     
     return 0;
 }

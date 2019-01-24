@@ -194,7 +194,8 @@ void GlassNode::buildRealCuts() {
                     prevAbscissa = cut.getAbscissa();
                     nbPrevItems = nbItemsSeen;
                 }            
-            } else if (depth == 0 && realCuts.size() == 1 && cut.getAbscissa() < lastAbscissa) {
+            } else if (depth == 0 && realCuts.size() == 1 && cut.getAbscissa() < lastAbscissa 
+                && cut.getAbscissa() + MIN_WASTE_AREA < lastAbscissa) {
                 unsigned int cutAbscissa = cut.getAbscissa() + MIN_WASTE_AREA;
                 if (cutAbscissa > lastAbscissa) throw std::runtime_error("cut impossible");
                 if (cutAbscissa != firstAbscissa && cutAbscissa != lastAbscissa
@@ -235,6 +236,8 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int n
     unsigned int nbPrevItems = 0;
     
     for (const RealCut& cut: realCuts) {
+        if (cut.x > (isVerticalCut() ? x + width : y + height)) { assert(false); continue; }
+        
         if (cut.x != prevAbscissa) {
             assert(nbItemsToCuts >= cut.nbItems);
             if (prevAbscissa <= cut.x) {
@@ -258,6 +261,10 @@ unsigned int GlassNode::cutRealCuts(const GlassLocationIt& first, unsigned int n
 unsigned int GlassNode::addSonAndBuildNode(unsigned int beginAbscissa, unsigned int size,
     unsigned int beginItem, unsigned int endItem, bool lazy) {
 
+    if (size > (isVerticalCut() ? width : height)) {
+        return 0;
+    }
+
     if (beginItem != endItem)
         xMax = std::max(xMax, beginAbscissa + size);
     
@@ -274,10 +281,6 @@ unsigned int GlassNode::addSonAndBuildNode(unsigned int beginAbscissa, unsigned 
         return builtNode.items.size();
     }
 
-    if (size > (isVerticalCut() ? width : height)) {
-        std::cout << *this << std::endl;
-        std::cout << size << " " << (isVerticalCut() ? width : height) << std::endl;
-    }
     assert(size <= (isVerticalCut() ? width : height));
 
     if (isVerticalCut())

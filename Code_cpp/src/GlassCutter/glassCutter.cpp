@@ -79,11 +79,11 @@ bool GlassCutter::cut(unsigned int depth, unsigned int endSequenceIndex){
             currentSequenceIndex++;
         } else {
             incrBinId();
-            if (currentSequenceIndex > endSequenceIndex && isCurrentBinUnmodified(currentSequenceIndex)) {
+            /*if (currentSequenceIndex > endSequenceIndex && isCurrentBinUnmodified(currentSequenceIndex)) {
                 currentMaxX = xLimit;
                 //std::cout << currentMaxX << std::endl;
                 return true;
-            }
+            }*/
             if (currentBinId * WIDTH_PLATES > xLimit) { currentMaxX = currentBinId*WIDTH_PLATES + getXMax(); return false;}
         }
     }
@@ -328,6 +328,7 @@ void GlassCutter::buildLocations() {
 }
 
 bool GlassCutter::isCurrentBinUnmodified(unsigned int newBinItemIndex) const {
+    return false;
     int previousBinItemIndex = firstIndexInEachPlate[currentBinId];
     if (previousBinItemIndex < 0) return false;
     /*if (((unsigned int)previousBinItemIndex) == newBinItemIndex)
@@ -564,6 +565,7 @@ GlassCutter::~GlassCutter() {
 
 // TODO on peut ignorer les premières plaques dans la boucle
 void GlassCutter::commitFirstIndexInEachPlate() {
+    return;
     unsigned int nbItemsFromPlate0 = 0;
     for (unsigned int index = 0; index < currentBinId; index++) {
         //std::cout << nbItemsFromPlate0 << std::endl;
