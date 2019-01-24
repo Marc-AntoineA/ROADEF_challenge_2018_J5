@@ -18,7 +18,7 @@
 #include <boost/random/variate_generator.hpp>
 #include <boost/thread.hpp>
 
-#define VERBOSE_HEURISTIC true
+#define VERBOSE_HEURISTIC false
 
 using namespace boost::chrono;
 typedef duration<double> sec;
